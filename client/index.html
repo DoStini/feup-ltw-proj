@@ -15,6 +15,31 @@
 
 </head>
 <body>
-    <h1>Hello this is a test</h1>
+    
+    <section id="auth" class="auth">
+        <header>
+            <h3>Authentication</h3>
+        </header>
+        <div class="auth-forms">
+            <form>
+                <fieldset id="login" class="login-box">
+                    <legend>Login</legend>
+                    <label>Username: <input type="text" onkeypress="return event.charCode != 32"></label>
+                    <label>Password: <input type="password"></label>
+                    <input type="submit" value="Login">
+                </fieldset>
+            </form>
+
+            <form>
+                <fieldset id="register" class="login-box">
+                    <legend>Register</legend>
+                    <label>Username: <input type="text" onkeypress="return event.charCode != 32"></label>
+                    <label>Password: <input type="password"></label>
+                    <label>Confirm Password: <input type="password"></label>
+                    <input type="submit" value="Register">
+                </fieldset>
+            </form>
+        </div>
+    </section>
 </body>
 </html>
