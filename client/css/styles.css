@@ -206,15 +206,15 @@ section#config div.config-layout > fieldset {
 
 section#config div.order-layout {
     display: grid;
-    grid-template-columns: 100px 130px 1fr;
-    grid-template-rows: 2.5fr 0.5fr 0.8fr;
+    grid-template-columns: 100px 130px;
+    grid-template-rows: 0.5fr 0.8fr;
     grid-template-areas: 
-        "header header header"
-        "label1 label2 ."
-        "input1 input2 .";
+        "label1 label2"
+        "input1 input2";
     row-gap: 0.4em;
     justify-items: start;
     column-gap: 2em;
+    margin-top: 1em;
 }
 
 section#config div.order-layout > legend {
