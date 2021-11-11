@@ -14,8 +14,9 @@
 </head>
 <body>
     <header>
-        <h1>Mancalada - Seeds With Your Friends</h1>
+        <h1>Mancalada - Sow With Your Friends</h1>
     </header>
+
     <section id="auth" class="auth">
         <header>
             <h3>Authentication</h3>
@@ -41,6 +42,8 @@
             </form>
         </div>
     </section>
+
+    <!--Rules Page-->
     <section id="rules" class="popup-window rules">
         <header>
             <h3>Rules</h3>
@@ -70,6 +73,42 @@
                 <li>Placeholder to prove the world that the scroll works</li>
             </ul>
         </div>
+
+    <!--Config Area-->
+    <section id="init-menu">
+        <form>
+            <button value="start-server">Play Against a Friend</button>
+            <button value="join-server">Join a Friend's Game</button>
+            <button value="play-alone">Play Against the All Knowing AI</button>
+        </form>
+    </section>
+    <section id="config">
+        <form>
+            <fieldset>
+                <legend>Choose Your Game Settings</legend>
+                <label for="holes">Number of holes in each side:</label>
+                <input type="number" id="holes" name="holes" value="6" min="1" max="10" step="1">
+    
+                <label for="seeds">Number of seeds in each hole:</label>
+                <input type="number" id="seeds" name="seeds" value="4" min="1" max="12" step="1">
+                    
+                <label for="ai_difficulty">AI Difficulty:</label>
+                <select name="ai_difficulty" id="ai_difficulty">
+                    <option value="easy">Lets You Win</option>
+                    <option value="hard">Loses on Purpose Sometimes</option>
+                    <option value="impossible" selected>Impossible</option>
+                </select>
+                
+                <fieldset>
+                    <legend>Who Goes First?</legend>
+                    <label for="ai-order-ai">The All Knowing AI</label>
+                    <input type="radio" name="ai-order" id="ai-order-ai" value="ai-first">
+
+                    <label for="ai-order-ai">The Human</label>
+                    <input type="radio" name="ai-order" id="ai-order-human" value="human-first" checked>
+                </fieldset>
+            </fieldset>
+        </form>
     </section>
 </body>
 </html>
