@@ -117,7 +117,7 @@ section#config {
 }
 
 section#config > form {
-    padding: 4em;
+    padding: 6em;
 }
 
 section#config fieldset{
@@ -206,7 +206,7 @@ section#config div.config-layout > fieldset {
 section#config div.order-layout {
     display: grid;
     grid-template-columns: 100px 130px 1fr;
-    grid-template-rows: 2fr 0.5fr 0.8fr;
+    grid-template-rows: 2.5fr 0.5fr 0.8fr;
     grid-template-areas: 
         "header header header"
         "label1 label2 ."
