@@ -12,6 +12,7 @@ body {
     "header"
     "body"
     "footer";
+    color: #373F41
 }
 
 h1 {
@@ -56,7 +57,7 @@ button {
     background-color: #3C64B1;
     color: white;
     font-size: 18px;
-    font-weight: 350;
+    font-weight: 400;
     padding: 0.5em;
     border-style: none;
     padding-left: 1em;
@@ -65,14 +66,14 @@ button {
 
 button:hover {
     background-color: #373F41;
-    font-weight: 400;
+    font-weight: 600;
     cursor: pointer;
 
 }
 
 a:hover {
     color: #3C64B1;
-    font-weight: 400;
+    font-weight: 600;
     cursor: pointer;
 }
 
@@ -116,26 +117,19 @@ section#config {
 }
 
 section#config > form {
-    padding: 2.2em;
+    padding: 4em;
 }
 
 section#config fieldset{
     border:none;
     display: block;
     position: relative;
-}
-
-section#config label {
-    display: block;
-    position: relative;
     margin: 0;
+    padding: 0;
 }
 
-section#config input {
-    display: block;
-    position: relative;
-}
-
+section#config label,
+section#config input,
 section#config select {
     display: block;
     position: relative;
@@ -143,24 +137,41 @@ section#config select {
 
 section#config legend {
     font-size: 32px;
+    font-weight: 600;
     display: block;
     position: relative;
-    margin: 0;
+    padding: 0;
 }
 
-section#config fieldset.config-layout {
+section#config input, select {
+    background-color: #F4F5F4;
+    border-color: #373F41;
+    border-style: dashed;
+    border-radius: 0;
+    border-width: 1px;
+}
+
+section#config div.config-layout {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-    grid-template-rows: 1.5fr 0.5fr 1fr 3fr;
+    grid-template-rows: 2fr 0.5fr 1fr 1fr 3fr 1fr;
     grid-template-areas: 
         "header header header"
         "label1 label2 label3"
         "input1 input2 input3"
-        "fields fields fields";
-    gap: 1em;
+        ". . ."
+        "fields fields fields"
+        ". . submit";
+    row-gap: 0.4em;
+    column-gap: 2em;
 }
 
-section#config fieldset.config-layout > legend {
+section#config div.config-layout > button {
+    grid-area: submit;
+    justify-self: right;
+}
+
+section#config div.config-layout > legend {
     grid-area: header;
 }
 
@@ -188,10 +199,42 @@ section#config select#ai_difficulty {
     grid-area: input3;
 }
 
-section#config fieldset.config-layout > fieldset {
+section#config div.config-layout > fieldset {
     grid-area: fields;
 }
 
+section#config div.order-layout {
+    display: grid;
+    grid-template-columns: 100px 130px 1fr;
+    grid-template-rows: 2fr 0.5fr 0.8fr;
+    grid-template-areas: 
+        "header header header"
+        "label1 label2 ."
+        "input1 input2 .";
+    row-gap: 0.4em;
+    justify-items: start;
+    column-gap: 2em;
+}
+
+section#config div.order-layout > legend {
+    grid-area: header;
+}
+
+section#config label[for="ai-order-human"] {
+    grid-area: label1;
+}
+
+section#config input#ai-order-human {
+    grid-area: input1;
+}
+
+section#config label[for="ai-order-ai"] {
+    grid-area: label2;
+}
+
+section#config input#ai-order-ai {
+    grid-area: input2;
+}
 
 .game {
   display: grid;
