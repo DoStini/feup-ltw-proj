@@ -50,11 +50,11 @@
   border-radius: 1em;
 }
 
-.popup-window h3 {
+.popup-window > header > h3 {
   margin-top: 0;
 }
 
-.closable-window {
+.popup-window > header {
   display: flex;
   justify-content: space-between;
 }
