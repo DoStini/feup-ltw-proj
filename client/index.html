@@ -11,13 +11,24 @@
 
     <link rel="stylesheet" href="css/styles.css">
     <script src="https://kit.fontawesome.com/4616109396.js" crossorigin="anonymous"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet"> 
 </head>
 <body>
-    <header>
-        <h1>Mancalada - Sow With Your Friends</h1>
+    <header class="main-header">
+        <h1>Mancalada</h1>
+        <nav>
+            <a class="selected">Mancala</a>
+            <a>Rules</a>
+            <a>Leaderboards</a>
+        </nav>
+        <form>
+            <button>Log In</button>
+        </form>
     </header>
 
-        <section id="game-section">
+        <!-- <section id="game-section">
             <header>
                 <h3>Game </h3>
             </header>
@@ -42,8 +53,8 @@
                 </section>
             </div>
         </section>
-        
-        <section id="auth" class="auth">
+         -->
+        <!-- <section id="auth" class="auth">
             <header>
                 <h3>Authentication</h3>
             </header>
@@ -67,7 +78,7 @@
                     </fieldset>
                 </form>
             </div>
-        </section>
+        </section> -->
 
     <!--Rules Page-->
     <section id="rules" class="popup-window rules">
@@ -104,12 +115,13 @@
     <!--Config Area-->
     <section id="init-menu">
         <form>
+            <h1>Mancalada<br>Sow With Your Friends.</h1>
+            <button value="play-alone">Play Against the All Knowing AI</button>
             <button value="start-server">Play Against a Friend</button>
             <button value="join-server">Join a Friend's Game</button>
-            <button value="play-alone">Play Against the All Knowing AI</button>
         </form>
     </section>
-    <section id="config">
+    <!-- <section id="config">
         <form>
             <fieldset>
                 <legend>Choose Your Game Settings</legend>
@@ -136,6 +148,10 @@
                 </fieldset>
             </fieldset>
         </form>
-    </section>
+    </section> -->
+
+    <footer>
+        <span>Mancalada. Sow With Your Friends.<br>Made With Love by André Moreira and Nuno Alves.</span>
+    </footer>
 </body>
 </html>
