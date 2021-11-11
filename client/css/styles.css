@@ -36,3 +36,44 @@
   flex-direction: column;
   justify-content: space-evenly;
 }
+
+.rules {
+  background-color: yellow;
+  display: flex;
+  flex-direction: column;
+  padding: 1em;
+  visibility: hidden;
+}
+
+.rules-content {
+  position: relative;
+  overflow-y: scroll;
+  bottom: 0;
+}
+
+.rules .button {
+  font-size: 1.5em;
+}
+
+.button:hover {
+  color: green;
+}
+
+.popup-window {
+  padding: 1em;
+  position: absolute;
+  top: 25%;
+  bottom: 25%;
+  left: 25%;
+  right: 25%;
+  border-radius: 1em;
+}
+
+.popup-window > header > h3 {
+  margin-top: 0;
+}
+
+.popup-window > header {
+  display: flex;
+  justify-content: space-between;
+}

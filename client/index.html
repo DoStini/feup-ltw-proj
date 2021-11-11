@@ -1,23 +1,23 @@
 <!doctype html>
 
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+<head>
+    <meta charset="utf-8">
+    <title>Mancalada</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Mancalada">
+    <meta name="author" content="Nuno and Moreira">
+    <meta property="title" content="Mancalada">
 
-        <title>Mancalada</title>
-        <meta name="description" content="Mancalada">
-        <meta name="author" content="Nuno and Moreira">
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://kit.fontawesome.com/4616109396.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <header>
+        <h1>Mancalada - Sow With Your Friends</h1>
+    </header>
 
-        <meta property="title" content="Mancalada">
-
-        <link rel="stylesheet" href="css/styles.css">
-    </head>
-    <body>
-        <header>
-            <h1>Mancalada - Seeds With Your Friends</h1>
-        </header>
-        <section>
+        <section id="game-section">
             <header>
                 <h3>Game </h3>
             </header>
@@ -29,12 +29,12 @@
                     <header>
                         <h4>Game Status</h4>
                     </header>
-                    <fieldset id="player_1" class="player-box">
+                    <fieldset id="player1" class="player-box">
                         <legend>Player 1</legend>
                         <p>Collected: 5</p>
                         <p>In game: 19</p>
                     </fieldset>
-                    <fieldset id="" class="player-box">
+                    <fieldset id="player2" class="player-box">
                         <legend>Player 2</legend>
                         <p>Collected: 7</p>
                         <p>In game: 20</p>
@@ -68,5 +68,74 @@
                 </form>
             </div>
         </section>
-    </body>
+
+    <!--Rules Page-->
+    <section id="rules" class="popup-window rules">
+        <header>
+            <h3>Rules</h3>
+            <i id="close-rules" class="button fas fa-times-circle"></i>
+        </header>
+        <div class="rules-content">
+            <h4>Board</h4>
+            <ul>
+                <li>The board is made up of cavities and containers. There is a container per player and a variable amount of cavities. Both players must have the same amount of cavities in each side.</li>
+                <li>The pieces are seeds. Each player control the seeds that are stored in their side's cavities.</li>
+                <li>In the beggining of the game, the storage is empty and the cavities are equally filled with seeds.</li>
+                <li></li>
+                <li>If you run into your own Mancala (store), deposit one piece in it. If you run into your opponent's Mancala, skip it and continue moving to the next pocket.</li>
+                <li>Be kekw</li>
+            </ul>
+            <h4>Gameplay</h4>
+            <ul>
+                <li>A player chooses one of the cavities on his side and picks up all of the seeds. The player then puts all the seeds in his hand in the next cavities, one seed in each, done in counter clock wise.</li>        
+                <li>Placeholder to prove the world that the scroll works</li>
+                <li>Placeholder to prove the world that the scroll works</li>
+                <li>Placeholder to prove the world that the scroll works</li>
+                <li>Placeholder to prove the world that the scroll works</li>
+                <li>Placeholder to prove the world that the scroll works</li>
+                <li>Placeholder to prove the world that the scroll works</li>
+                <li>Placeholder to prove the world that the scroll works</li>
+                <li>Placeholder to prove the world that the scroll works</li>
+                <li>Placeholder to prove the world that the scroll works</li>
+            </ul>
+        </div>
+    </section>
+
+    <!--Config Area-->
+    <section id="init-menu">
+        <form>
+            <button value="start-server">Play Against a Friend</button>
+            <button value="join-server">Join a Friend's Game</button>
+            <button value="play-alone">Play Against the All Knowing AI</button>
+        </form>
+    </section>
+    <section id="config">
+        <form>
+            <fieldset>
+                <legend>Choose Your Game Settings</legend>
+                <label for="holes">Number of holes in each side:</label>
+                <input type="number" id="holes" name="holes" value="6" min="1" max="10" step="1">
+    
+                <label for="seeds">Number of seeds in each hole:</label>
+                <input type="number" id="seeds" name="seeds" value="4" min="1" max="12" step="1">
+                    
+                <label for="ai_difficulty">AI Difficulty:</label>
+                <select name="ai_difficulty" id="ai_difficulty">
+                    <option value="easy">Lets You Win</option>
+                    <option value="hard">Loses on Purpose Sometimes</option>
+                    <option value="impossible" selected>Impossible</option>
+                </select>
+                
+                <fieldset>
+                    <legend>Who Goes First?</legend>
+                    <label for="ai-order-ai">The All Knowing AI</label>
+                    <input type="radio" name="ai-order" id="ai-order-ai" value="ai-first">
+
+                    <label for="ai-order-ai">The Human</label>
+                    <input type="radio" name="ai-order" id="ai-order-human" value="human-first" checked>
+                </fieldset>
+            </fieldset>
+        </form>
+    </section>
+</body>
 </html>
