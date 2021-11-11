@@ -21,6 +21,8 @@ h1 {
 
 a.selected {
     color: #3C64B1;
+    font-weight: 600;
+
 }
 
 a {
