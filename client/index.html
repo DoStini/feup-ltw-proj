@@ -1,47 +1,72 @@
 <!doctype html>
 
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Mancalada</title>
-  <meta name="description" content="Mancalada">
-  <meta name="author" content="Nuno and Moreira">
+        <title>Mancalada</title>
+        <meta name="description" content="Mancalada">
+        <meta name="author" content="Nuno and Moreira">
 
-  <meta property="title" content="Mancalada">
+        <meta property="title" content="Mancalada">
 
-  <link rel="stylesheet" href="css/styles.css">
-
-</head>
-<body>
-    <header>
-        <h1>Mancalada - Seeds With Your Friends</h1>
-    </header>
-    <section id="auth" class="auth">
+        <link rel="stylesheet" href="css/styles.css">
+    </head>
+    <body>
         <header>
-            <h3>Authentication</h3>
+            <h1>Mancalada - Seeds With Your Friends</h1>
         </header>
-        <div class="auth-forms">
-            <form>
-                <fieldset id="login" class="login-box">
-                    <legend>Login</legend>
-                    <label>Username: <input type="text" onkeypress="return event.charCode != 32"></label>
-                    <label>Password: <input type="password"></label>
-                    <input type="submit" value="Login">
-                </fieldset>
-            </form>
+        <section>
+            <header>
+                <h3>Game </h3>
+            </header>
+            <div class="game">
+                <div class="game-area">
+                    <p>Cool stuff</p>
+                </div>
+                <section class="game-status">
+                    <header>
+                        <h4>Game Status</h4>
+                    </header>
+                    <fieldset id="player_1" class="player-box">
+                        <legend>Player 1</legend>
+                        <p>Collected: 5</p>
+                        <p>In game: 19</p>
+                    </fieldset>
+                    <fieldset id="" class="player-box">
+                        <legend>Player 2</legend>
+                        <p>Collected: 7</p>
+                        <p>In game: 20</p>
+                    </fieldset>
+                </section>
+            </div>
+        </section>
+        
+        <section id="auth" class="auth">
+            <header>
+                <h3>Authentication</h3>
+            </header>
+            <div class="auth-forms">
+                <form>
+                    <fieldset id="login" class="login-box">
+                        <legend>Login</legend>
+                        <label>Username: <input type="text" onkeypress="return event.charCode != 32"></label>
+                        <label>Password: <input type="password"></label>
+                        <input type="submit" value="Login">
+                    </fieldset>
+                </form>
 
-            <form>
-                <fieldset id="register" class="login-box">
-                    <legend>Register</legend>
-                    <label>Username: <input type="text" onkeypress="return event.charCode != 32"></label>
-                    <label>Password: <input type="password"></label>
-                    <label>Confirm Password: <input type="password"></label>
-                    <input type="submit" value="Register">
-                </fieldset>
-            </form>
-        </div>
-    </section>
-</body>
+                <form>
+                    <fieldset id="register" class="login-box">
+                        <legend>Register</legend>
+                        <label>Username: <input type="text" onkeypress="return event.charCode != 32"></label>
+                        <label>Password: <input type="password"></label>
+                        <label>Confirm Password: <input type="password"></label>
+                        <input type="submit" value="Register">
+                    </fieldset>
+                </form>
+            </div>
+        </section>
+    </body>
 </html>
