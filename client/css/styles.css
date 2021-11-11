@@ -6,13 +6,12 @@
 .game-area {
   background-color: blueviolet;
   width: 100%;
-  grid-column-start: 0;
+  grid-column-start: 1;
   grid-column-end: span 3;
 }
 
 .game-status {
   grid-column-start: 4;
-  grid-column-end: 5;
   background-color: blue;
 }
 
@@ -55,6 +54,37 @@
   font-size: 1.5em;
 }
 
+.leaderboard {
+  background-color: orange;
+  display: flex;
+  flex-direction: column;
+  padding: 1em;
+  /* visibility: hidden; */
+}
+
+.leaderboard-content {
+  position: relative;
+  display: grid;
+  bottom: 0;
+  height: 100%;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.leaderboard .button {
+  font-size: 1.5em;
+}
+
+.local-leaderboard {
+  border-right: 1px solid;
+  grid-column-start: 1;
+  padding: 1em;
+}
+
+.server-leaderboard {
+  grid-column-start: 2;
+  padding: 1em;
+}
+
 .button:hover {
   color: green;
 }
@@ -76,4 +106,9 @@
 .popup-window > header {
   display: flex;
   justify-content: space-between;
+}
+
+.table-leaderboard th,
+.table-leaderboard td {
+  border: 1px solid black;
 }
