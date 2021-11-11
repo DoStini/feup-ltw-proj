@@ -92,7 +92,7 @@ section#init-menu > form {
     height: 70%;
 }
 
-section#init-menu > form > h1{
+section#init-menu > form > h2{
     text-align: center;
     font-size: 38px;
 }
@@ -137,7 +137,7 @@ section#config select {
     position: relative;
 }
 
-section#config legend {
+section#config h2, section#config legend {
     font-size: 32px;
     font-weight: 600;
     display: block;
@@ -156,9 +156,8 @@ section#config input, select {
 section#config div.config-layout {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-    grid-template-rows: 2fr 0.5fr 1fr 1fr 3fr 1fr;
+    grid-template-rows: 0.5fr 1fr 1fr 3fr 1fr;
     grid-template-areas: 
-        "header header header"
         "label1 label2 label3"
         "input1 input2 input3"
         ". . ."
