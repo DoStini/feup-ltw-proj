@@ -288,7 +288,6 @@ section#config input#ai-order-ai {
   display: flex;
   flex-direction: column;
   padding: 1em;
-  visibility: hidden;
 }
 
 .rules-content {
@@ -313,6 +312,7 @@ section#config input#ai-order-ai {
   left: 25%;
   right: 25%;
   border-radius: 1em;
+  z-index: 1000;
 }
 
 .popup-window > header > h3 {
