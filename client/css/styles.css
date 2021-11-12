@@ -330,7 +330,7 @@ i.button {
   border-radius: 1em;
   z-index: 1000;
   overflow: hidden;
-  box-shadow: -0.1em 0.2em 0.1em #373f41, 0.1em 0.2em 0.1em #373f41;
+  box-shadow: -0.1em 0.2em 0.1em #bababa, 0.1em 0.2em 0.1em #bababa;
 }
 
 .popup-window > header > h2 {
