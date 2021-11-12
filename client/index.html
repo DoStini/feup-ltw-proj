@@ -12,14 +12,26 @@
 
     <link rel="stylesheet" href="css/styles.css">
     <script src="https://kit.fontawesome.com/4616109396.js" crossorigin="anonymous"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,200;0,300;0,400;0,600;0,800;1,200;1,300;1,400;1,600;1,800&display=swap"
+        rel="stylesheet">
 </head>
 
 <body>
-    <header>
-        <h1>Mancalada - Sow With Your Friends</h1>
+    <header class="main-header">
+        <h1>Mancalada</h1>
+        <nav>
+            <a class="selected">Mancala</a>
+            <a>Rules</a>
+            <a>Leaderboards</a>
+        </nav>
+        <form>
+            <button>Log In</button>
+        </form>
     </header>
-
-    <section id="game-section">
+    <!--<section id="game-section">
         <header>
             <h3>Game </h3>
         </header>
@@ -43,9 +55,9 @@
                 </fieldset>
             </section>
         </div>
-    </section>
+    </section> -->
 
-    <section id="auth" class="auth">
+    <!--<section id="auth" class="auth">
         <header>
             <h3>Authentication</h3>
         </header>
@@ -69,16 +81,16 @@
                 </fieldset>
             </form>
         </div>
-    </section>
+    </section>-->
 
     <!--Rules Page-->
     <section id="rules" class="popup-window rules">
         <header>
-            <h3>Rules</h3>
+            <h2>Rules</h2>
             <i id="close-rules" class="button fas fa-times-circle"></i>
         </header>
         <div class="rules-content">
-            <h4>Board</h4>
+            <h3>Board</h3>
             <ul>
                 <li>The board is made up of cavities and containers. There is a container per player and a variable
                     amount of cavities. Both players must have the same amount of cavities in each side.</li>
@@ -86,7 +98,7 @@
                 <li>In the beginning of the game, the storage is empty and seeds are equally distributed through the
                     cavities.</li>
             </ul>
-            <h4>Gameplay</h4>
+            <h3>Gameplay</h3>
             <ul>
                 <li>Players sow their seeds in turns. In each turn, a player chooses the cavity from which to sow their
                     seeds.</li>
@@ -99,9 +111,10 @@
                 <li>If the last seed is placed in one of the player's empty cavities, then the player collects all of
                     the seeds of the opposite cavity as well as the seed itself.</li>
             </ul>
-            <h4>Game Termination and Score</h4>
+            <h3>Game Termination and Score</h3>
             <ul>
-                <li>The game ends when one of the players can't play anymore because they don't have any seeds placed in their cavities.</li>
+                <li>The game ends when one of the players can't play anymore because they don't have any seeds placed in
+                    their cavities.</li>
                 <li>When this happens, the other player collects the seeds from their cavities and stores them.</li>
                 <li>The player who has more seeds in storage wins.</li>
             </ul>
@@ -111,39 +124,50 @@
     <!--Config Area-->
     <section id="init-menu">
         <form>
+            <h2>Mancalada<br>Sow With Your Friends.</h2>
+            <button value="play-alone">Play Against the All Knowing AI</button>
             <button value="start-server">Play Against a Friend</button>
             <button value="join-server">Join a Friend's Game</button>
-            <button value="play-alone">Play Against the All Knowing AI</button>
         </form>
     </section>
     <section id="config">
         <form>
-            <fieldset>
-                <legend>Choose Your Game Settings</legend>
-                <label for="holes">Number of holes in each side:</label>
-                <input type="number" id="holes" name="holes" value="6" min="1" max="10" step="1">
+            <fieldset class="config-layout">
+                <h2>Choose Your Game Settings</h2>
+                <div class="config-layout">
+                    <label for="holes">Number of holes in each side</label>
+                    <input type="number" id="holes" name="holes" value="6" min="1" max="10" step="1">
 
-                <label for="seeds">Number of seeds in each hole:</label>
-                <input type="number" id="seeds" name="seeds" value="4" min="1" max="12" step="1">
+                    <label for="seeds">Number of seeds in each hole</label>
+                    <input type="number" id="seeds" name="seeds" value="4" min="1" max="12" step="1">
 
-                <label for="ai_difficulty">AI Difficulty:</label>
-                <select name="ai_difficulty" id="ai_difficulty">
-                    <option value="easy">Lets You Win</option>
-                    <option value="hard">Loses on Purpose Sometimes (but will kick your ass)</option>
-                    <option value="impossible" selected>Impossible</option>
-                </select>
+                    <label for="ai_difficulty">AI Difficulty</label>
+                    <select name="ai_difficulty" id="ai_difficulty">
+                        <option value="easy">Lets You Win</option>
+                        <option value="hard">Loses on Purpose Sometimes (but will kick your ass)</option>
+                        <option value="impossible" selected>Impossible</option>
+                    </select>
 
-                <fieldset>
-                    <legend>Who Goes First?</legend>
-                    <label for="ai-order-ai">The All Knowing AI</label>
-                    <input type="radio" name="ai-order" id="ai-order-ai" value="ai-first">
+                    <fieldset>
+                        <legend>Who Goes First?</legend>
+                        <div class="order-layout">
+                            <label for="ai-order-human">The Human</label>
+                            <input type="radio" name="ai-order" id="ai-order-human" value="human-first" checked>
 
-                    <label for="ai-order-ai">The Human</label>
-                    <input type="radio" name="ai-order" id="ai-order-human" value="human-first" checked>
-                </fieldset>
+                            <label for="ai-order-ai">The All Knowing AI</label>
+                            <input type="radio" name="ai-order" id="ai-order-ai" value="ai-first">
+                        </div>
+                    </fieldset>
+
+                    <button value="start">Start Game</button>
+                </div>
             </fieldset>
         </form>
     </section>
+
+    <footer>
+        <span>Mancalada. Sow With Your Friends.<br>Made With Love by André Moreira and Nuno Alves.</span>
+    </footer>
 </body>
 
 </html>

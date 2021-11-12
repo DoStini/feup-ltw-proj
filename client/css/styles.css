@@ -1,3 +1,251 @@
+html {
+  max-height: fit-content;
+  min-height: 100vh;
+  height: 100vh;
+}
+
+body {
+  background-color: #f3f6fa;
+  max-height: fit-content;
+  width: 100%;
+  min-height: 100vh;
+  height: 100vh;
+  margin: 0;
+  font-family: "Mulish", "sans-serif";
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 70px 1fr 50px;
+  grid-template-areas:
+    "header"
+    "body"
+    "footer";
+  color: #373f41;
+}
+
+h1 {
+  color: #373f41;
+}
+
+a.selected {
+  color: #3c64b1;
+  font-weight: 600;
+}
+
+a {
+  color: #373f41;
+}
+
+header.main-header {
+  display: grid;
+  grid-template-rows: 1fr;
+  grid-template-columns: 1fr 20em 1fr;
+  align-items: center;
+  margin-left: 50px;
+  margin-right: 50px;
+  grid-area: header;
+}
+
+header.main-header > nav {
+  width: 20em;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+header.main-header > form {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+button {
+  border-radius: 0;
+  background-color: #3c64b1;
+  color: white;
+  font-size: 18px;
+  font-weight: 400;
+  padding: 0.5em;
+  border-style: none;
+  padding-left: 1em;
+  padding-right: 1em;
+}
+
+button:hover {
+  background-color: #373f41;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+a:hover {
+  color: #3c64b1;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+section#init-menu {
+  height: 100%;
+  grid-area: body;
+}
+
+section#init-menu > form {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  height: 70%;
+}
+
+section#init-menu > form > h2 {
+  text-align: center;
+  font-size: 38px;
+}
+
+section#init-menu button {
+  width: 20em;
+}
+
+footer {
+  grid-area: footer;
+  background-color: #373f41;
+  color: white;
+  font-size: 12px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+section#config {
+  grid-area: body;
+}
+
+section#config > form {
+  padding: 6em;
+}
+
+section#config fieldset {
+  border: none;
+  display: block;
+  position: relative;
+  margin: 0;
+  padding: 0;
+}
+
+section#config label,
+section#config input,
+section#config select {
+  display: block;
+  position: relative;
+}
+
+section#config label {
+    font-size: 15px;
+}
+
+section#config h2,
+section#config legend {
+  font-size: 32px;
+  font-weight: 600;
+  display: block;
+  position: relative;
+  padding: 0;
+}
+
+section#config input,
+select {
+  background-color: #f4f5f4;
+  border-color: #373f41;
+  border-style: dashed;
+  border-radius: 0;
+  border-width: 1px;
+}
+
+section#config div.config-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 0.5fr 1fr 1fr 3fr 1fr;
+  grid-template-areas:
+    "label1 label2 label3"
+    "input1 input2 input3"
+    ". . ."
+    "fields fields fields"
+    ". . submit";
+  row-gap: 0.4em;
+  column-gap: 2em;
+}
+
+section#config div.config-layout > button {
+  grid-area: submit;
+  justify-self: right;
+}
+
+section#config div.config-layout > legend {
+  grid-area: header;
+}
+
+section#config label[for="holes"] {
+  grid-area: label1;
+}
+
+section#config input#holes {
+  grid-area: input1;
+}
+
+section#config label[for="seeds"] {
+  grid-area: label2;
+}
+
+section#config input#seeds {
+  grid-area: input2;
+}
+
+section#config label[for="ai_difficulty"] {
+  grid-area: label3;
+}
+
+section#config select#ai_difficulty {
+  grid-area: input3;
+}
+
+section#config div.config-layout > fieldset {
+  grid-area: fields;
+}
+
+section#config div.order-layout {
+  display: grid;
+  grid-template-columns: 100px 140px;
+  grid-template-rows: 0.5fr 0.8fr;
+  grid-template-areas:
+    "label1 label2"
+    "input1 input2";
+  row-gap: 0.4em;
+  justify-items: start;
+  column-gap: 2em;
+  margin-top: 1em;
+}
+
+section#config div.order-layout > legend {
+  grid-area: header;
+}
+
+section#config label[for="ai-order-human"] {
+  grid-area: label1;
+}
+
+section#config input#ai-order-human {
+  grid-area: input1;
+}
+
+section#config label[for="ai-order-ai"] {
+  grid-area: label2;
+}
+
+section#config input#ai-order-ai {
+  grid-area: input2;
+}
+
 .game {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -6,7 +254,7 @@
 .game-area {
   background-color: blueviolet;
   width: 100%;
-  grid-column-start: 0;
+  grid-column-start: 1;
   grid-column-end: span 3;
 }
 
@@ -44,11 +292,25 @@
   /* visibility: hidden; */
 }
 
+i.button {
+    color: white;
+}
+
 .rules-content {
   position: relative;
   overflow-y: scroll;
-  margin: 1em;
   bottom: 0;
+  text-align: justify;
+  text-justify: inter-word;
+  padding: 1.8em;
+  padding-right: 3.5em;
+  font-size: 16px;
+  padding-top: 0;
+  line-height: 1.8;
+}
+
+.rules-content h3 {
+    font-size: 18px;
 }
 
 .rules .button {
@@ -61,23 +323,25 @@
 
 .popup-window {
   position: absolute;
-  top: 25%;
-  bottom: 25%;
+  top: 15%;
+  bottom: 15%;
   left: 25%;
   right: 25%;
   border-radius: 1em;
+  z-index: 1000;
   overflow: hidden;
-  box-shadow: -0.1em 0.2em 0.1em #555, 0.1em 0.2em 0.1em #555;
+  box-shadow: -0.1em 0.2em 0.1em #bababa, 0.1em 0.2em 0.1em #bababa;
 }
 
-.popup-window > header > h3 {
+.popup-window > header > h2 {
   margin-top: 0;
+  font-size: 20px;
   color: white;
 }
 
 .popup-window > header {
   display: flex;
   justify-content: space-between;
-  background-color: #333;
+  background-color: #373f41;
   padding: 1em 1em 0;
 }
