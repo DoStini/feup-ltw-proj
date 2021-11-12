@@ -284,15 +284,16 @@ section#config input#ai-order-ai {
 }
 
 .rules {
-  background-color: yellow;
+  background-color: white;
   display: flex;
   flex-direction: column;
-  padding: 1em;
+  /* visibility: hidden; */
 }
 
 .rules-content {
   position: relative;
   overflow-y: scroll;
+  margin: 1em;
   bottom: 0;
 }
 
@@ -305,7 +306,6 @@ section#config input#ai-order-ai {
 }
 
 .popup-window {
-  padding: 1em;
   position: absolute;
   top: 25%;
   bottom: 25%;
@@ -313,13 +313,18 @@ section#config input#ai-order-ai {
   right: 25%;
   border-radius: 1em;
   z-index: 1000;
+  overflow: hidden;
+  box-shadow: -0.1em 0.2em 0.1em #555, 0.1em 0.2em 0.1em #555;
 }
 
 .popup-window > header > h3 {
   margin-top: 0;
+  color: white;
 }
 
 .popup-window > header {
   display: flex;
   justify-content: space-between;
+  background-color: #333;
+  padding: 1em 1em 0;
 }
