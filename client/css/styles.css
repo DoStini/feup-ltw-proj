@@ -38,16 +38,16 @@
 }
 
 .rules {
-  background-color: yellow;
+  background-color: white;
   display: flex;
   flex-direction: column;
-  padding: 1em;
-  visibility: hidden;
+  /* visibility: hidden; */
 }
 
 .rules-content {
   position: relative;
   overflow-y: scroll;
+  margin: 1em;
   bottom: 0;
 }
 
@@ -60,20 +60,24 @@
 }
 
 .popup-window {
-  padding: 1em;
   position: absolute;
   top: 25%;
   bottom: 25%;
   left: 25%;
   right: 25%;
   border-radius: 1em;
+  overflow: hidden;
+  box-shadow: -0.1em 0.2em 0.1em #555, 0.1em 0.2em 0.1em #555;
 }
 
 .popup-window > header > h3 {
   margin-top: 0;
+  color: white;
 }
 
 .popup-window > header {
   display: flex;
   justify-content: space-between;
+  background-color: #333;
+  padding: 1em 1em 0;
 }
