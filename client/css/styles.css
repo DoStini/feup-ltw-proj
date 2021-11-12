@@ -140,6 +140,10 @@ section#config select {
   position: relative;
 }
 
+section#config label {
+    font-size: 15px;
+}
+
 section#config h2,
 section#config legend {
   font-size: 32px;
@@ -211,7 +215,7 @@ section#config div.config-layout > fieldset {
 
 section#config div.order-layout {
   display: grid;
-  grid-template-columns: 100px 130px;
+  grid-template-columns: 100px 140px;
   grid-template-rows: 0.5fr 0.8fr;
   grid-template-areas:
     "label1 label2"
@@ -298,8 +302,15 @@ i.button {
   bottom: 0;
   text-align: justify;
   text-justify: inter-word;
-  padding: 1.2em;
+  padding: 1.8em;
+  padding-right: 3.5em;
+  font-size: 16px;
   padding-top: 0;
+  line-height: 1.8;
+}
+
+.rules-content h3 {
+    font-size: 18px;
 }
 
 .rules .button {
@@ -312,8 +323,8 @@ i.button {
 
 .popup-window {
   position: absolute;
-  top: 25%;
-  bottom: 25%;
+  top: 15%;
+  bottom: 15%;
   left: 25%;
   right: 25%;
   border-radius: 1em;
