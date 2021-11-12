@@ -1,7 +1,14 @@
+html {
+    max-height: fit-content;
+    min-height: 100vh;
+    height: 100vh;
+}
+
 body {
     background-color: #F3F6FA;
-    height: fit-content;
+    max-height: fit-content;
     width: 100%;
+    min-height: 100vh;
     height: 100vh;
     margin: 0;
     font-family: 'Mulish', 'sans-serif';
