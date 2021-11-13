@@ -16,7 +16,7 @@ section#game-section header > h3{
 
 div.game-area{
     display: grid;
-    grid-template-columns: 150px 1fr 1fr 1fr 1fr 1fr 1fr 150px;
+    grid-template-columns: 1.3fr 1fr 1fr 1fr 1fr 1fr 1fr 1.3fr;
     grid-template-rows: 1fr 6fr 1fr;
     grid-template-areas: 
         "name1 seeds1-0 seeds1-1 seeds1-2 seeds1-3 seeds1-4 seeds1-5 ."
@@ -32,12 +32,52 @@ div.game-area > div#board{
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
     grid-template-rows: 1fr 1fr;
-    grid-template-areas: 
-        "hole1-0 hole1-1 hole1-2 hole1-3 hole1-4 hole1-5"
-        "hole0-0 hole0-1 hole0-2 hole0-3 hole0-4 hole0-5";
     width: 100%;
     background-color: white;
     box-shadow:  0.1em 0.2em 0.1em #bababa;
+}
+
+div.game-area span.seed-num {
+    color: #373f41;
+    font-weight: 600;
+    font-size: 28px;
+    justify-self: center;
+    align-self: center;
+}
+
+div.game-area div.hole {
+    width: 70%;
+    padding-bottom: 70%;
+    height: 0;
+    color: white;
+    border-radius: 50%;
+    background-color: #373f41;
+    justify-self: center;
+    align-self: center;
+}
+
+div.game-area div#storage0 {
+    background-color: #373f41;
+    grid-area: storage0;
+    border-radius: 0 15px 15px 0;
+    box-shadow:  0.1em 0.2em 0.1em #bababa;
+}
+
+div.game-area div#storage1 {
+    background-color: #373f41;
+    grid-area: storage1;
+    border-radius: 15px 0 0 15px;
+    box-shadow:  0.1em 0.2em 0.1em #bababa;
+}
+
+div.game-area div#name0 {
+    grid-area: name0;
+    justify-self: right;;
+}
+
+div.game-area div#name1 {
+    grid-area: name1;
+    justify-self: left;
 }
 
 div.game-area .player-name {
@@ -56,18 +96,6 @@ div.game-area .player-back {
     padding: 0.2em;
 }
 
-div.game-area #name1 {
-    justify-self: left;
-}
-
-.player-turn > .player-back {
-    border-bottom: 4px solid #373f41;
-}
-
-div.game-area #name0 {
-    justify-self: right;
-}
-
 div.game-area #name1 .player-back {
     background-color: #97ADD5;
 }
@@ -77,42 +105,6 @@ div.game-area #name0 .player-back {
     color: white;
 }
 
-div.game-area span.seed-num {
-    color: #373f41;
-    font-weight: 600;
-    font-size: 28px;
-    justify-self: center;
-    align-self: center;
-}
-
-div.game-area div#storage1 {
-    background-color: #373f41;
-    grid-area: storage1;
-    border-radius: 15px 0 0 15px;
-    box-shadow:  0.1em 0.2em 0.1em #bababa;
-}
-
-div.game-area div.hole {
-    width: 70%;
-    height: 0;
-    padding-bottom: 70%;
-    border-radius: 50%;
-    background-color: #373f41;
-    justify-self: center;
-    align-self: center;
-}
-
-div.game-area div#storage0 {
-    background-color: #373f41;
-    grid-area: storage0;
-    border-radius: 0 15px 15px 0;
-    box-shadow:  0.1em 0.2em 0.1em #bababa;
-}
-
-div.game-area div#name0 {
-    grid-area: name0;
-}
-
-div.game-area div#name1 {
-    grid-area: name1;
+.player-turn > .player-back {
+    border-bottom: 4px solid #373f41;
 }
