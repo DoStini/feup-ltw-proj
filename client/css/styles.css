@@ -122,12 +122,26 @@ footer {
 
 section#auth {
   grid-area: body;
+  display: flex;
+  flex-direction: column;
 }
 
 section#auth > #auth-form {
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
   justify-content: space-evenly;
+  flex: 1;
+  padding: 3em 0;
+}
+
+section#auth > #auth-form > section {
+  padding: 0 7em;
+  flex: 1;
+}
+
+section#auth > #auth-form > section#login {
+  border-right: 1px solid black;
 }
 
 /* Login Grid Section */
@@ -166,6 +180,8 @@ form#login-form > button {
   grid-area: submit;
   justify-self: right;
 }
+
+/* Registers Grid Section */
 
 section#auth > #auth-form > section > #register-form {
   display: grid;
