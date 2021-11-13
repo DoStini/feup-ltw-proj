@@ -11,6 +11,7 @@
     <meta property="title" content="Mancalada">
 
     <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/game.css">
     <script src="https://kit.fontawesome.com/4616109396.js" crossorigin="anonymous"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -31,13 +32,61 @@
             <button>Log In</button>
         </form>
     </header>
-    <!--<section id="game-section">
+    <section id="game-section">
         <header>
             <h3>Game </h3>
         </header>
         <div class="game">
             <div class="game-area">
-                <p>Cool stuff</p>
+                <div class="player-name player-turn" id="name1">
+                    <div class="player-back">
+                        Other
+                    </div>
+                </div>
+                <div id="storage1"></div>
+
+                <span class="seed-num" id="seeds1-0">1</span>
+                <span class="seed-num" id="seeds1-1">2</span>
+                <span class="seed-num" id="seeds1-2">3</span>
+                <span class="seed-num" id="seeds1-3">4</span>
+                <span class="seed-num" id="seeds1-4">5</span>
+                <span class="seed-num" id="seeds1-5">6</span>
+
+                <span class="filler"></span>
+
+                <div id="board">
+                    <div class="hole" id="hole1-0">
+                        <span class="seed" id="seed0.1-0"></span>
+                        <span class="seed" id="seed1.1-0"></span>
+                    </div>
+                    <div class="hole" id="hole1-1"></div>
+                    <div class="hole" id="hole1-2"></div>
+                    <div class="hole" id="hole1-3"></div>
+                    <div class="hole" id="hole1-4"></div>
+                    <div class="hole" id="hole1-5"></div>
+                    <div class="hole" id="hole0-0"></div>
+                    <div class="hole" id="hole0-2"></div>
+                    <div class="hole" id="hole0-3"></div>
+                    <div class="hole" id="hole0-4"></div>
+                    <div class="hole" id="hole0-5"></div>
+                </div>
+
+                <span class="filler"></span>
+
+                <span class="seed-num" id="seeds0-0">0</span>
+                <span class="seed-num" id="seeds0-1">1</span>
+                <span class="seed-num" id="seeds0-2">2</span>
+                <span class="seed-num" id="seeds0-3">3</span>
+                <span class="seed-num" id="seeds0-4">4</span>
+                <span class="seed-num" id="seeds0-4">5</span>
+
+                <div id="storage0"></div>
+                <div class="player-name" id="name0">
+                    <div class="player-back">
+                        You
+                    </div>
+                </div>
+
             </div>
             <section class="game-status">
                 <header>
@@ -55,7 +104,7 @@
                 </fieldset>
             </section>
         </div>
-    </section> -->
+    </section>
 
     <!--<section id="auth" class="auth">
         <header>
