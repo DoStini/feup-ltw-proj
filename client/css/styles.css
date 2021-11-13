@@ -249,21 +249,20 @@ section#config input#ai-order-ai {
 }
 
 .game {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  display: flex;
+  flex-direction: column;
   align-items: center;
+  justify-content: space-around;
   height: 80%;
 }
 
 .game-area {
   width: 100%;
-  grid-column-start: 1;
-  grid-column-end: span 3;
 }
 
 .game-status {
-  grid-column-start: 4;
-  grid-column-end: 5;
+    position: fixed;
+    right: 0;
 }
 
 .auth {
