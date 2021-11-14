@@ -284,8 +284,8 @@ section#game-status > header > h2 {
   background-color: red;
 }
 
-section#game-status > header > #game-status-button {
-  /* transform: rotate(180deg); */
+section#game-status > header > #game-status-button:hover > path {
+  stroke-width: 3;
 }
 
 section#game-status > #game-status-info {
