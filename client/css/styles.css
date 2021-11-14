@@ -13,8 +13,8 @@ body {
   margin: 0;
   font-family: "Mulish", "sans-serif";
   display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: 70px 1fr 50px;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: minmax(0,70px) minmax(0, 1fr) minmax(0, 50px);
   grid-template-areas:
     "header"
     "body"
@@ -255,6 +255,8 @@ section#config input#ai-order-ai {
   justify-content: space-around;
   height: 80%;
   min-width: 0;
+  min-height: 0;
+
 }
 
 .game-area {
