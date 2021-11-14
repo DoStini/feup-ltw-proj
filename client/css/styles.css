@@ -246,34 +246,75 @@ section#config input#ai-order-ai {
   grid-area: input2;
 }
 
+/* Game Status Section*/
+
 section#game-status {
-  background-color: blue;
   z-index: 100;
   position: absolute;
   right: 0;
   bottom: 10%;
   top: 10%;
-  left: 75%;
+  left: 70%;
   display: flex;
   flex-direction: row;
-  border-radius: 3em 0 0 3em;
+  border-radius: 2.5em 0 0 2.5em;
+  overflow-y: hidden;
   grid-area: body;
 }
 
 section#game-status > header {
   background-color: #373f41;
-  padding: 2em;
+  padding: 2em 1.5em;
   display: grid;
   grid-template-rows: 3fr auto 3fr;
   grid-template-areas:
-    "button"
-    "h2"
+    "."
+    "."
     ".";
 }
 
 section#game-status > header > h2 {
   color: white;
-  grid-area: h2;
+  text-align: center;
+  vertical-align: middle;
+  writing-mode: vertical-lr;
+  align-self: center;
+  text-orientation: upright;
+  margin: 0;
+  background-color: red;
+}
+
+section#game-status > header > #game-status-button {
+  /* transform: rotate(180deg); */
+}
+
+section#game-status > #game-status-info {
+  font-size: 1.1em;
+  width: 100%;
+  background-color: white;
+  padding: 2em 1.5em;
+  display: flex;
+  flex-direction: column;
+}
+
+section#game-status > #game-status-info > * {
+  text-align: center;
+  margin-bottom: 2em;
+}
+
+section#game-status > #game-status-info td,
+section#game-status > #game-status-info tr {
+  width: 50%;
+  padding: 1em;
+}
+
+section#game-status > #game-status-info td:first-child {
+  font-weight: bold;
+}
+
+section#game-status > #game-status-info > table tr:first-child > td {
+  background-color: orangered;
+  color: white;
 }
 
 /* .game {
