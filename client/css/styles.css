@@ -266,6 +266,7 @@ section#game-status > header {
   background-color: #373f41;
   padding: 2em 1.5em;
   display: grid;
+  justify-items: center;
   grid-template-rows: 3fr auto 3fr;
   grid-template-areas:
     "."
@@ -281,7 +282,6 @@ section#game-status > header > h2 {
   align-self: center;
   text-orientation: upright;
   margin: 0;
-  background-color: red;
 }
 
 section#game-status > header > #game-status-button:hover > path {
