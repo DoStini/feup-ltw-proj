@@ -17,13 +17,14 @@ section#game-section header > h3{
 div.game-area{
     display: grid;
     grid-template-columns: 1.3fr 1fr 1fr 1fr 1fr 1fr 1fr 1.3fr;
-    grid-template-rows: 1fr 6fr 1fr;
+    grid-template-rows: 1fr 6fr 1fr 1fr auto;
     grid-template-areas: 
         "name1 seeds1-0 seeds1-1 seeds1-2 seeds1-3 seeds1-4 seeds1-5 ."
         "storage1 board board board board board board storage0"
-        ". seeds0-0 seeds0-1 seeds0-2 seeds0-3 seeds0-4 seeds0-5 name0";
+        ". seeds0-0 seeds0-1 seeds0-2 seeds0-3 seeds0-4 seeds0-5 name0"
+        ". . . . . . . ."
+        ". message message message message message message .";
     width: 75%;
-    height: 75%;
     justify-self: center;
 }
 
@@ -108,3 +109,40 @@ div.game-area #name0 .player-back {
 .player-turn > .player-back {
     border-bottom: 4px solid #373f41;
 }
+
+ /* MESSAGE BOARD */
+div.game-area > section#message-board {
+    grid-area: message;
+    min-height: 20em;
+    max-height: 20em;
+    background-color: white;
+    border-radius: 8px;
+    border: 1px solid #373f41;
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: flex-start;
+    padding: 1.5em;
+    overflow: hidden;
+    overflow-y: scroll;
+}
+
+div.game-area  .message {
+    width: 100%;
+    padding-bottom: 0.5em;
+}
+
+div.game .message::before {
+    content: '>';
+    padding-right: 1.5em;
+}
+
+.message {
+    color: #676f71;
+}
+
+
+.message:first-child {
+    color: #373f41;
+    font-weight: 800;
+}
+

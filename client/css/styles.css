@@ -14,7 +14,7 @@ body {
   font-family: "Mulish", "sans-serif";
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: 70px 1fr 50px;
+  grid-template-rows: 70px auto 50px;
   grid-template-areas:
     "header"
     "body"
@@ -253,7 +253,7 @@ section#config input#ai-order-ai {
   flex-direction: column;
   align-items: center;
   justify-content: space-around;
-  height: 80%;
+  padding-bottom: 5em;
 }
 
 .game-area {
