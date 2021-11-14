@@ -260,6 +260,7 @@ section#game-status {
   border-radius: 2.5em 0 0 2.5em;
   overflow-y: hidden;
   grid-area: body;
+  box-shadow: -0.2em 0.2em 0.2em #bababa, 0.2em 0.2em 0.2em #bababa;
 }
 
 section#game-status > header {
