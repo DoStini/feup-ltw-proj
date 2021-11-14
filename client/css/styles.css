@@ -141,7 +141,7 @@ section#config select {
 }
 
 section#config label {
-    font-size: 15px;
+  font-size: 15px;
 }
 
 section#config h2,
@@ -246,12 +246,42 @@ section#config input#ai-order-ai {
   grid-area: input2;
 }
 
-.game {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
+section#game-status {
+  background-color: blue;
+  z-index: 100;
+  position: absolute;
+  right: 0;
+  bottom: 10%;
+  top: 10%;
+  left: 75%;
+  display: flex;
+  flex-direction: row;
+  border-radius: 3em 0 0 3em;
+  grid-area: body;
 }
 
-.game-area {
+section#game-status > header {
+  background-color: #373f41;
+  padding: 2em;
+  display: grid;
+  grid-template-rows: 3fr auto 3fr;
+  grid-template-areas:
+    "button"
+    "h2"
+    ".";
+}
+
+section#game-status > header > h2 {
+  color: white;
+  grid-area: h2;
+}
+
+/* .game {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+} */
+
+/* .game-area {
   background-color: blueviolet;
   width: 100%;
   grid-column-start: 1;
@@ -262,7 +292,7 @@ section#config input#ai-order-ai {
   grid-column-start: 4;
   grid-column-end: 5;
   background-color: blue;
-}
+} */
 
 .auth {
   background-color: blanchedalmond;
@@ -289,11 +319,11 @@ section#config input#ai-order-ai {
   background-color: white;
   display: flex;
   flex-direction: column;
-  /* visibility: hidden; */
+  visibility: hidden;
 }
 
 i.button {
-    color: white;
+  color: white;
 }
 
 .rules-content {
@@ -310,7 +340,7 @@ i.button {
 }
 
 .rules-content h3 {
-    font-size: 18px;
+  font-size: 18px;
 }
 
 .rules .button {
