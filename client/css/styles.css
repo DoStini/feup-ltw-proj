@@ -254,6 +254,7 @@ section#config input#ai-order-ai {
   align-items: center;
   justify-content: space-around;
   height: 80%;
+  min-width: 0;
 }
 
 .game-area {
