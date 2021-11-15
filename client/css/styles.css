@@ -260,7 +260,6 @@ section#config input#ai-order-ai {
 
 .game-status {
   grid-column-start: 4;
-  grid-column-end: 5;
   background-color: blue;
 }
 
