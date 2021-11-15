@@ -9,12 +9,11 @@ body {
   max-height: fit-content;
   width: 100%;
   min-height: 100vh;
-  height: 100vh;
   margin: 0;
   font-family: "Mulish", "sans-serif";
   display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: 70px auto 50px;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: 70px 1fr 50px;
   grid-template-areas:
     "header"
     "body"
@@ -253,7 +252,10 @@ section#config input#ai-order-ai {
   flex-direction: column;
   align-items: center;
   justify-content: space-around;
-  padding-bottom: 5em;
+  /* padding-bottom: 5em; */
+  height: 90%;
+  min-width: 0;
+  min-height: 0;
 }
 
 .game-area {
