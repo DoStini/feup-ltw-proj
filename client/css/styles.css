@@ -141,7 +141,7 @@ section#config select {
 }
 
 section#config label {
-    font-size: 15px;
+  font-size: 15px;
 }
 
 section#config h2,
@@ -292,7 +292,7 @@ section#config input#ai-order-ai {
 }
 
 i.button {
-    color: white;
+  color: white;
 }
 
 .rules-content {
@@ -309,7 +309,7 @@ i.button {
 }
 
 .rules-content h3 {
-    font-size: 18px;
+  font-size: 18px;
 }
 
 .rules .button {
@@ -344,3 +344,48 @@ i.button {
   background-color: #373f41;
   padding: 1em 1em 0;
 }
+
+@media (max-width: 800px) {
+  section#config div.config-layout {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: 0.5fr 1fr 0.5fr 1fr 1fr 3fr 1fr;
+    grid-template-areas:
+      "label1 label2"
+      "input1 input2"
+      "label3 label3"
+      "input3 input3"
+      ". . "
+      "fields fields"
+      ". submit";
+    row-gap: 0.4em;
+    column-gap: 2em;
+  }
+
+  section#config > form {
+    padding: 2em;
+  }
+}
+
+
+@media (max-width: 350px) {
+    section#config div.config-layout {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      grid-template-rows: 0.5fr 1fr 0.5fr 1fr 0.5fr 1fr 1fr 3fr 1fr;
+      grid-template-areas:
+        "label1 label1"
+        "input1 input1"
+        "label2 label2"
+        "input2 input2"
+        "label3 label3"
+        "input3 input3"
+        ". . "
+        "fields fields"
+        "submit submit";
+      row-gap: 0.4em;
+      column-gap: 2em;
+    }
+  
+    section#config > form {
+      padding: 1em;
+    }
+  }
