@@ -316,7 +316,7 @@ i.button {
   background-color: white;
   display: flex;
   flex-direction: column;
-  visibility: hidden;
+  /* visibility: hidden; */
 }
 
 .leaderboard-content {
@@ -326,18 +326,27 @@ i.button {
   padding: 2em 0.5em 1em;
   height: 100%;
   grid-template-columns: repeat(2, 1fr);
+  overflow-y: scroll;
 }
 
 .leaderboard-content .leaderboard-table {
   text-align: center;
   left: 0;
   right: 0;
+  border-collapse: collapse;
   width: 100%;
 }
 
 .leaderboard-table th,
 .leaderboard-table td {
   width: 15%;
+  border: 1px solid #ddd;
+  padding: 1em 0;
+}
+
+.leaderboard-table th,
+.leaderboard-table tr:nth-child(2n) {
+    background-color: #f8f8f8;
 }
 
 .leaderboard-table .name-row,
@@ -347,12 +356,10 @@ i.button {
 
 .local-leaderboard {
   border-right: 1px solid;
-  grid-column-start: 1;
   padding: 0 1em;
 }
 
 .server-leaderboard {
-  grid-column-start: 2;
   padding: 0 1em;
 }
 
@@ -360,8 +367,8 @@ i.button {
   position: absolute;
   top: 15%;
   bottom: 15%;
-  left: 25%;
-  right: 25%;
+  left: 10%;
+  right: 10%;
   border-radius: 1em;
   z-index: 1000;
   overflow: hidden;
@@ -388,4 +395,22 @@ i.button {
 }
 .popup-window > header > .popup-window-close:hover {
   font-weight: 600;
+}
+
+@media (max-width: 900px) {
+    .leaderboard-content {
+        padding: 2em 0.5em 1em;
+        height: 100%;
+        grid-template-rows: repeat(2, 1fr);
+        grid-template-columns: 1fr;
+    }
+
+    .local-leaderboard {
+        border-right: none;
+    }
+
+    .popup-window {
+        left: 6%;
+        right: 6%;
+    }
 }
