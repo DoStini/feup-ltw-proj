@@ -356,11 +356,16 @@ i.button {
   padding: 1em 1em 0;
 }
 
+
 @media (max-width: 800px) {
+    body {
+        grid-template-rows: auto 1fr 50px;
+    }
+
     header.main-header {
         display: grid;
         grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-        grid-template-rows: 1fr 1fr;
+        grid-template-rows: 1fr 2em;
         grid-template-areas:
             "title log"
             "nav nav";
@@ -368,6 +373,10 @@ i.button {
         margin-left: 50px;
         margin-right: 50px;
         grid-area: header;
+    }
+
+    header.main-header > nav {
+        max-height: 2em;
     }
 
     button {
