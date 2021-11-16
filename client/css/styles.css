@@ -42,6 +42,7 @@ header.main-header {
   margin-left: 50px;
   margin-right: 50px;
   grid-area: header;
+  visibility: hidden;
 }
 
 header.main-header > nav {
