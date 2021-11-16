@@ -39,17 +39,22 @@ header.main-header {
   display: grid;
   grid-template-rows: 1fr;
   grid-template-columns: 1fr 20em 1fr;
+  grid-template-areas: 
+    "title nav log";
   align-items: center;
   margin-left: 50px;
   margin-right: 50px;
   grid-area: header;
+  min-width: 0;
 }
 
 header.main-header > nav {
   width: 20em;
   display: flex;
   flex-direction: row;
+  justify-self: center;
   justify-content: space-between;
+  grid-area: nav;
 }
 
 header.main-header > form {
@@ -57,6 +62,12 @@ header.main-header > form {
   flex-direction: row;
   justify-content: flex-end;
   align-items: center;
+  grid-area: log;
+  min-width: 0;
+}
+
+header.main-header > h1 {
+    grid-area: title;
 }
 
 button {
@@ -343,4 +354,23 @@ i.button {
   justify-content: space-between;
   background-color: #373f41;
   padding: 1em 1em 0;
+}
+
+@media (max-width: 800px) {
+    header.main-header {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        grid-template-rows: 1fr 1fr;
+        grid-template-areas:
+            "title log"
+            "nav nav";
+        align-items: center;
+        margin-left: 50px;
+        margin-right: 50px;
+        grid-area: header;
+    }
+
+    button {
+        font-size: 16px;
+    }
 }
