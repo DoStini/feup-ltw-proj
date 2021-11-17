@@ -57,31 +57,44 @@
         </div>
     </section> -->
 
-    <!--<section id="auth" class="auth">
-        <header>
-            <h3>Authentication</h3>
-        </header>
-        <div class="auth-forms">
-            <form>
-                <fieldset id="login" class="login-box">
-                    <legend>Login</legend>
-                    <label>Username: <input type="text" onkeypress="return event.charCode != 32"></label>
-                    <label>Password: <input type="password"></label>
-                    <input type="submit" value="Login">
-                </fieldset>
-            </form>
+    <section id="auth" class="auth">
+        <div id="auth-form">
+            <section id="login">
+                <header>
+                    <h2>Login</h3>
+                </header>
+                <form id="login-form">
+                    <label for="username">User Name</label>
+                    <input id="username" name="username" type="text" onkeypress="return event.charCode != 32">
 
-            <form>
-                <fieldset id="register" class="login-box">
-                    <legend>Register</legend>
-                    <label>Username: <input type="text" onkeypress="return event.charCode != 32"></label>
-                    <label>Password: <input type="password"></label>
-                    <label>Confirm Password: <input type="password"></label>
-                    <input type="submit" value="Register">
-                </fieldset>
-            </form>
+                    <label for="password">Password</label>
+                    <input id="password" name="password" type="password">
+
+                    <button value="login">Login</button>
+                </form>
+    
+            </section>
+            
+            <section id="register">
+                <header>
+                    <h2>Register</h3>
+                </header>
+                <form id="register-form">
+                    <label for="username">User Name</label>
+                    <input id="username" name="username" type="text" onkeypress="return event.charCode != 32">
+
+                    <label for="password">Password</label>
+                    <input id="password" name="password" type="password">
+
+                    <label for="confirm-password">Confirm Password</label>
+                    <input id="confirm-password" name="confirm-password" type="password">
+
+                    <button value="register">Register</button>
+                </form>
+    
+            </section>
         </div>
-    </section>-->
+    </section>
 
     <!--Rules Page-->
     <section id="rules" class="popup-window rules">
@@ -121,7 +134,7 @@
         </div>
     </section>
 
-    <!--Config Area-->
+    <!--Init Menu Area-->
     <section id="init-menu">
         <form>
             <h2>Mancalada<br>Sow With Your Friends.</h2>
@@ -130,6 +143,8 @@
             <button value="join-server">Join a Friend's Game</button>
         </form>
     </section>
+
+    <!--Config Area-->
     <section id="config">
         <form>
             <fieldset class="config-layout">

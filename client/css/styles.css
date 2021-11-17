@@ -86,6 +86,7 @@ a:hover {
 section#init-menu {
   height: 100%;
   grid-area: body;
+  visibility: hidden;
 }
 
 section#init-menu > form {
@@ -117,8 +118,149 @@ footer {
   text-align: center;
 }
 
+/* Authentication Section */
+
+section#auth {
+  grid-area: body;
+  display: flex;
+  flex-direction: column;
+}
+
+section#auth > #auth-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(50%, 1fr));
+  grid-auto-flow: column;
+  width: 100vw;
+  flex: 1;
+  padding: 3em 0;
+}
+
+section#auth > #auth-form > section {
+  padding: 0 7em;
+  flex: 1;
+}
+
+section#auth > #auth-form > section > * {
+  max-width: 30em;
+  margin: 0 auto;
+}
+
+section#auth > #auth-form > section#login {
+  border-right: 1px solid black;
+}
+
+@media (max-width: 950px) {
+  section#auth > #auth-form > section {
+    margin: 0 auto;
+    padding: 0;
+  }
+  section#auth > #auth-form {
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    flex-wrap: wrap;
+    justify-content: start;
+    flex: 1;
+  }
+  section#auth > #auth-form > section#login {
+    border-right: none;
+  }
+
+  section#auth > #auth-form > section {
+    min-width: 20em;
+  }
+}
+
+/* Login Grid Section */
+
+section#auth > #auth-form > section > #login-form {
+  display: grid;
+  grid-template-rows: 0.5fr 1fr 0.1fr 0.5fr 1fr 0.1fr 1fr;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas:
+    "label1"
+    "input1"
+    "."
+    "label2"
+    "input2"
+    "."
+    "submit";
+  row-gap: 0.4em;
+}
+
+form#login-form > label[for="username"] {
+  grid-area: label1;
+}
+
+form#login-form > input#username {
+  grid-area: input1;
+}
+
+section#login > #login-form > label[for="password"] {
+  grid-area: label2;
+}
+
+form#login-form > input#password {
+  grid-area: input2;
+}
+
+form#login-form > button {
+  grid-area: submit;
+  justify-self: right;
+}
+
+/* Register Grid Section */
+
+section#auth > #auth-form > section > #register-form {
+  display: grid;
+  grid-template-rows: 0.5fr 1fr 0.1fr 0.5fr 1fr 0.1fr 0.5fr 1fr 0.1fr 1fr;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas:
+    "label1"
+    "input1"
+    "."
+    "label2"
+    "input2"
+    "."
+    "label3"
+    "input3"
+    "."
+    "submit";
+  row-gap: 0.4em;
+}
+
+form#register-form > label[for="username"] {
+  grid-area: label1;
+}
+
+form#register-form > input#username {
+  grid-area: input1;
+}
+
+section#register > #register-form > label[for="password"] {
+  grid-area: label2;
+}
+
+form#register-form > input#password {
+  grid-area: input2;
+}
+
+section#register > #register-form > label[for="confirm-password"] {
+  grid-area: label3;
+}
+
+form#register-form > input#confirm-password {
+  grid-area: input3;
+}
+
+form#register-form > button {
+  grid-area: submit;
+  justify-self: right;
+}
+
 section#config {
   grid-area: body;
+  visibility: hidden;
 }
 
 section#config > form {
@@ -141,7 +283,7 @@ section#config select {
 }
 
 section#config label {
-    font-size: 15px;
+  font-size: 15px;
 }
 
 section#config h2,
@@ -153,13 +295,17 @@ section#config legend {
   padding: 0;
 }
 
-section#config input,
+input,
 select {
   background-color: #f4f5f4;
   border-color: #373f41;
-  border-style: dashed;
   border-radius: 0;
   border-width: 1px;
+}
+
+section#config input,
+select {
+  border-style: dashed;
 }
 
 section#config div.config-layout {
@@ -263,21 +409,6 @@ section#config input#ai-order-ai {
   background-color: blue;
 }
 
-.auth {
-  background-color: blanchedalmond;
-  width: 50%;
-  padding: 2em;
-  border-radius: 1em;
-  justify-content: center;
-  text-align: center;
-  margin: auto;
-}
-
-.auth-forms {
-  display: flex;
-  justify-content: space-evenly;
-}
-
 .login-box {
   display: flex;
   flex-direction: column;
@@ -288,11 +419,11 @@ section#config input#ai-order-ai {
   background-color: white;
   display: flex;
   flex-direction: column;
-  /* visibility: hidden; */
+  visibility: hidden;
 }
 
 i.button {
-    color: white;
+  color: white;
 }
 
 .rules-content {
@@ -309,7 +440,7 @@ i.button {
 }
 
 .rules-content h3 {
-    font-size: 18px;
+  font-size: 18px;
 }
 
 .rules .button {
