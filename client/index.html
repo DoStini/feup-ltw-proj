@@ -39,21 +39,7 @@
             <div class="game-area">
                 <p>Cool stuff</p>
             </div>
-            <section class="game-status">
-                <header>
-                    <h4>Game Status</h4>
-                </header>
-                <fieldset id="player1" class="player-box">
-                    <legend>Player 1</legend>
-                    <p>Collected: 5</p>
-                    <p>In game: 19</p>
-                </fieldset>
-                <fieldset id="player2" class="player-box">
-                    <legend>Player 2</legend>
-                    <p>Collected: 7</p>
-                    <p>In game: 20</p>
-                </fieldset>
-            </section>
+            
         </div>
     </section> -->
 
@@ -95,6 +81,57 @@
             </section>
         </div>
     </section>
+
+
+    <!--Game status sidebar-->
+    <section id="game-status">
+        <header>
+            <svg id="game-status-button" width="40" height="40" viewBox="0 0 43 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M18.3333 1L41 21L18.3333 41M9.66667 1L33 21L9.66667 41M1 1L24.3333 21L1 41" stroke="white" stroke-width="2"/>
+            </svg>
+            <h2>STATUS</h2>
+        </header>
+        <div id="game-status-info">
+            <h3>Current Turn<br>2</h3>
+
+            <table class="status-player">
+                <tr>
+                    <td id="status-p0" class="status-player-name" colspan="2">André Moreira</td>
+                </tr>
+                <tr>
+                    <td>Storage Seeds</td>
+                    <td id="status-p0-store-seeds">2</td>
+                </tr>
+                <tr>
+                    <td>Seeds in Play</td>
+                    <td id="status-p0-play-seeds">8</td>
+                </tr>
+                <tr>
+                    <td>Advantage</td>
+                    <td id="status-p0-play-adv">0.95</td>
+                </tr>
+            </table>
+
+            <table class="status-player">
+                <tr>
+                    <td id="status-p1" class="status-player-name" colspan="2">Nuno Alves</td>
+                </tr>
+                <tr>
+                    <td>Storage Seeds</td>
+                    <td id="status-p1-store-seeds">21</td>
+                </tr>
+                <tr>
+                    <td>Seeds in Play</td>
+                    <td id="status-p1-play-seeds">1</td>
+                </tr>
+                <tr>
+                    <td>Advantage</td>
+                    <td id="status-p1-play-adv">1.05</td>
+                </tr>
+            </table>
+        </div>
+    </section>
+
 
     <!--Rules Page-->
     <section id="rules" class="popup-window rules">

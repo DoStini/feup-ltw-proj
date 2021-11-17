@@ -403,12 +403,87 @@ section#config input#ai-order-ai {
   grid-area: input2;
 }
 
-.game {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
+/* Game Status Section*/
+
+section#game-status {
+  z-index: 100;
+  position: fixed;
+  right: 0;
+  bottom: 10%;
+  top: 10%;
+  left: 70%;
+  display: flex;
+  overflow-y: hidden;
+  flex-direction: row;
+  border-radius: 2.5em 0 0 2.5em;
+  grid-area: body;
+  box-shadow: -0.2em 0.2em 0.2em #bababa, 0.2em 0.2em 0.2em #bababa;
 }
 
-.game-area {
+section#game-status > header {
+  background-color: #373f41;
+  padding: 2em 1.5em;
+  display: grid;
+  justify-items: center;
+  grid-template-rows: 3fr auto 3fr;
+  grid-template-areas:
+    "."
+    "."
+    ".";
+}
+
+section#game-status > header > h2 {
+  color: white;
+  text-align: center;
+  vertical-align: middle;
+  writing-mode: vertical-lr;
+  align-self: center;
+  text-orientation: upright;
+  margin: 0;
+}
+
+section#game-status > header > #game-status-button:hover > path {
+  stroke-width: 3;
+}
+
+section#game-status > #game-status-info {
+  font-size: 1.1em;
+  width: 100%;
+  background-color: white;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  padding: 2em 1.5em;
+  padding-bottom: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+section#game-status > #game-status-info > * {
+  text-align: center;
+  margin-bottom: 2em;
+}
+
+section#game-status > #game-status-info td,
+section#game-status > #game-status-info tr {
+  width: 50%;
+  padding: 1em;
+}
+
+section#game-status > #game-status-info td:first-child {
+  font-weight: bold;
+}
+
+section#game-status > #game-status-info > table tr:first-child > td {
+  background-color: orangered;
+  color: white;
+}
+
+/* .game {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+} */
+
+/* .game-area {
   background-color: blueviolet;
   width: 100%;
   grid-column-start: 1;
@@ -418,7 +493,7 @@ section#config input#ai-order-ai {
 .game-status {
   grid-column-start: 4;
   background-color: blue;
-}
+} */
 
 .login-box {
   display: flex;
