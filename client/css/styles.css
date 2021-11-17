@@ -39,8 +39,7 @@ header.main-header {
   display: grid;
   grid-template-rows: 1fr;
   grid-template-columns: 1fr 20em 1fr;
-  grid-template-areas: 
-    "title nav log";
+  grid-template-areas: "title nav log";
   align-items: center;
   margin-left: 50px;
   margin-right: 50px;
@@ -67,7 +66,7 @@ header.main-header > form {
 }
 
 header.main-header > h1 {
-    grid-area: title;
+  grid-area: title;
 }
 
 button {
@@ -271,7 +270,7 @@ form#register-form > button {
 
 section#config {
   grid-area: body;
-  visibility: hidden;
+  /* visibility: hidden; */
 }
 
 section#config > form {
@@ -411,12 +410,10 @@ section#game-status {
   right: 0;
   bottom: 10%;
   top: 10%;
-  left: 70%;
   display: flex;
   overflow-y: hidden;
   flex-direction: row;
   border-radius: 2.5em 0 0 2.5em;
-  grid-area: body;
   box-shadow: -0.2em 0.2em 0.2em #bababa, 0.2em 0.2em 0.2em #bababa;
 }
 
@@ -562,30 +559,71 @@ i.button {
   padding: 1em 1em 0;
 }
 
-
 @media (max-width: 800px) {
-    body {
-        grid-template-rows: auto 1fr 50px;
-    }
+  section#config div.config-layout {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: 0.5fr 1fr 0.5fr 1fr 1fr 3fr 1fr;
+    grid-template-areas:
+      "label1 label2"
+      "input1 input2"
+      "label3 label3"
+      "input3 input3"
+      ". . "
+      "fields fields"
+      ". submit";
+    row-gap: 0.4em;
+    column-gap: 2em;
+  }
 
-    header.main-header {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-        grid-template-rows: 1fr 2em;
-        grid-template-areas:
-            "title log"
-            "nav nav";
-        align-items: center;
-        margin-left: 50px;
-        margin-right: 50px;
-        grid-area: header;
-    }
+  section#config > form {
+    padding: 2em;
+  }
 
-    header.main-header > nav {
-        max-height: 2em;
-    }
+  body {
+    grid-template-rows: auto 1fr 50px;
+  }
 
-    button {
-        font-size: 16px;
-    }
+  header.main-header {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: 1fr 2em;
+    grid-template-areas:
+      "title log"
+      "nav nav";
+    align-items: center;
+    margin-left: 50px;
+    margin-right: 50px;
+    grid-area: header;
+  }
+
+  header.main-header > nav {
+    max-height: 2em;
+  }
+
+  button {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 350px) {
+  section#config div.config-layout {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: 0.5fr 1fr 0.5fr 1fr 0.5fr 1fr 1fr 3fr 1fr;
+    grid-template-areas:
+      "label1 label1"
+      "input1 input1"
+      "label2 label2"
+      "input2 input2"
+      "label3 label3"
+      "input3 input3"
+      ". . "
+      "fields fields"
+      "submit submit";
+    row-gap: 0.4em;
+    column-gap: 2em;
+  }
+
+  section#config > form {
+    padding: 1em;
+  }
 }
