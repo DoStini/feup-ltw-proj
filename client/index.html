@@ -136,10 +136,10 @@
 
 
     <!--Rules Page-->
-    <!-- <section id="rules" class="popup-window rules">
+    <section id="rules" class="popup-window rules">
         <header>
             <h2>Rules</h2>
-            <i id="close-rules" class="button fas fa-times-circle"></i>
+            <i id="close-rules" class="popup-window-close far fa-times-circle"></i>
         </header>
         <div class="rules-content">
             <h3>Board</h3>
@@ -147,8 +147,8 @@
                 <li>The board is made up of cavities and containers. There is a container per player and a variable
                     amount of cavities. Both players must have the same amount of cavities in each side.</li>
                 <li>The pieces are seeds. Each player control the seeds that are stored in their side's cavities.</li>
-                <li>In the beginning of the game, the storage is empty and seeds are equally distributed through the
-                    cavities.</li>
+                <li>In the beginning of the game, the storage is empty and the cavities are equally filled with seeds.</li>
+                <li>If you run into your own Mancala (store), deposit one piece in it. If you run into your opponent's Mancala, skip it and continue moving to the next pocket.</li>
             </ul>
             <h3>Gameplay</h3>
             <ul>
@@ -171,7 +171,111 @@
                 <li>The player who has more seeds in storage wins.</li>
             </ul>
         </div>
-    </section> -->
+    </section>
+
+    <!--Leaderboard Page-->
+    <section id="leaderboard" class="popup-window leaderboard">
+        <header>
+            <h2>Leaderboard</h2>
+            <i id="close-leaderboard" class="popup-window-close far fa-times-circle"></i>
+        </header>
+        <div class="leaderboard-content">
+            <section class="local-leaderboard">
+                <header>
+                    <h3>Local Leaderboard</h3>
+                </header>
+                <table class="leaderboard-table">
+                    <thead>
+                        <tr>
+                            <th>Position</td>
+                            <th class="name-row">Name</td>
+                            <th>Score</td>
+                            <th>Wins</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td class="name-row">John Cena</td>
+                            <td>250</td>
+                            <td>2</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td class="name-row">Nuno Miguel da Silva Alves</td>
+                            <td>250</td>
+                            <td>2</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td class="name-row">André Júlio dos Moreiras</td>
+                            <td>250</td>
+                            <td>2</td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td class="name-row">John Cena</td>
+                            <td>250</td>
+                            <td>2</td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td class="name-row">John Cena</td>
+                            <td>250</td>
+                            <td>2</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+            <section class="server-leaderboard">
+                <header>
+                    <h3>Public Leaderboard</h3>
+                </header>
+                <table class="leaderboard-table">
+                    <thead>
+                        <tr>
+                            <th>Position</td>
+                            <th class="name-row">Name</td>
+                            <th>Score</td>
+                            <th>Wins</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td class="name-row">John Cena</td>
+                            <td>250</td>
+                            <td>2</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td class="name-row">John Cena</td>
+                            <td>250</td>
+                            <td>2</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td class="name-row">John Cena</td>
+                            <td>250</td>
+                            <td>2</td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td class="name-row">John Cena</td>
+                            <td>250</td>
+                            <td>2</td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td class="name-row">John Cena</td>
+                            <td>250</td>
+                            <td>2</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+        </div>
+    </section>
 
 
     <!--Init Menu Area-->
