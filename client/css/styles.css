@@ -630,7 +630,7 @@ i.button {
   }
 
   .rules ul {
-      padding-left: 1em;
+    padding-left: 1em;
   }
 }
 
@@ -677,6 +677,19 @@ i.button {
 
   button {
     font-size: 16px;
+  }
+
+  section#game-status > header {
+    padding: 0.5em;
+  }
+
+  section#game-status > header > svg {
+    width: 2em;
+    padding-top: 1em;
+  }
+
+  section#game-status > #game-status-info {
+      padding: 0.5em 1em;
   }
 }
 
