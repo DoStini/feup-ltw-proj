@@ -270,7 +270,7 @@ form#register-form > button {
 
 section#config {
   grid-area: body;
-  /* visibility: hidden; */
+  visibility: hidden;
 }
 
 section#config > form {
@@ -502,6 +502,7 @@ section#game-status > #game-status-info > table tr:first-child > td {
   background-color: white;
   display: flex;
   flex-direction: column;
+  opacity: 0;
   visibility: hidden;
 }
 
@@ -530,7 +531,8 @@ i.button {
   background-color: white;
   display: flex;
   flex-direction: column;
-  /* visibility: hidden; */
+  opacity: 0;
+  visibility: hidden;
 }
 
 .leaderboard-content {
@@ -587,6 +589,7 @@ i.button {
   z-index: 1000;
   overflow: hidden;
   box-shadow: -0.1em 0.2em 0.1em #bababa, 0.1em 0.2em 0.1em #bababa;
+  transition: opacity 0.5s, visibility 0.6s;
 }
 
 .popup-window > header > h2 {
@@ -689,7 +692,7 @@ i.button {
   }
 
   section#game-status > #game-status-info {
-      padding: 0.5em 1em;
+    padding: 0.5em 1em;
   }
 }
 
