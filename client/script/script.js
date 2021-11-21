@@ -3,8 +3,19 @@ function setupPopupWindows() {
     ["rules", "leaderboard"].forEach((target) => {
         document.getElementById(`${target}-open-btn`).addEventListener('click', () => {
             console.log("click" + target);
-            document.getElementById(target).style.opacity = "1";
-            document.getElementById(target).style.visibility = "visible";
+            let targetElement = document.getElementById(target);
+
+            if(targetElement.style.opacity === "1") {
+                targetElement.style.opacity = "0";
+            } else {
+                targetElement.style.opacity = "1";
+            }
+
+            if(targetElement.style.visibility === "visible") {
+                targetElement.style.visibility = null;
+            } else {
+                targetElement.style.visibility = "visible";
+            }
         })
 
         document.getElementById(`close-${target}`).addEventListener('click', () => {
