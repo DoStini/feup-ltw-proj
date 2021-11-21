@@ -420,17 +420,15 @@ section#config input#ai-order-ai {
 /* Game Status Section*/
 
 section#game-status {
-  visibility: hidden;
   z-index: 100;
   position: fixed;
   right: 0;
   bottom: 10%;
   top: 10%;
   display: flex;
-  overflow-y: hidden;
   flex-direction: row;
-  border-radius: 2.5em 0 0 2.5em;
-  box-shadow: -0.2em 0.2em 0.2em #bababa, 0.2em 0.2em 0.2em #bababa;
+  overflow: visible;
+  transition: 0.5s right;
 }
 
 section#game-status > header {
@@ -443,6 +441,8 @@ section#game-status > header {
     "."
     "."
     ".";
+    border-radius: 2.5em 0 0 2.5em;
+    box-shadow: -0.2em 0.2em 0.2em 0 rgba(0, 0, 0, 0.2)
 }
 
 section#game-status > header > h2 {
@@ -453,11 +453,17 @@ section#game-status > header > h2 {
   align-self: center;
   text-orientation: upright;
   margin: 0;
+  border-radius: 2.5em 0 0 2.5em;
 }
 
 section#game-status > header > #game-status-button:hover > path {
   stroke-width: 3;
+  cursor: pointer;
 }
+
+section#game-status > header > #game-status-button:hover {
+    cursor: pointer;
+  }
 
 section#game-status > #game-status-info {
   font-size: 1.1em;
@@ -465,10 +471,11 @@ section#game-status > #game-status-info {
   background-color: white;
   overflow-y: scroll;
   overflow-x: hidden;
-  padding: 2em 1.5em;
+  padding: 0.5em 1em;
   padding-bottom: 0;
   display: flex;
   flex-direction: column;
+  box-shadow: -0.2em 0.2em 0.2em 0 rgba(0, 0, 0, 0.2);
 }
 
 section#game-status > #game-status-info > * {
@@ -587,7 +594,7 @@ i.button {
   border-radius: 1em;
   z-index: 1000;
   overflow: hidden;
-  box-shadow: -0.1em 0.2em 0.1em #bababa, 0.1em 0.2em 0.1em #bababa;
+  box-shadow: -0.1em 0.2em 0.1em rgba(0, 0, 0, 0.2), 0.1em 0.2em 0.1em rgba(0, 0, 0, 0.2);
   transition: opacity 0.5s, visibility 0.6s;
 }
 
@@ -684,15 +691,24 @@ i.button {
 
   section#game-status > header {
     padding: 0.5em;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    height: 4em;
+    border-radius: 1.5em 0 0 1.5em;
+  }
+
+  section#game-status > header > h2 {
+      display: none;
   }
 
   section#game-status > header > svg {
     width: 2em;
-    padding-top: 1em;
   }
 
   section#game-status > #game-status-info {
-    padding: 0.5em 1em;
+    border-radius: 0 0 0 1.5em;
   }
 }
 
