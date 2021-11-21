@@ -39,7 +39,7 @@ function setupBoard(nHoles) {
         .forEach(el => {
             el.style['grid-template-columns'] = `repeat(${nHoles}, 1fr)`;
         })
-    document.querySelector("div.game-area > div#board").style['grid-template-columns'] = `repeat(${nHoles}, 1fr)`;
+    document.getElementById("board").style['grid-template-columns'] = `repeat(${nHoles}, 1fr)`;
 
     [1, 0].forEach(el => {
         let seedCounter = "";
@@ -47,16 +47,13 @@ function setupBoard(nHoles) {
 
         for (let i = 0; i < nHoles; i++) {
             seedCounter += `<span class="seed-num" id="seeds${el}-${i}">0</span>`;      
-            seedHole += `<div class="hole ${el == 0 ? "player-hole" : ""}" id="hole%{el}-${i}"></div>`
+            seedHole += `<div class="hole ${el == 0 ? "player-hole" : ""}" id="hole${el}-${i}"></div>`
         }
 
         document.getElementById(`seeds${el}`).innerHTML = seedCounter;
         document.getElementById("board").innerHTML += seedHole;
 
     })
-
-    document.querySelector("#seeds1")
-
 }
 
 function main() {
