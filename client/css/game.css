@@ -80,7 +80,7 @@ div.game-area > div#board {
   padding-bottom: 1em;
   padding-top: 1em;
   background-color: white;
-  box-shadow: 0.1em 0.2em 0.1em #bababa;
+  box-shadow: 0.1em 0.2em 0.1em rgba(0, 0, 0, 0.2);
 }
 
 div.game-area span.seed-num {
@@ -117,7 +117,7 @@ div.game-area div#storage0 {
   min-width: 0;
   min-height: 0;
   border-radius: 0 15px 15px 0;
-  box-shadow: 0.1em 0.2em 0.1em #bababa;
+  box-shadow: 0.1em 0.2em 0.1em rgba(0, 0, 0, 0.2);
 }
 
 div.game-area div#storage1 {
@@ -126,7 +126,7 @@ div.game-area div#storage1 {
   min-width: 0;
   min-height: 0;
   border-radius: 15px 0 0 15px;
-  box-shadow: 0.1em 0.2em 0.1em #bababa;
+  box-shadow: 0.1em 0.2em 0.1em rgba(0, 0, 0, 0.2);
 }
 
 div.game-area div#name0 {
@@ -212,18 +212,22 @@ div.game .message::before {
 @media (max-width: 800px) {
   div.game-area {
     grid-template-columns: minmax(0, 1.3fr) minmax(0, 6fr) minmax(0, 1.3fr);
-    grid-template-rows: minmax(0, 4.5em) minmax(0, 4.5em) minmax(0, 1fr) minmax(
+    grid-template-rows: minmax(0, 3.5em) minmax(0, 4.5em) minmax(0, 1fr) minmax(
         0,
         4.5em
-      ) minmax(0, 4.5em) minmax(0, auto);
+      ) minmax(0, 3.5em) minmax(0, auto);
     grid-template-areas:
-      "name1 name1  name1"
+      ". name1 ."
       ". seeds1 ."
       "storage1 board storage0"
       ". seeds0 ."
-      "name0 name0 name0"
+      ". name0 ."
       "message message message";
     column-gap: 0.5em;
+  }
+
+  div.game-area .player-name {
+      font-size: 22px;
   }
 
   div.game-area div#board {
