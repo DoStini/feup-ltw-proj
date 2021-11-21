@@ -2,7 +2,6 @@ function setupPopupWindows() {
 
     ["rules", "leaderboard"].forEach((target) => {
         document.getElementById(`${target}-open-btn`).addEventListener('click', () => {
-            console.log("click" + target);
             let targetElement = document.getElementById(target);
 
             if(targetElement.style.opacity === "1") {
@@ -19,7 +18,6 @@ function setupPopupWindows() {
         })
 
         document.getElementById(`close-${target}`).addEventListener('click', () => {
-            console.log("click close" + target);
             document.getElementById(target).style.opacity = null;
             document.getElementById(target).style.visibility = null;
         })
@@ -27,7 +25,6 @@ function setupPopupWindows() {
 
     document.addEventListener('keydown', (e) => {
         if(e.key === "Escape") {
-            console.log(document.getElementsByClassName("popup-window"))
             document.querySelectorAll(".popup-window").forEach((target) => {
                 target.style.opacity = null;
                 target.style.visibility = null;
@@ -38,7 +35,6 @@ function setupPopupWindows() {
 }
 
 function setupBoard(nHoles) {
-    console.log(document.querySelectorAll("div.seed-box"))
     document.querySelectorAll("div.seed-box")
         .forEach(el => {
             el.style['grid-template-columns'] = `repeat(${nHoles}, 1fr)`;
