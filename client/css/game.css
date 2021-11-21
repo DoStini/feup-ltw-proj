@@ -100,7 +100,7 @@ div.game-area div.hole {
   min-width: 0;
   min-height: 0;
   color: white;
-  border-radius: 50%;
+  border-radius: 20%;
   background-color: #373f41;
   justify-self: center;
   align-self: center;
@@ -258,4 +258,6 @@ div.game .message::before {
   padding-bottom: 20%;
   border-radius: 100%;
   background-color: #bfbfbf;
+  border: 1px solid #8c8c8c;
+  position: relative;
 }
