@@ -11,6 +11,7 @@
     <meta property="title" content="Mancalada">
 
     <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/game.css">
     <script src="https://kit.fontawesome.com/4616109396.js" crossorigin="anonymous"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,7 +21,7 @@
 </head>
 
 <body>
-    <!-- <header class="main-header">
+    <header class="main-header">
         <h1>Mancalada</h1>
         <nav>
             <a class="selected">Mancala</a>
@@ -30,18 +31,93 @@
         <form>
             <button>Log In</button>
         </form>
-    </header> -->
-    <!--<section id="game-section">
+    </header>
+    
+    <section id="game-section">
         <header>
-            <h3>Game </h3>
+            <h3>XXXX's Turn </h3>
         </header>
         <div class="game">
             <div class="game-area">
-                <p>Cool stuff</p>
+                <div class="player-name player-turn" id="name1">
+                    <div class="player-back">
+                        Other
+                    </div>
+                </div>
+                <div id="storage1"></div>
+
+                <div id="seeds1" class="seed-box">
+                    <span class="seed-num" id="seeds1-0">1</span>
+                    <span class="seed-num" id="seeds1-1">2</span>
+                    <span class="seed-num" id="seeds1-2">3</span>
+                    <span class="seed-num" id="seeds1-3">4</span>
+                    <span class="seed-num" id="seeds1-4">5</span>
+                    <span class="seed-num" id="seeds1-5">6</span>
+                </div>
+
+                <div id="board">
+                    <div class="hole" id="hole1-0">
+                        <span class="seed" id="seed0.1-0"></span>
+                        <span class="seed" id="seed1.1-0"></span>
+                    </div>
+                    <div class="hole" id="hole1-1"></div>
+                    <div class="hole" id="hole1-2"></div>
+                    <div class="hole" id="hole1-3"></div>
+                    <div class="hole" id="hole1-4"></div>
+                    <div class="hole" id="hole1-5"></div>
+                    <div class="hole player-hole" id="hole0-0"></div>
+                    <div class="hole player-hole" id="hole0-1"></div>
+                    <div class="hole player-hole" id="hole0-2"></div>
+                    <div class="hole player-hole" id="hole0-3"></div>
+                    <div class="hole player-hole" id="hole0-4"></div>
+                    <div class="hole player-hole" id="hole0-5"></div>
+                </div>
+
+                <div id="seeds0" class="seed-box">
+                    <span class="seed-num" id="seeds0-0">0</span>
+                    <span class="seed-num" id="seeds0-1">1</span>
+                    <span class="seed-num" id="seeds0-2">2</span>
+                    <span class="seed-num" id="seeds0-3">3</span>
+                    <span class="seed-num" id="seeds0-4">4</span>
+                    <span class="seed-num" id="seeds0-4">5</span>
+                </div>
+
+                <div id="storage0">
+                    <!-- <svg width="43" height="42" viewBox="0 0 43 42" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M24.6667 41L2 21L24.6667 1M33.3333 41L10 21L33.3333 1M42 41L18.6667 21L42 1" stroke="white" stroke-width="2"/>
+                     </svg> -->
+
+                </div>
+                <div class="player-name" id="name0">
+                    <div class="player-back">
+                        You
+                    </div>
+                </div>
+
+                <section id="message-board">
+                    <span class=message>Player 1, it is your turn to play</span>
+                    <span class=message>It is Player 2's turn</span>
+                    <span class=message>Player 1, it is your turn to play</span>
+                    <span class=message>It is Player 2's turn</span>
+                    <span class=message>Player 1, it is your turn to play</span>
+                    <span class=message>It is Player 2's turn</span>
+                    <span class=message>Player 1, it is your turn to play</span>
+                    <span class=message>It is Player 2's turn</span>
+                    <span class=message>Player 1, it is your turn to play</span>
+                    <span class=message>It is Player 2's turn</span>
+                    <span class=message>Player 1, it is your turn to play</span>
+                    <span class=message>It is Player 2's turn</span>
+                    <span class=message>Player 1, it is your turn to play</span>
+                    <span class=message>It is Player 2's turn</span>
+                    <span class=message>Player 1, it is your turn to play</span>
+                    <span class=message>It is Player 2's turn</span>
+                    <span class=message>Player 1, it is your turn to play</span>
+                    <span class=message>It is Player 2's turn</span>
+                </section>
+
             </div>
-            
         </div>
-    </section> -->
+    </section>
 
     <section id="auth" class="auth">
         <div id="auth-form">
@@ -136,7 +212,7 @@
 
 
     <!--Rules Page-->
-    <!-- <section id="rules" class="popup-window rules">
+    <section id="rules" class="popup-window rules">
         <header>
             <h2>Rules</h2>
             <i id="close-rules" class="popup-window-close far fa-times-circle"></i>
@@ -171,7 +247,7 @@
                 <li>The player who has more seeds in storage wins.</li>
             </ul>
         </div>
-    </section> -->
+    </section>
 
     <!--Leaderboard Page-->
     <section id="leaderboard" class="popup-window leaderboard">

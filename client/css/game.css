@@ -1,0 +1,254 @@
+section#game-section {
+  grid-area: body;
+  min-width: 0;
+  min-height: 0;
+}
+
+section#game-section header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  font-size: 30px;
+  font-weight: 800;
+}
+
+section#game-section header > h3 {
+  margin: 0.2em;
+}
+
+div.game-area {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 6fr) minmax(0, 1.3fr);
+  grid-template-rows: minmax(0, 4.5em) minmax(0, 1fr) minmax(0, 4.5em) minmax(
+      0,
+      auto
+    );
+  grid-template-areas:
+    "name1 seeds1 ."
+    "storage1 board storage0"
+    ". seeds0 name0"
+    ". message .";
+  width: 80%;
+  /* max-height: 100%; */
+  column-gap: 1em;
+  padding-bottom: 1em;
+  justify-self: center;
+  min-width: 0;
+  min-height: 0;
+}
+
+.filler {
+  grid-area: f;
+}
+
+.filler1 {
+  grid-area: f1;
+}
+
+.filler2 {
+  grid-area: f2;
+}
+
+.filler3 {
+  grid-area: f3;
+}
+
+div.seed-box {
+  display: grid;
+  column-gap: 1em;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: minmax(1fr);
+}
+
+div#seeds0 {
+  grid-area: seeds0;
+}
+div#seeds1 {
+  grid-area: seeds1;
+}
+
+div.game-area > div#board {
+  grid-area: board;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
+  width: 100%;
+  column-gap: 1em;
+  row-gap: 2em;
+  min-width: 0;
+  min-height: 0;
+  padding-bottom: 1em;
+  padding-top: 1em;
+  background-color: white;
+  box-shadow: 0.1em 0.2em 0.1em #bababa;
+}
+
+div.game-area span.seed-num {
+  color: #373f41;
+  font-weight: 600;
+  font-size: 28px;
+  min-width: 0;
+  min-height: 0;
+  justify-self: center;
+  align-self: center;
+}
+
+div.game-area div.hole {
+  width: 70%;
+  padding-bottom: 70%;
+  height: 0;
+  min-width: 0;
+  min-height: 0;
+  color: white;
+  border-radius: 50%;
+  background-color: #373f41;
+  justify-self: center;
+  align-self: center;
+}
+
+div.game-area div.player-hole:hover {
+  background-color: #676f71;
+  cursor: pointer;
+}
+
+div.game-area div#storage0 {
+  background-color: #373f41;
+  grid-area: storage0;
+  min-width: 0;
+  min-height: 0;
+  border-radius: 0 15px 15px 0;
+  box-shadow: 0.1em 0.2em 0.1em #bababa;
+}
+
+div.game-area div#storage1 {
+  background-color: #373f41;
+  grid-area: storage1;
+  min-width: 0;
+  min-height: 0;
+  border-radius: 15px 0 0 15px;
+  box-shadow: 0.1em 0.2em 0.1em #bababa;
+}
+
+div.game-area div#name0 {
+  grid-area: name0;
+  justify-self: right;
+  min-width: 0;
+  min-height: 0;
+}
+
+div.game-area div#name1 {
+  grid-area: name1;
+  justify-self: left;
+  min-width: 0;
+  min-height: 0;
+}
+
+div.game-area .player-name {
+  padding: 0.3em;
+  padding-left: 0;
+  padding-right: 0;
+  color: #373f41;
+  font-size: 28px;
+  font-weight: 600;
+  align-self: center;
+  width: 80%;
+  text-align: center;
+}
+
+div.game-area .player-back {
+  padding: 0.2em;
+  min-width: 0;
+  min-height: 0;
+}
+
+div.game-area #name1 .player-back {
+  background-color: #97add5;
+}
+
+div.game-area #name0 .player-back {
+  background-color: #ff7262;
+  color: white;
+}
+
+.player-turn > .player-back {
+  border-bottom: 4px solid #373f41;
+}
+
+/* MESSAGE BOARD */
+div.game-area > section#message-board {
+  grid-area: message;
+  height: 12em;
+  background-color: white;
+  border-radius: 1em;
+  border: 1px solid #373f41;
+  display: flex;
+  margin-top: 2em;
+  flex-direction: column;
+  justify-content: flex-start;
+  overflow: hidden;
+  overflow-y: scroll;
+}
+
+div.game-area .message {
+  width: 100%;
+  line-height: 2em;
+  padding-left: 1em;
+}
+
+div.game .message::before {
+  content: ">";
+  padding-right: 1.5em;
+}
+
+.message {
+  color: #676f71;
+}
+
+.message:first-child {
+  color: #373f41;
+  font-weight: 800;
+}
+
+@media (max-width: 800px) {
+  div.game-area {
+    grid-template-columns: minmax(0, 1.3fr) minmax(0, 6fr) minmax(0, 1.3fr);
+    grid-template-rows: minmax(0, 4.5em) minmax(0, 4.5em) minmax(0, 1fr) minmax(
+        0,
+        4.5em
+      ) minmax(0, 4.5em) minmax(0, auto);
+    grid-template-areas:
+      "name1 name1  name1"
+      ". seeds1 ."
+      "storage1 board storage0"
+      ". seeds0 ."
+      "name0 name0 name0"
+      "message message message";
+    column-gap: 0.5em;
+  }
+
+  div.game-area div#board {
+    column-gap: 0.5em;
+    font-size: 16px;
+  }
+
+  div.game-area div#name0 {
+    justify-self: center;
+  }
+
+  div.game-area div#name1 {
+    justify-self: center;
+  }
+
+  div.game-area {
+    width: 95%;
+  }
+
+  div.game-area span.seed-num {
+    font-size: 20px;
+  }
+
+  div.game-area div.hole {
+    width: 100%;
+    padding-bottom: 100%;
+  }
+}
