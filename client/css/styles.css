@@ -21,6 +21,12 @@ body {
   color: #373f41;
 }
 
+.in-body {
+    grid-area: body;
+    visibility: hidden;
+    display: none;
+}
+
 h1 {
   color: #373f41;
 }
@@ -93,9 +99,9 @@ a:hover {
 }
 
 section#init-menu {
-  height: 100%;
-  grid-area: body;
-  visibility: hidden;
+    height: 100%;
+    visibility: visible;
+    display: unset;
 }
 
 section#init-menu > form {
@@ -130,8 +136,6 @@ footer {
 /* Authentication Section */
 
 section#auth {
-  visibility: hidden;
-  grid-area: body;
   display: flex;
   flex-direction: column;
 }
@@ -266,11 +270,6 @@ form#register-form > input#confirm-password {
 form#register-form > button {
   grid-area: submit;
   justify-self: right;
-}
-
-section#config {
-  grid-area: body;
-  visibility: hidden;
 }
 
 section#config > form {
