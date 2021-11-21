@@ -603,6 +603,7 @@ i.button {
   justify-content: space-between;
   background-color: #373f41;
   padding: 1em 1em 0;
+  align-items: baseline;
 }
 
 .popup-window > header > .popup-window-close {
