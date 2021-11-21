@@ -37,6 +37,10 @@ function startGame() {
 
 function cleanupGame() {
     document.getElementById("game-status").classList.add("hidden");
+
+    if(toggleGameStatus.open) {
+        toggleGameStatus();
+    }
 }
 
 function cleanupAuth() {
