@@ -693,6 +693,18 @@ i.button {
   }
 }
 
+@media (max-width: 450px) {
+    section#init-menu > form > h2 {
+        font-size: 32px;
+    }
+
+    section#init-menu button {
+        width: 16em;
+        font-size: 16px;
+        padding: 1em 0;
+    }
+}
+
 @media (max-width: 350px) {
   section#config div.config-layout {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
