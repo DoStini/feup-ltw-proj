@@ -43,22 +43,29 @@ function cleanupGame() {
     }
 }
 
+function startAuth() {
+    pageManager.setPage("auth");
+
+    document.getElementById("log-in-header").style.visibility = "hidden";
+}
+
 function cleanupAuth() {
     document.getElementById("username-login").value = null;
     document.getElementById("username-register").value = null;
     document.getElementById("password-login").value = null;
     document.getElementById("password-register").value = null;
     document.getElementById("confirm-password").value = null;
+
+    document.getElementById("log-in-header").style.visibility = null;
 }
 
 function setupInitMenu() {
     let setPageConfig = pageManager.setPage.bind(pageManager, "config");
     let setInitMenu = pageManager.setPage.bind(pageManager, "init-menu");
-    let setAuthMenu = pageManager.setPage.bind(pageManager, "auth");
 
     document.getElementById("start-button-ai").addEventListener('click', setPageConfig);
     document.getElementById("header-logo").addEventListener('click', setInitMenu);
-    document.getElementById("log-in-header").addEventListener('click', setAuthMenu);
+    document.getElementById("log-in-header").addEventListener('click', startAuth);
 
     pageManager.pageCleanup["auth"] = cleanupAuth;
 }
