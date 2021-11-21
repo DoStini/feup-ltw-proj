@@ -36,27 +36,34 @@ function setupPopupWindows() {
 }
 
 function toggleGameStatus() {
-    toggleGameStatus.open = !toggleGameStatus.open || false;
-
-    if(toggleGameStatus.open === false) {
-        document.getElementById("game-status").style.right = (-document.getElementById("game-status-info").offsetWidth).toString() + "px";
-    } else {
-        document.getElementById("game-status").style.right = "0";
+    if( typeof toggleGameStatus.open === 'undefined') {
+        toggleGameStatus.open = true;
     }
 
+    if(toggleGameStatus.open === true) {
+        document.getElementById("game-status").style.right = (-document.getElementById("game-status-info").offsetWidth).toString() + "px";
+        document.getElementById("game-status-button").style.transform = "rotate(180deg)"
+    } else if(toggleGameStatus.open === false) {
+        document.getElementById("game-status").style.right = "0";
+        document.getElementById("game-status-button").style.transform = ""
+    }
+
+    toggleGameStatus.open = !toggleGameStatus.open;
 }
 
 function setupGameStatus() {
     let buttonElement = document.getElementById("game-status-button");
 
     buttonElement.onclick = toggleGameStatus;
+    document.getElementById("game-status").style.transition = "0s";
     toggleGameStatus();
+    document.getElementById("game-status").style.transition = "";
 }
 
 
 function main() {
     setupPopupWindows();
-    setupGameStatus();
+    window.addEventListener('load', setupGameStatus);
 }
 
 main();
