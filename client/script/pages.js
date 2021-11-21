@@ -39,10 +39,14 @@ function cleanupGame() {
     document.getElementById("game-status").classList.add("hidden");
 }
 
-/**
- * 
- * @param {PageManager} pageManager 
- */
+function cleanupAuth() {
+    document.getElementById("username-login").value = null;
+    document.getElementById("username-register").value = null;
+    document.getElementById("password-login").value = null;
+    document.getElementById("password-register").value = null;
+    document.getElementById("confirm-password").value = null;
+}
+
 function setupInitMenu() {
     let setPageConfig = pageManager.setPage.bind(pageManager, "config");
     let setInitMenu = pageManager.setPage.bind(pageManager, "init-menu");
@@ -51,12 +55,10 @@ function setupInitMenu() {
     document.getElementById("start-button-ai").addEventListener('click', setPageConfig);
     document.getElementById("header-logo").addEventListener('click', setInitMenu);
     document.getElementById("log-in-header").addEventListener('click', setAuthMenu);
+
+    pageManager.pageCleanup["auth"] = cleanupAuth;
 }
 
-/**
- * 
- * @param {PageManager} pageManager 
- */
 function setupConfig() {
     let startGameButton = document.getElementById("start-game-button");
 
