@@ -2,42 +2,29 @@
  * 
  * @param {string} initPage 
  */
-function PageManager(initPage) {
+function PageManager() {
     this.pageCleanup = {};
-    this.curPage = initPage;
 }
 
 /**
  * @param {string} elementId
  */
-PageManager.prototype.setPage = function(elementId) {
+PageManager.prototype.setPage = function (elementId) {
     let element = document.getElementById(elementId);
     if (element === null) return;
 
-    document.querySelectorAll(".in-body").forEach(bodyElement => {
-        bodyElement.style.visibility = null;
-        bodyElement.style.display = "none";
-    });
+    if (typeof this.curPage !== 'undefined') {
+        let bodyElement = document.getElementById(this.curPage);
 
-    let curPageCleanup = this.pageCleanup[this.curPage];
-    if(typeof curPageCleanup === 'function') curPageCleanup();
+        bodyElement.classList.toggle("hidden");
 
-    element.style.visibility = "visible";
-    element.style.display = null;
+        let curPageCleanup = this.pageCleanup[this.curPage];
+        if (typeof curPageCleanup === 'function') curPageCleanup();
+    }
+
+    element.classList.toggle("hidden");
 
     this.curPage = elementId;
-}
-
-/**
- * 
- * @param {Object} f 
- */
-function curry(f) {
-    return function (a) {
-        return function () {
-            f(a);
-        }
-    }
 }
 
 function startGame() {
@@ -45,11 +32,11 @@ function startGame() {
 
     setupBoard(holes);
     pageManager.setPage("game-section");
-    document.getElementById("game-status").style.visibility = "visible";
+    document.getElementById("game-status").classList.remove("hidden");
 }
 
 function cleanupGame() {
-    document.getElementById("game-status").style.visibility = null;
+    document.getElementById("game-status").classList.add("hidden");
 }
 
 /**
@@ -82,7 +69,6 @@ function setupPages() {
     setupConfig();
 
     pageManager.setPage("init-menu");
-    console.log(pageManager);
 }
 
-let pageManager = new PageManager("init-menu");
+let pageManager = new PageManager();
