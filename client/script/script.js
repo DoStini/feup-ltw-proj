@@ -59,7 +59,6 @@ function setupBoard(nHoles) {
 function main() {
     setupPopupWindows();
     setupPages();
-    setPage("init-menu");
 }
 
 main();
