@@ -212,10 +212,9 @@ div.game .message::before {
 @media (max-width: 800px) {
   div.game-area {
     grid-template-columns: minmax(0, 1.3fr) minmax(0, 6fr) minmax(0, 1.3fr);
-    grid-template-rows: minmax(0, 4.5em) minmax(0, 4.5em) minmax(0, 1fr) minmax(
-        0,
-        4.5em
-      ) minmax(0, 4.5em) minmax(0, auto);
+    grid-template-rows:
+      minmax(0, 4.5em) minmax(0, 4.5em) minmax(0, 1fr) minmax(0, 4.5em)
+      minmax(0, 4.5em) minmax(0, auto);
     grid-template-areas:
       "name1 name1  name1"
       ". seeds1 ."
@@ -251,4 +250,12 @@ div.game .message::before {
     width: 100%;
     padding-bottom: 100%;
   }
+}
+
+.seed {
+  width: 35%;
+  height: 0;
+  padding-bottom: 20%;
+  border-radius: 100%;
+  background-color: #bfbfbf;
 }
