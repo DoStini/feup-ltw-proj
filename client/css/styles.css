@@ -39,17 +39,21 @@ header.main-header {
   display: grid;
   grid-template-rows: 1fr;
   grid-template-columns: 1fr 20em 1fr;
+  grid-template-areas: "title nav log";
   align-items: center;
   margin-left: 50px;
   margin-right: 50px;
   grid-area: header;
+  min-width: 0;
 }
 
 header.main-header > nav {
   width: 20em;
   display: flex;
   flex-direction: row;
+  justify-self: center;
   justify-content: space-between;
+  grid-area: nav;
 }
 
 header.main-header > form {
@@ -57,6 +61,12 @@ header.main-header > form {
   flex-direction: row;
   justify-content: flex-end;
   align-items: center;
+  grid-area: log;
+  min-width: 0;
+}
+
+header.main-header > h1 {
+  grid-area: title;
 }
 
 button {
@@ -86,6 +96,7 @@ a:hover {
 section#init-menu {
   height: 100%;
   grid-area: body;
+  visibility: hidden;
 }
 
 section#init-menu > form {
@@ -117,8 +128,149 @@ footer {
   text-align: center;
 }
 
+/* Authentication Section */
+
+section#auth {
+  grid-area: body;
+  display: flex;
+  flex-direction: column;
+}
+
+section#auth > #auth-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(50%, 1fr));
+  grid-auto-flow: column;
+  width: 100vw;
+  flex: 1;
+  padding: 3em 0;
+}
+
+section#auth > #auth-form > section {
+  padding: 0 7em;
+  flex: 1;
+}
+
+section#auth > #auth-form > section > * {
+  max-width: 30em;
+  margin: 0 auto;
+}
+
+section#auth > #auth-form > section#login {
+  border-right: 1px solid black;
+}
+
+@media (max-width: 950px) {
+  section#auth > #auth-form > section {
+    margin: 0 auto;
+    padding: 0;
+  }
+  section#auth > #auth-form {
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    flex-wrap: wrap;
+    justify-content: start;
+    flex: 1;
+  }
+  section#auth > #auth-form > section#login {
+    border-right: none;
+  }
+
+  section#auth > #auth-form > section {
+    min-width: 20em;
+  }
+}
+
+/* Login Grid Section */
+
+section#auth > #auth-form > section > #login-form {
+  display: grid;
+  grid-template-rows: 0.5fr 1fr 0.1fr 0.5fr 1fr 0.1fr 1fr;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas:
+    "label1"
+    "input1"
+    "."
+    "label2"
+    "input2"
+    "."
+    "submit";
+  row-gap: 0.4em;
+}
+
+form#login-form > label[for="username"] {
+  grid-area: label1;
+}
+
+form#login-form > input#username {
+  grid-area: input1;
+}
+
+section#login > #login-form > label[for="password"] {
+  grid-area: label2;
+}
+
+form#login-form > input#password {
+  grid-area: input2;
+}
+
+form#login-form > button {
+  grid-area: submit;
+  justify-self: right;
+}
+
+/* Register Grid Section */
+
+section#auth > #auth-form > section > #register-form {
+  display: grid;
+  grid-template-rows: 0.5fr 1fr 0.1fr 0.5fr 1fr 0.1fr 0.5fr 1fr 0.1fr 1fr;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas:
+    "label1"
+    "input1"
+    "."
+    "label2"
+    "input2"
+    "."
+    "label3"
+    "input3"
+    "."
+    "submit";
+  row-gap: 0.4em;
+}
+
+form#register-form > label[for="username"] {
+  grid-area: label1;
+}
+
+form#register-form > input#username {
+  grid-area: input1;
+}
+
+section#register > #register-form > label[for="password"] {
+  grid-area: label2;
+}
+
+form#register-form > input#password {
+  grid-area: input2;
+}
+
+section#register > #register-form > label[for="confirm-password"] {
+  grid-area: label3;
+}
+
+form#register-form > input#confirm-password {
+  grid-area: input3;
+}
+
+form#register-form > button {
+  grid-area: submit;
+  justify-self: right;
+}
+
 section#config {
   grid-area: body;
+  /* visibility: hidden; */
 }
 
 section#config > form {
@@ -141,7 +293,7 @@ section#config select {
 }
 
 section#config label {
-    font-size: 15px;
+  font-size: 15px;
 }
 
 section#config h2,
@@ -153,13 +305,17 @@ section#config legend {
   padding: 0;
 }
 
-section#config input,
+input,
 select {
   background-color: #f4f5f4;
   border-color: #373f41;
-  border-style: dashed;
   border-radius: 0;
   border-width: 1px;
+}
+
+section#config input,
+select {
+  border-style: dashed;
 }
 
 section#config div.config-layout {
@@ -246,12 +402,85 @@ section#config input#ai-order-ai {
   grid-area: input2;
 }
 
-.game {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
+/* Game Status Section*/
+
+section#game-status {
+  z-index: 100;
+  position: fixed;
+  right: 0;
+  bottom: 10%;
+  top: 10%;
+  display: flex;
+  overflow-y: hidden;
+  flex-direction: row;
+  border-radius: 2.5em 0 0 2.5em;
+  box-shadow: -0.2em 0.2em 0.2em #bababa, 0.2em 0.2em 0.2em #bababa;
 }
 
-.game-area {
+section#game-status > header {
+  background-color: #373f41;
+  padding: 2em 1.5em;
+  display: grid;
+  justify-items: center;
+  grid-template-rows: 3fr auto 3fr;
+  grid-template-areas:
+    "."
+    "."
+    ".";
+}
+
+section#game-status > header > h2 {
+  color: white;
+  text-align: center;
+  vertical-align: middle;
+  writing-mode: vertical-lr;
+  align-self: center;
+  text-orientation: upright;
+  margin: 0;
+}
+
+section#game-status > header > #game-status-button:hover > path {
+  stroke-width: 3;
+}
+
+section#game-status > #game-status-info {
+  font-size: 1.1em;
+  width: 100%;
+  background-color: white;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  padding: 2em 1.5em;
+  padding-bottom: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+section#game-status > #game-status-info > * {
+  text-align: center;
+  margin-bottom: 2em;
+}
+
+section#game-status > #game-status-info td,
+section#game-status > #game-status-info tr {
+  width: 50%;
+  padding: 1em;
+}
+
+section#game-status > #game-status-info td:first-child {
+  font-weight: bold;
+}
+
+section#game-status > #game-status-info > table tr:first-child > td {
+  background-color: orangered;
+  color: white;
+}
+
+/* .game {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+} */
+
+/* .game-area {
   background-color: blueviolet;
   width: 100%;
   grid-column-start: 1;
@@ -261,22 +490,7 @@ section#config input#ai-order-ai {
 .game-status {
   grid-column-start: 4;
   background-color: blue;
-}
-
-.auth {
-  background-color: blanchedalmond;
-  width: 50%;
-  padding: 2em;
-  border-radius: 1em;
-  justify-content: center;
-  text-align: center;
-  margin: auto;
-}
-
-.auth-forms {
-  display: flex;
-  justify-content: space-evenly;
-}
+} */
 
 .login-box {
   display: flex;
@@ -288,11 +502,11 @@ section#config input#ai-order-ai {
   background-color: white;
   display: flex;
   flex-direction: column;
-  /* visibility: hidden; */
+  visibility: hidden;
 }
 
 i.button {
-    color: white;
+  color: white;
 }
 
 .rules-content {
@@ -309,23 +523,66 @@ i.button {
 }
 
 .rules-content h3 {
-    font-size: 18px;
+  font-size: 18px;
 }
 
-.rules .button {
-  font-size: 1.5em;
+.leaderboard {
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  /* visibility: hidden; */
 }
 
-.button:hover {
-  color: green;
+.leaderboard-content {
+  position: relative;
+  display: grid;
+  bottom: 0;
+  padding: 2em 0.5em 1em;
+  height: 100%;
+  grid-template-columns: repeat(2, 1fr);
+  overflow-y: scroll;
+}
+
+.leaderboard-content .leaderboard-table {
+  text-align: center;
+  left: 0;
+  right: 0;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.leaderboard-table th,
+.leaderboard-table td {
+  width: 15%;
+  border: 1px solid #ddd;
+  padding: 1em 0;
+}
+
+.leaderboard-table th,
+.leaderboard-table tr:nth-child(2n) {
+  background-color: #f8f8f8;
+}
+
+.leaderboard-table .name-row,
+.leaderboard-table .name-row {
+  width: 55%;
+}
+
+.local-leaderboard {
+  border-right: 1px solid;
+  padding: 0 1em;
+}
+
+.server-leaderboard {
+  padding: 0 1em;
 }
 
 .popup-window {
   position: absolute;
   top: 15%;
   bottom: 15%;
-  left: 25%;
-  right: 25%;
+  left: 10%;
+  right: 10%;
   border-radius: 1em;
   z-index: 1000;
   overflow: hidden;
@@ -345,6 +602,97 @@ i.button {
   padding: 1em 1em 0;
 }
 
+.popup-window > header > .popup-window-close {
+  color: white;
+  font-size: 1.5em;
+  height: 0; /* Height was doubled for some reason */
+}
+
+.popup-window > header > .popup-window-close:hover {
+  font-weight: 600;
+}
+
+@media (max-width: 900px) {
+  .leaderboard-content {
+    padding: 2em 0.5em 1em;
+    height: 100%;
+    grid-template-rows: repeat(2, 1fr);
+    grid-template-columns: 1fr;
+  }
+
+  .local-leaderboard {
+    border-right: none;
+  }
+
+  .popup-window {
+    left: 6%;
+    right: 6%;
+  }
+
+  .rules ul {
+    padding-left: 1em;
+  }
+}
+
+@media (max-width: 800px) {
+  section#config div.config-layout {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: 0.5fr 1fr 0.5fr 1fr 1fr 3fr 1fr;
+    grid-template-areas:
+      "label1 label2"
+      "input1 input2"
+      "label3 label3"
+      "input3 input3"
+      ". . "
+      "fields fields"
+      ". submit";
+    row-gap: 0.4em;
+    column-gap: 2em;
+  }
+
+  section#config > form {
+    padding: 2em;
+  }
+
+  body {
+    grid-template-rows: auto 1fr 50px;
+  }
+
+  header.main-header {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: 1fr 2em;
+    grid-template-areas:
+      "title log"
+      "nav nav";
+    align-items: center;
+    margin-left: 50px;
+    margin-right: 50px;
+    grid-area: header;
+  }
+
+  header.main-header > nav {
+    max-height: 2em;
+  }
+
+  button {
+    font-size: 16px;
+  }
+
+  section#game-status > header {
+    padding: 0.5em;
+  }
+
+  section#game-status > header > svg {
+    width: 2em;
+    padding-top: 1em;
+  }
+
+  section#game-status > #game-status-info {
+      padding: 0.5em 1em;
+  }
+}
+
 @media (max-width: 450px) {
     section#init-menu > form > h2 {
         font-size: 32px;
@@ -355,4 +703,27 @@ i.button {
         font-size: 16px;
         padding: 1em 0;
     }
+}
+
+@media (max-width: 350px) {
+  section#config div.config-layout {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: 0.5fr 1fr 0.5fr 1fr 0.5fr 1fr 1fr 3fr 1fr;
+    grid-template-areas:
+      "label1 label1"
+      "input1 input1"
+      "label2 label2"
+      "input2 input2"
+      "label3 label3"
+      "input3 input3"
+      ". . "
+      "fields fields"
+      "submit submit";
+    row-gap: 0.4em;
+    column-gap: 2em;
+  }
+
+  section#config > form {
+    padding: 1em;
+  }
 }

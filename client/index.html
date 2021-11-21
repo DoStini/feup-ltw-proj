@@ -39,55 +39,107 @@
             <div class="game-area">
                 <p>Cool stuff</p>
             </div>
-            <section class="game-status">
-                <header>
-                    <h4>Game Status</h4>
-                </header>
-                <fieldset id="player1" class="player-box">
-                    <legend>Player 1</legend>
-                    <p>Collected: 5</p>
-                    <p>In game: 19</p>
-                </fieldset>
-                <fieldset id="player2" class="player-box">
-                    <legend>Player 2</legend>
-                    <p>Collected: 7</p>
-                    <p>In game: 20</p>
-                </fieldset>
-            </section>
+            
         </div>
     </section> -->
 
-    <!--<section id="auth" class="auth">
-        <header>
-            <h3>Authentication</h3>
-        </header>
-        <div class="auth-forms">
-            <form>
-                <fieldset id="login" class="login-box">
-                    <legend>Login</legend>
-                    <label>Username: <input type="text" onkeypress="return event.charCode != 32"></label>
-                    <label>Password: <input type="password"></label>
-                    <input type="submit" value="Login">
-                </fieldset>
-            </form>
+    <section id="auth" class="auth">
+        <div id="auth-form">
+            <section id="login">
+                <header>
+                    <h2>Login</h3>
+                </header>
+                <form id="login-form">
+                    <label for="username">User Name</label>
+                    <input id="username" name="username" type="text" onkeypress="return event.charCode != 32">
 
-            <form>
-                <fieldset id="register" class="login-box">
-                    <legend>Register</legend>
-                    <label>Username: <input type="text" onkeypress="return event.charCode != 32"></label>
-                    <label>Password: <input type="password"></label>
-                    <label>Confirm Password: <input type="password"></label>
-                    <input type="submit" value="Register">
-                </fieldset>
-            </form>
+                    <label for="password">Password</label>
+                    <input id="password" name="password" type="password">
+
+                    <button value="login">Login</button>
+                </form>
+
+            </section>
+
+            <section id="register">
+                <header>
+                    <h2>Register</h3>
+                </header>
+                <form id="register-form">
+                    <label for="username">User Name</label>
+                    <input id="username" name="username" type="text" onkeypress="return event.charCode != 32">
+
+                    <label for="password">Password</label>
+                    <input id="password" name="password" type="password">
+
+                    <label for="confirm-password">Confirm Password</label>
+                    <input id="confirm-password" name="confirm-password" type="password">
+
+                    <button value="register">Register</button>
+                </form>
+
+            </section>
         </div>
-    </section>-->
+    </section>
+
+
+    <!--Game status sidebar-->
+    <section id="game-status">
+        <header>
+            <svg id="game-status-button" width="40" height="40" viewBox="0 0 43 42" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path d="M18.3333 1L41 21L18.3333 41M9.66667 1L33 21L9.66667 41M1 1L24.3333 21L1 41" stroke="white"
+                    stroke-width="2" />
+            </svg>
+            <h2>STATUS</h2>
+        </header>
+        <div id="game-status-info">
+            <h3>Current Turn<br>2</h3>
+
+            <table class="status-player">
+                <tr>
+                    <td id="status-p0" class="status-player-name" colspan="2">André Moreira</td>
+                </tr>
+                <tr>
+                    <td>Storage Seeds</td>
+                    <td id="status-p0-store-seeds">2</td>
+                </tr>
+                <tr>
+                    <td>Seeds in Play</td>
+                    <td id="status-p0-play-seeds">8</td>
+                </tr>
+                <tr>
+                    <td>Advantage</td>
+                    <td id="status-p0-play-adv">0.95</td>
+                </tr>
+            </table>
+
+            <table class="status-player">
+                <tr>
+                    <td id="status-p1" class="status-player-name" colspan="2">Nuno Alves</td>
+                </tr>
+                <tr>
+                    <td>Storage Seeds</td>
+                    <td id="status-p1-store-seeds">21</td>
+                </tr>
+                <tr>
+                    <td>Seeds in Play</td>
+                    <td id="status-p1-play-seeds">1</td>
+                </tr>
+                <tr>
+                    <td>Advantage</td>
+                    <td id="status-p1-play-adv">1.05</td>
+                </tr>
+            </table>
+        </div>
+    </section>
+
 
     <!--Rules Page-->
     <!-- <section id="rules" class="popup-window rules">
         <header>
             <h2>Rules</h2>
-            <i id="close-rules" class="button fas fa-times-circle"></i>
+            <i id="close-rules" class="popup-window-close far fa-times-circle"></i>
         </header>
         <div class="rules-content">
             <h3>Board</h3>
@@ -95,8 +147,8 @@
                 <li>The board is made up of cavities and containers. There is a container per player and a variable
                     amount of cavities. Both players must have the same amount of cavities in each side.</li>
                 <li>The pieces are seeds. Each player control the seeds that are stored in their side's cavities.</li>
-                <li>In the beginning of the game, the storage is empty and seeds are equally distributed through the
-                    cavities.</li>
+                <li>In the beginning of the game, the storage is empty and the cavities are equally filled with seeds.</li>
+                <li>If you run into your own Mancala (store), deposit one piece in it. If you run into your opponent's Mancala, skip it and continue moving to the next pocket.</li>
             </ul>
             <h3>Gameplay</h3>
             <ul>
@@ -121,7 +173,112 @@
         </div>
     </section> -->
 
-    <!--Config Area-->
+    <!--Leaderboard Page-->
+    <section id="leaderboard" class="popup-window leaderboard">
+        <header>
+            <h2>Leaderboard</h2>
+            <i id="close-leaderboard" class="popup-window-close far fa-times-circle"></i>
+        </header>
+        <div class="leaderboard-content">
+            <section class="local-leaderboard">
+                <header>
+                    <h3>Local Leaderboard</h3>
+                </header>
+                <table class="leaderboard-table">
+                    <thead>
+                        <tr>
+                            <th>Position</td>
+                            <th class="name-row">Name</td>
+                            <th>Score</td>
+                            <th>Wins</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td class="name-row">John Cena</td>
+                            <td>250</td>
+                            <td>2</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td class="name-row">Nuno Miguel da Silva Alves</td>
+                            <td>250</td>
+                            <td>2</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td class="name-row">André Júlio dos Moreiras</td>
+                            <td>250</td>
+                            <td>2</td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td class="name-row">John Cena</td>
+                            <td>250</td>
+                            <td>2</td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td class="name-row">John Cena</td>
+                            <td>250</td>
+                            <td>2</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+            <section class="server-leaderboard">
+                <header>
+                    <h3>Public Leaderboard</h3>
+                </header>
+                <table class="leaderboard-table">
+                    <thead>
+                        <tr>
+                            <th>Position</td>
+                            <th class="name-row">Name</td>
+                            <th>Score</td>
+                            <th>Wins</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td class="name-row">John Cena</td>
+                            <td>250</td>
+                            <td>2</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td class="name-row">John Cena</td>
+                            <td>250</td>
+                            <td>2</td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td class="name-row">John Cena</td>
+                            <td>250</td>
+                            <td>2</td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td class="name-row">John Cena</td>
+                            <td>250</td>
+                            <td>2</td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td class="name-row">John Cena</td>
+                            <td>250</td>
+                            <td>2</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+        </div>
+    </section>
+
+
+    <!--Init Menu Area-->
     <section id="init-menu">
         <form>
             <h2>Mancalada<br>Sow With Your Friends.</h2>
@@ -129,8 +286,11 @@
             <button value="start-server">Play Against a Friend</button>
             <button value="join-server">Join a Friend's Game</button>
         </form>
+
     </section>
-    <!-- <section id="config">
+
+    <!--Config Area-->
+    <section id="config">
         <form>
             <fieldset class="config-layout">
                 <h2>Choose Your Game Settings</h2>
@@ -163,7 +323,7 @@
                 </div>
             </fieldset>
         </form>
-    </section> -->
+    </section>
 
     <footer>
         <span>Mancalada. Sow With Your Friends.<br>Made With Love by André Moreira and Nuno Alves.</span>
