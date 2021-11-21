@@ -42,7 +42,7 @@ function toggleGameStatus() {
 
     if(toggleGameStatus.open === true) {
         document.getElementById("game-status").style.right = (-document.getElementById("game-status-info").offsetWidth).toString() + "px";
-        document.getElementById("game-status-button").style.transform = "rotate(180deg)"
+        document.getElementById("game-status-button").style.transform = "scaleX(-1)"
     } else if(toggleGameStatus.open === false) {
         document.getElementById("game-status").style.right = "0";
         document.getElementById("game-status-button").style.transform = ""

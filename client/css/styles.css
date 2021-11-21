@@ -456,6 +456,10 @@ section#game-status > header > h2 {
   border-radius: 2.5em 0 0 2.5em;
 }
 
+section#game-status > header > #game-status-button {
+  transition: transform 0.5s;
+}
+
 section#game-status > header > #game-status-button:hover > path {
   stroke-width: 3;
   cursor: pointer;
@@ -464,7 +468,6 @@ section#game-status > header > #game-status-button:hover > path {
 section#game-status > header > #game-status-button:hover {
   cursor: pointer;
 }
-
 
 section#game-status > #game-status-info {
   font-size: 1.1em;
