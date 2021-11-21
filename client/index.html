@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="css/game.css">
     <script src="https://kit.fontawesome.com/4616109396.js" crossorigin="anonymous"></script>
+    <script defer src="script/pages.js"></script>
     <script defer src="script/script.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -23,7 +24,7 @@
 
 <body>
     <header class="main-header">
-        <h1>Mancalada</h1>
+        <h1 id="header-logo">Mancalada</h1>
         <nav>
             <a class="selected">Mancala</a>
             <a id="rules-open-btn">Rules</a>
@@ -33,7 +34,7 @@
             <button>Log In</button>
         </form>
     </header>
-    
+
     <section id="game-section" class="in-body">
         <header>
             <h3>XXXX's Turn </h3>
@@ -55,9 +56,6 @@
                 <div id="seeds0" class="seed-box"></div>
 
                 <div id="storage0">
-                    <!-- <svg width="43" height="42" viewBox="0 0 43 42" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M24.6667 41L2 21L24.6667 1M33.3333 41L10 21L33.3333 1M42 41L18.6667 21L42 1" stroke="white" stroke-width="2"/>
-                     </svg> -->
 
                 </div>
                 <div class="player-name" id="name0">
@@ -95,14 +93,14 @@
         <div id="auth-form">
             <section id="login">
                 <header>
-                    <h2>Login</h3>
+                    <h2>Login</h2>
                 </header>
                 <form id="login-form">
-                    <label for="username">User Name</label>
-                    <input id="username" name="username" type="text" onkeypress="return event.charCode != 32">
+                    <label for="username-login">User Name</label>
+                    <input id="username-login" name="username" type="text" onkeypress="return event.charCode != 32">
 
-                    <label for="password">Password</label>
-                    <input id="password" name="password" type="password">
+                    <label for="password-login">Password</label>
+                    <input id="password-login" name="password" type="password">
 
                     <button value="login">Login</button>
                 </form>
@@ -111,14 +109,14 @@
 
             <section id="register">
                 <header>
-                    <h2>Register</h3>
+                    <h2>Register</h2>
                 </header>
                 <form id="register-form">
-                    <label for="username">User Name</label>
-                    <input id="username" name="username" type="text" onkeypress="return event.charCode != 32">
+                    <label for="username-register">User Name</label>
+                    <input id="username-register" name="username" type="text" onkeypress="return event.charCode != 32">
 
-                    <label for="password">Password</label>
-                    <input id="password" name="password" type="password">
+                    <label for="password-register">Password</label>
+                    <input id="password-register" name="password" type="password">
 
                     <label for="confirm-password">Confirm Password</label>
                     <input id="confirm-password" name="confirm-password" type="password">
@@ -195,8 +193,10 @@
                 <li>The board is made up of cavities and containers. There is a container per player and a variable
                     amount of cavities. Both players must have the same amount of cavities in each side.</li>
                 <li>The pieces are seeds. Each player control the seeds that are stored in their side's cavities.</li>
-                <li>In the beginning of the game, the storage is empty and the cavities are equally filled with seeds.</li>
-                <li>If you run into your own Mancala (store), deposit one piece in it. If you run into your opponent's Mancala, skip it and continue moving to the next pocket.</li>
+                <li>In the beginning of the game, the storage is empty and the cavities are equally filled with seeds.
+                </li>
+                <li>If you run into your own Mancala (store), deposit one piece in it. If you run into your opponent's
+                    Mancala, skip it and continue moving to the next pocket.</li>
             </ul>
             <h3>Gameplay</h3>
             <ul>
@@ -235,10 +235,10 @@
                 <table class="leaderboard-table">
                     <thead>
                         <tr>
-                            <th>Position</td>
-                            <th class="name-row">Name</td>
-                            <th>Score</td>
-                            <th>Wins</td>
+                            <th>Position</th>
+                            <th class="name-row">Name</th>
+                            <th>Score</th>
+                            <th>Wins</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -282,10 +282,10 @@
                 <table class="leaderboard-table">
                     <thead>
                         <tr>
-                            <th>Position</td>
-                            <th class="name-row">Name</td>
-                            <th>Score</td>
-                            <th>Wins</td>
+                            <th>Position</th>
+                            <th class="name-row">Name</th>
+                            <th>Score</th>
+                            <th>Wins</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -328,49 +328,44 @@
 
     <!--Init Menu Area-->
     <section id="init-menu" class="in-body">
-        <form>
-            <h2>Mancalada<br>Sow With Your Friends.</h2>
-            <button value="play-alone">Play Against the All Knowing AI</button>
-            <button value="start-server">Play Against a Friend</button>
-            <button value="join-server">Join a Friend's Game</button>
-        </form>
-
+        <h2>Mancalada<br>Sow With Your Friends.</h2>
+        <button id="start-button-ai" value="play-alone">Play Against the All Knowing AI</button>
+        <button value="start-server">Play Against a Friend</button>
+        <button value="join-server">Join a Friend's Game</button>
     </section>
 
     <!--Config Area-->
     <section id="config" class="in-body">
-        <form>
-            <fieldset class="config-layout">
-                <h2>Choose Your Game Settings</h2>
-                <div class="config-layout">
-                    <label for="holes">Number of holes in each side</label>
-                    <input type="number" id="holes" name="holes" value="6" min="1" max="10" step="1">
+        <fieldset class="config-layout">
+            <h2>Choose Your Game Settings</h2>
+            <div class="config-layout">
+                <label for="holes">Number of holes in each side</label>
+                <input type="number" id="holes" name="holes" value="6" min="1" max="10" step="1">
 
-                    <label for="seeds">Number of seeds in each hole</label>
-                    <input type="number" id="seeds" name="seeds" value="4" min="1" max="12" step="1">
+                <label for="seeds">Number of seeds in each hole</label>
+                <input type="number" id="seeds" name="seeds" value="4" min="1" max="12" step="1">
 
-                    <label for="ai_difficulty">AI Difficulty</label>
-                    <select name="ai_difficulty" id="ai_difficulty">
-                        <option value="easy">Lets You Win</option>
-                        <option value="hard">Loses on Purpose Sometimes (but will kick your ass)</option>
-                        <option value="impossible" selected>Impossible</option>
-                    </select>
+                <label for="ai_difficulty">AI Difficulty</label>
+                <select name="ai_difficulty" id="ai_difficulty">
+                    <option value="easy">Lets You Win</option>
+                    <option value="hard">Loses on Purpose Sometimes (but will kick your ass)</option>
+                    <option value="impossible" selected>Impossible</option>
+                </select>
 
-                    <fieldset>
-                        <legend>Who Goes First?</legend>
-                        <div class="order-layout">
-                            <label for="ai-order-human">The Human</label>
-                            <input type="radio" name="ai-order" id="ai-order-human" value="human-first" checked>
+                <fieldset>
+                    <legend>Who Goes First?</legend>
+                    <div class="order-layout">
+                        <label for="ai-order-human">The Human</label>
+                        <input type="radio" name="ai-order" id="ai-order-human" value="human-first" checked>
 
-                            <label for="ai-order-ai">The All Knowing AI</label>
-                            <input type="radio" name="ai-order" id="ai-order-ai" value="ai-first">
-                        </div>
-                    </fieldset>
+                        <label for="ai-order-ai">The All Knowing AI</label>
+                        <input type="radio" name="ai-order" id="ai-order-ai" value="ai-first">
+                    </div>
+                </fieldset>
 
-                    <button value="start">Start Game</button>
-                </div>
-            </fieldset>
-        </form>
+                <button id="start-game-button" value="start">Start Game</button>
+            </div>
+        </fieldset>
     </section>
 
     <footer>

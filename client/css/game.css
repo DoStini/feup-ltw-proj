@@ -57,7 +57,7 @@ div.seed-box {
   display: grid;
   column-gap: 1em;
   grid-template-columns: repeat(6, 1fr);
-  grid-template-rows: minmax(1fr);
+  grid-template-rows: minmax(0,1fr);
 }
 
 div#seeds0 {

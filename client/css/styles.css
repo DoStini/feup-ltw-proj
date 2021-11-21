@@ -24,7 +24,6 @@ body {
 .in-body {
     grid-area: body;
     visibility: hidden;
-    display: none;
 }
 
 h1 {
@@ -72,6 +71,11 @@ header.main-header > form {
 
 header.main-header > h1 {
   grid-area: title;
+  cursor: pointer;
+}
+
+header.main-header > h1:hover {
+    color: #3c64b1;
 }
 
 button {
@@ -100,11 +104,6 @@ a:hover {
 
 section#init-menu {
     height: 100%;
-    visibility: visible;
-    display: unset;
-}
-
-section#init-menu > form {
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -112,7 +111,7 @@ section#init-menu > form {
   height: 70%;
 }
 
-section#init-menu > form > h2 {
+section#init-menu > h2 {
   text-align: center;
   font-size: 38px;
 }
@@ -202,19 +201,19 @@ section#auth > #auth-form > section > #login-form {
   row-gap: 0.4em;
 }
 
-form#login-form > label[for="username"] {
+form#login-form > label[for="username-login"] {
   grid-area: label1;
 }
 
-form#login-form > input#username {
+form#login-form > input#username-login {
   grid-area: input1;
 }
 
-section#login > #login-form > label[for="password"] {
+section#login > #login-form > label[for="password-login"] {
   grid-area: label2;
 }
 
-form#login-form > input#password {
+form#login-form > input#password-login {
   grid-area: input2;
 }
 
@@ -243,19 +242,19 @@ section#auth > #auth-form > section > #register-form {
   row-gap: 0.4em;
 }
 
-form#register-form > label[for="username"] {
+form#register-form > label[for="username-register"] {
   grid-area: label1;
 }
 
-form#register-form > input#username {
+form#register-form > input#username-register {
   grid-area: input1;
 }
 
-section#register > #register-form > label[for="password"] {
+section#register > #register-form > label[for="password-register"] {
   grid-area: label2;
 }
 
-form#register-form > input#password {
+form#register-form > input#password-register {
   grid-area: input2;
 }
 
@@ -272,7 +271,7 @@ form#register-form > button {
   justify-self: right;
 }
 
-section#config > form {
+section#config {
   padding: 6em;
 }
 

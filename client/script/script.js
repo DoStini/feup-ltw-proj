@@ -1,5 +1,4 @@
 function setupPopupWindows() {
-
     ["rules", "leaderboard"].forEach((target) => {
         document.getElementById(`${target}-open-btn`).addEventListener('click', () => {
             let targetElement = document.getElementById(target);
@@ -31,8 +30,8 @@ function setupPopupWindows() {
             })
         }
     });
-
 }
+
 
 function setupBoard(nHoles) {
     document.querySelectorAll("div.seed-box")
@@ -40,6 +39,8 @@ function setupBoard(nHoles) {
             el.style['grid-template-columns'] = `repeat(${nHoles}, 1fr)`;
         })
     document.getElementById("board").style['grid-template-columns'] = `repeat(${nHoles}, 1fr)`;
+
+    document.getElementById("board").innerHTML = null;
 
     [1, 0].forEach(el => {
         let seedCounter = "";
@@ -52,13 +53,13 @@ function setupBoard(nHoles) {
 
         document.getElementById(`seeds${el}`).innerHTML = seedCounter;
         document.getElementById("board").innerHTML += seedHole;
-
     })
 }
 
 function main() {
     setupPopupWindows();
-    setupBoard(6);
+    setupPages();
+    setPage("init-menu");
 }
 
 main();
