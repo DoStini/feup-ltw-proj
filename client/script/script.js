@@ -72,7 +72,11 @@ function setupSeeds(nHoles, seedsPerHole) {
                 const [x, y] = [0, 0].map(() => Math.random() * 60 +  5);
                 const rot = Math.random() * 90;
                 const newElem = document.createElement("div");
-                newElem.innerHTML = `<div id="seed${el}-${i}-${j}" class="seed" style=left:${x}%;top:${y}%;transform:rotate(${rot}deg)></div>`
+                newElem.id = `seed${el}-${i}-${j}`;
+                newElem.className = "seed";
+                newElem.style.left = x + "%";
+                newElem.style.top = y + "%";
+                newElem.style.transform = `rotate(${rot}deg)`;
 
                 elem.appendChild(newElem);
             }
