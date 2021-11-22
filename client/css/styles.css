@@ -673,7 +673,7 @@ i.button {
     column-gap: 2em;
   }
 
-  section#config > form {
+  section#config {
     padding: 2em;
   }
 
@@ -726,7 +726,7 @@ i.button {
 }
 
 @media (max-width: 450px) {
-  section#init-menu > form > h2 {
+  section#init-menu > h2 {
     font-size: 32px;
   }
 
@@ -755,7 +755,7 @@ i.button {
     column-gap: 2em;
   }
 
-  section#config > form {
+  section#config {
     padding: 1em;
   }
 }

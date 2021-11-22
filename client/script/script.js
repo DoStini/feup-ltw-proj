@@ -1,3 +1,5 @@
+'use strict'
+
 function setupPopupWindows() {
     ["rules", "leaderboard"].forEach((target) => {
         document.getElementById(`${target}-open-btn`).addEventListener('click', () => {
