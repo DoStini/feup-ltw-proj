@@ -104,6 +104,7 @@ div.game-area div.hole {
   height: 100%;
   aspect-ratio: 1 / 1;
   max-width: 100%;
+  position: relative;
 }
 
 div.game-area div.player-hole:hover {
@@ -249,4 +250,14 @@ div.game .message::before {
   div.game-area span.seed-num {
     font-size: 20px;
   }
+}
+
+.seed {
+  width: 35%;
+  height: 0;
+  padding-bottom: 20%;
+  border-radius: 100%;
+  background-color: #bfbfbf;
+  border: 1px solid #8c8c8c;
+  position: absolute;
 }
