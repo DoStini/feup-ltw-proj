@@ -21,18 +21,6 @@ body {
   color: #373f41;
 }
 
-.in-body {
-    grid-area: body;
-    transition: opacity 0.3s, visibility 0s, display 0s;
-    opacity: 1;
-}
-
-.hidden {
-     visibility: hidden;
-    /* display: none;  */
-    opacity: 0;
-}
-
 h1 {
   color: #373f41;
 }
@@ -82,7 +70,7 @@ header.main-header > h1 {
 }
 
 header.main-header > h1:hover {
-    color: #3c64b1;
+  color: #3c64b1;
 }
 
 button {
@@ -110,7 +98,7 @@ a:hover {
 }
 
 section#init-menu {
-    height: 80%;
+  height: 80%;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -146,7 +134,7 @@ section#auth {
 }
 
 section#auth input {
-    font-size: 18px;
+  font-size: 18px;
 }
 
 section#auth > #auth-form {
@@ -170,28 +158,6 @@ section#auth > #auth-form > section > * {
 
 section#auth > #auth-form > section#login {
   border-right: 1px solid black;
-}
-
-@media (max-width: 950px) {
-  section#auth > #auth-form > section {
-    margin: 0 auto;
-    padding: 0;
-  }
-  section#auth > #auth-form {
-    display: flex;
-    flex-direction: column;
-    width: 100vw;
-    flex-wrap: wrap;
-    justify-content: start;
-    flex: 1;
-  }
-  section#auth > #auth-form > section#login {
-    border-right: none;
-  }
-
-  section#auth > #auth-form > section {
-    min-width: 20em;
-  }
 }
 
 /* Login Grid Section */
@@ -230,6 +196,28 @@ form#login-form > input#password-login {
 form#login-form > button {
   grid-area: submit;
   justify-self: right;
+}
+
+@media (max-width: 950px) {
+  section#auth > #auth-form > section {
+    margin: 0 auto;
+    padding: 0;
+  }
+  section#auth > #auth-form {
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    flex-wrap: wrap;
+    justify-content: start;
+    flex: 1;
+  }
+  section#auth > #auth-form > section#login {
+    border-right: none;
+  }
+
+  section#auth > #auth-form > section {
+    min-width: 20em;
+  }
 }
 
 /* Register Grid Section */
@@ -757,5 +745,28 @@ i.button {
 
   section#config {
     padding: 1em;
+  }
+}
+
+.in-body {
+  grid-area: body;
+  transition: visibility 0s, opacity 0.3s linear;
+  opacity: 1;
+}
+
+.show {
+  animation: fade-in 0.3s;
+}
+
+.hidden {
+  visibility: hidden;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }

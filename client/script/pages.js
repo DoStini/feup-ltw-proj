@@ -18,13 +18,15 @@ PageManager.prototype.setPage = function (elementId) {
     if (typeof this.curPage !== 'undefined') {
         let bodyElement = document.getElementById(this.curPage);
 
-        bodyElement.classList.toggle("hidden");
+        bodyElement.style.display = "none";
+        bodyElement.classList.toggle("show");
 
         let curPageCleanup = this.pageCleanup[this.curPage];
         if (typeof curPageCleanup === 'function') curPageCleanup();
     }
 
-    element.classList.toggle("hidden");
+    element.style.display = null;
+    element.classList.toggle("show");
 
     this.curPage = elementId;
 }
@@ -49,6 +51,7 @@ function startAuth() {
     pageManager.setPage("auth");
 
     document.getElementById("log-in-header").style.visibility = "hidden";
+    document.getElementById("log-in-header").style.display = "none";
 }
 
 function cleanupAuth() {
@@ -59,6 +62,7 @@ function cleanupAuth() {
     document.getElementById("confirm-password").value = null;
 
     document.getElementById("log-in-header").style.visibility = null;
+    document.getElementById("log-in-header").style.display = null;
 }
 
 function setupInitMenu() {
@@ -80,6 +84,10 @@ function setupConfig() {
 }
 
 function setupPages() {
+    document.querySelectorAll(".in-body").forEach(bodyElement => {
+        bodyElement.style.display = "none";
+    });
+
     setupInitMenu();
     setupConfig();
 
