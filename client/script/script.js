@@ -69,8 +69,10 @@ function setupSeeds(nHoles, seedsPerHole) {
             const elem = document.getElementById(`hole${el}-${i}`);
             
             for (let j = 0; j < seedsPerHole; j++) {
-                const [x, y] = [0, 0].map(() => Math.random() * 65);
+                const y = Math.random() * (70-8) + 8;
+                const x = Math.random() * 60;
                 const rot = Math.random() * 90;
+                
                 const newElem = document.createElement("div");
                 newElem.id = `seed${el}-${i}-${j}`;
                 newElem.className = "seed";
