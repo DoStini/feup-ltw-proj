@@ -19,7 +19,7 @@ section#game-section header > h3 {
 div.game-area {
   display: grid;
   grid-template-columns: minmax(0, 1.3fr) minmax(0, 6fr) minmax(0, 1.3fr);
-  grid-template-rows: minmax(0, 4.5em) minmax(0, 1fr) minmax(0, 4.5em) minmax(
+  grid-template-rows: minmax(0, 4.5em) minmax(0, 20em) minmax(0, 4.5em) minmax(
       0,
       auto
     );
@@ -57,7 +57,7 @@ div.seed-box {
   display: grid;
   column-gap: 1em;
   grid-template-columns: repeat(6, 1fr);
-  grid-template-rows: minmax(1fr);
+  grid-template-rows: minmax(0, 1fr);
 }
 
 div#seeds0 {
@@ -94,9 +94,6 @@ div.game-area span.seed-num {
 }
 
 div.game-area div.hole {
-  width: 70%;
-  padding-bottom: 70%;
-  height: 0;
   min-width: 0;
   min-height: 0;
   color: white;
@@ -104,6 +101,9 @@ div.game-area div.hole {
   background-color: #373f41;
   justify-self: center;
   align-self: center;
+  height: 100%;
+  aspect-ratio: 1 / 1;
+  max-width: 100%;
   position: relative;
 }
 
@@ -213,10 +213,9 @@ div.game .message::before {
 @media (max-width: 800px) {
   div.game-area {
     grid-template-columns: minmax(0, 1.3fr) minmax(0, 6fr) minmax(0, 1.3fr);
-    grid-template-rows: minmax(0, 3.5em) minmax(0, 4.5em) minmax(0, 1fr) minmax(
-        0,
-        4.5em
-      ) minmax(0, 3.5em) minmax(0, auto);
+    grid-template-rows:
+      minmax(0, 3.5em) minmax(0, 4.5em) minmax(0, 15em) minmax(0, 4.5em)
+      minmax(0, 3.5em) minmax(0, auto);
     grid-template-areas:
       ". name1 ."
       ". seeds1 ."
@@ -228,7 +227,7 @@ div.game .message::before {
   }
 
   div.game-area .player-name {
-      font-size: 22px;
+    font-size: 22px;
   }
 
   div.game-area div#board {
@@ -250,11 +249,6 @@ div.game .message::before {
 
   div.game-area span.seed-num {
     font-size: 20px;
-  }
-
-  div.game-area div.hole {
-    width: 100%;
-    padding-bottom: 100%;
   }
 }
 

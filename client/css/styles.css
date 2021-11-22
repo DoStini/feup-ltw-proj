@@ -9,6 +9,7 @@ body {
   max-height: fit-content;
   width: 100%;
   min-height: 100vh;
+  max-width: 100%;
   margin: 0;
   font-family: "Mulish", "sans-serif";
   display: grid;
@@ -55,7 +56,7 @@ header.main-header > nav {
   grid-area: nav;
 }
 
-header.main-header > form {
+header.main-header > div {
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
@@ -66,6 +67,11 @@ header.main-header > form {
 
 header.main-header > h1 {
   grid-area: title;
+  cursor: pointer;
+}
+
+header.main-header > h1:hover {
+  color: #3c64b1;
 }
 
 button {
@@ -93,26 +99,21 @@ a:hover {
 }
 
 section#init-menu {
-  height: 100%;
-  grid-area: body;
-  visibility: hidden;
-}
-
-section#init-menu > form {
+  min-height: 80%;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
-  height: 70%;
 }
 
-section#init-menu > form > h2 {
+section#init-menu > h2 {
   text-align: center;
   font-size: 38px;
 }
 
 section#init-menu button {
   width: 20em;
+  margin-bottom: 1em;
 }
 
 footer {
@@ -130,10 +131,12 @@ footer {
 /* Authentication Section */
 
 section#auth {
-  visibility: hidden;
-  grid-area: body;
   display: flex;
   flex-direction: column;
+}
+
+section#auth input {
+  font-size: 18px;
 }
 
 section#auth > #auth-form {
@@ -159,6 +162,44 @@ section#auth > #auth-form > section#login {
   border-right: 1px solid black;
 }
 
+/* Login Grid Section */
+
+section#auth > #auth-form > section > #login-form {
+  display: grid;
+  grid-template-rows: 0.5fr 1fr 0.1fr 0.5fr 1fr 0.1fr 1fr;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas:
+    "label1"
+    "input1"
+    "."
+    "label2"
+    "input2"
+    "."
+    "submit";
+  row-gap: 0.4em;
+}
+
+form#login-form > label[for="username-login"] {
+  grid-area: label1;
+}
+
+form#login-form > input#username-login {
+  grid-area: input1;
+}
+
+section#login > #login-form > label[for="password-login"] {
+  grid-area: label2;
+}
+
+form#login-form > input#password-login {
+  grid-area: input2;
+}
+
+form#login-form > button {
+  grid-area: submit;
+  justify-self: right;
+}
+
 @media (max-width: 950px) {
   section#auth > #auth-form > section {
     margin: 0 auto;
@@ -181,44 +222,6 @@ section#auth > #auth-form > section#login {
   }
 }
 
-/* Login Grid Section */
-
-section#auth > #auth-form > section > #login-form {
-  display: grid;
-  grid-template-rows: 0.5fr 1fr 0.1fr 0.5fr 1fr 0.1fr 1fr;
-  grid-template-columns: minmax(0, 1fr);
-  grid-template-areas:
-    "label1"
-    "input1"
-    "."
-    "label2"
-    "input2"
-    "."
-    "submit";
-  row-gap: 0.4em;
-}
-
-form#login-form > label[for="username"] {
-  grid-area: label1;
-}
-
-form#login-form > input#username {
-  grid-area: input1;
-}
-
-section#login > #login-form > label[for="password"] {
-  grid-area: label2;
-}
-
-form#login-form > input#password {
-  grid-area: input2;
-}
-
-form#login-form > button {
-  grid-area: submit;
-  justify-self: right;
-}
-
 /* Register Grid Section */
 
 section#auth > #auth-form > section > #register-form {
@@ -239,19 +242,19 @@ section#auth > #auth-form > section > #register-form {
   row-gap: 0.4em;
 }
 
-form#register-form > label[for="username"] {
+form#register-form > label[for="username-register"] {
   grid-area: label1;
 }
 
-form#register-form > input#username {
+form#register-form > input#username-register {
   grid-area: input1;
 }
 
-section#register > #register-form > label[for="password"] {
+section#register > #register-form > label[for="password-register"] {
   grid-area: label2;
 }
 
-form#register-form > input#password {
+form#register-form > input#password-register {
   grid-area: input2;
 }
 
@@ -269,11 +272,6 @@ form#register-form > button {
 }
 
 section#config {
-  grid-area: body;
-  visibility: hidden;
-}
-
-section#config > form {
   padding: 6em;
 }
 
@@ -665,7 +663,7 @@ i.button {
     column-gap: 2em;
   }
 
-  section#config > form {
+  section#config {
     padding: 2em;
   }
 
@@ -718,7 +716,7 @@ i.button {
 }
 
 @media (max-width: 450px) {
-  section#init-menu > form > h2 {
+  section#init-menu > h2 {
     font-size: 32px;
   }
 
@@ -747,7 +745,30 @@ i.button {
     column-gap: 2em;
   }
 
-  section#config > form {
+  section#config {
     padding: 1em;
+  }
+}
+
+.in-body {
+  grid-area: body;
+  transition: visibility 0s, opacity 0.3s linear;
+  opacity: 1;
+}
+
+.show {
+  animation: fade-in 0.3s;
+}
+
+.hidden {
+  visibility: hidden;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }

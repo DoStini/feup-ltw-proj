@@ -1,3 +1,5 @@
+'use strict'
+
 function setupPopupWindows() {
     ["rules", "leaderboard"].forEach((target) => {
         document.getElementById(`${target}-open-btn`).addEventListener('click', () => {
@@ -57,6 +59,7 @@ function setupGameStatus() {
     document.getElementById("game-status").style.transition = "";
 }
 
+
 function setupBoard(nHoles) {
     const board = document.getElementById("board");
 
@@ -65,6 +68,8 @@ function setupBoard(nHoles) {
             el.style['grid-template-columns'] = `repeat(${nHoles}, 1fr)`;
         })
     board.style['grid-template-columns'] = `repeat(${nHoles}, 1fr)`;
+
+    document.getElementById("board").innerHTML = null;
 
     [1, 0].forEach(el => {
         const seedCounterWrapper = document.getElementById(`seeds${el}`);
@@ -116,7 +121,8 @@ function setupGame(nHoles, seedsPerHole) {
 
 function main() {
     setupPopupWindows();
-    setupGame(6, 4);
+    setupPages();
+    
     window.addEventListener('load', setupGameStatus);
 }
 
