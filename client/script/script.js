@@ -35,23 +35,30 @@ function setupPopupWindows() {
 }
 
 function setupBoard(nHoles) {
+    const board = document.getElementById("board");
+
     document.querySelectorAll("div.seed-box")
         .forEach(el => {
             el.style['grid-template-columns'] = `repeat(${nHoles}, 1fr)`;
         })
-    document.getElementById("board").style['grid-template-columns'] = `repeat(${nHoles}, 1fr)`;
+    board.style['grid-template-columns'] = `repeat(${nHoles}, 1fr)`;
 
     [1, 0].forEach(el => {
-        let seedCounter = "";
-        let seedHole = "";
+        const seedCounterWrapper = document.getElementById(`seeds${el}`);
+        seedCounterWrapper.innerHTML = "";
 
         for (let i = 0; i < nHoles; i++) {
-            seedCounter += `<span class="seed-num" id="seeds${el}-${i}">0</span>`;      
-            seedHole += `<div class="hole ${el == 0 ? "player-hole" : ""}" id="hole${el}-${i}"></div>`
-        }
+            const seedCounter = document.createElement("span");
+            seedCounter.className = "seed-num";
+            seedCounter.id = `seeds${el}-${i}`;
+            seedCounter.innerHTML = "0";
+            seedCounterWrapper.appendChild(seedCounter);
 
-        document.getElementById(`seeds${el}`).innerHTML = seedCounter;
-        document.getElementById("board").innerHTML += seedHole;
+            const seedHole = document.createElement("div");
+            seedHole.className = `hole ${el == 0 ? " player-hole" : ""}`;
+            seedHole.id = `hole${el}-${i}`;
+            board.appendChild(seedHole);
+        }
     });
 }
 
@@ -61,15 +68,14 @@ function setupSeeds(nHoles, seedsPerHole) {
         for (let i = 0; i < nHoles; i++) {
             const elem = document.getElementById(`hole${el}-${i}`);
             
-            let res = "";
-
             for (let j = 0; j < seedsPerHole; j++) {
                 const [x, y] = [0, 0].map(() => Math.random() * 60 +  5);
                 const rot = Math.random() * 90;
-                res += `<div id="seed${el}-${i}-${j}" class="seed" style=left:${x}%;top:${y}%;transform:rotate(${rot}deg)></div>`
-            }
+                const newElem = document.createElement("div");
+                newElem.innerHTML = `<div id="seed${el}-${i}-${j}" class="seed" style=left:${x}%;top:${y}%;transform:rotate(${rot}deg)></div>`
 
-            elem.innerHTML = res;
+                elem.appendChild(newElem);
+            }
         }
     });
 }
