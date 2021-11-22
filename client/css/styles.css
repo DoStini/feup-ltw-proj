@@ -99,7 +99,7 @@ a:hover {
 }
 
 section#init-menu {
-  height: 80%;
+  min-height: 80%;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -113,6 +113,7 @@ section#init-menu > h2 {
 
 section#init-menu button {
   width: 20em;
+  margin-bottom: 1em;
 }
 
 footer {
