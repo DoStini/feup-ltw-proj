@@ -30,7 +30,7 @@ function GameState(game, board) {
  * @param {Game} game
  * @param {number} hole 
  */
-GameState.prototype.sowSeeds = function(hole) {}
+GameState.prototype.sowSeeds = function(hole) {console.log("nothing to do in " + hole)}
 
 GameState.prototype.run = function() {}
 
@@ -60,6 +60,16 @@ PlayerState.prototype.run = function() {
     for(let i = 0; i < this.board.nHoles; i++) {
         document.getElementById(`hole0-${i}`).classList.add("player-hole");
     }
+
+    const message = document.createElement("span");
+    const board =  document.getElementById("message-board");
+
+    document.getElementById("name0").classList.add("player-turn");
+    document.getElementById("name1").classList.remove("player-turn");
+
+    message.innerText = "Player, it's your turn to play";
+    message.classList.add("message");
+    board.insertBefore(message, board.firstChild);
 }
 
 /**
@@ -82,6 +92,20 @@ WaitState.prototype.run = function() {
     for(let i = 0; i < this.board.nHoles; i++) {
         document.getElementById(`hole0-${i}`).classList.remove("player-hole");
     }
+
+    document.getElementById("name1").classList.add("player-turn");
+    document.getElementById("name0").classList.remove("player-turn");
+
+    const message = document.createElement("span");
+    const board =  document.getElementById("message-board");
+
+    message.innerText = "It's the AI's turn";
+    message.classList.add("message");
+    board.insertBefore(message, board.firstChild);
+
+    setTimeout(function() {
+        this.game.changeState(new PlayerState(this.game, this.board));
+    }.bind(this), 2000);
 }
 
 /**
@@ -174,9 +198,11 @@ function setupSeeds(board) {
  * 
  * @param {Game} board  
  */
-function setupHoles() {
+function setupHoles(game) {
     document.querySelectorAll(".player-hole").forEach(hole => {
-        hole.addEventListener('click', game.sowSeeds.bind(game, hole))
+        let curHole = parseInt(hole.id.split("-")[1]);
+
+        hole.addEventListener('click', game.sowSeeds.bind(game, curHole))
     })
 }
 
@@ -187,7 +213,7 @@ function setupGame(nHoles, seedsPerHole, turn) {
 
     let gameState;
 
-    game = new Game();
+    const game = new Game();
     if(turn === 0) {
         gameState = new PlayerState(game, board);
     } else {
@@ -195,7 +221,5 @@ function setupGame(nHoles, seedsPerHole, turn) {
     }
     game.changeState(gameState);
 
-    setupHoles();
+    setupHoles(game);
 }
-
-let game;

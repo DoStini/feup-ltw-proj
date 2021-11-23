@@ -154,12 +154,15 @@ div.game-area .player-name {
   align-self: center;
   width: 80%;
   text-align: center;
+  transition: 0.5s border;
 }
 
 div.game-area .player-back {
   padding: 0.2em;
   min-width: 0;
   min-height: 0;
+  transition: 0.5s border-bottom;
+  border-bottom: 0px solid #373f41;
 }
 
 div.game-area #name1 .player-back {
@@ -171,9 +174,13 @@ div.game-area #name0 .player-back {
   color: white;
 }
 
-.player-turn > .player-back {
-  border-bottom: 4px solid #373f41;
+div.player-turn > div.player-back {
+  border-bottom: 6px solid #373f41;
 }
+
+.player-wait > .player-back {
+    border-bottom: 0;
+  }
 
 /* MESSAGE BOARD */
 div.game-area > section#message-board {
