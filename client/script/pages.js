@@ -34,8 +34,13 @@ PageManager.prototype.setPage = function (elementId) {
 function startGame() {
     let holes = document.getElementById("holes").value;
     let seeds = document.getElementById("seeds").value;
+    let turn = 0;
 
-    setupGame(holes, seeds);
+    if(document.getElementById("ai-order-ai").checked) {
+        turn = 1;
+    }
+
+    setupGame(holes, seeds, turn);
     pageManager.setPage("game-section");
     document.getElementById("game-status").classList.remove("hidden");
 }
