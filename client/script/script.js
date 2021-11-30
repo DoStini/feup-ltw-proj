@@ -59,6 +59,56 @@ function setupGameStatus() {
     document.getElementById("game-status").style.transition = "";
 }
 
+async function changeHole(evt, el) {
+    const animationDuration = 2;
+    const animationDelay = 0.1;
+    const positionDuration = animationDuration - animationDelay;
+    const dimensionDuration = (animationDuration - animationDelay ) / 2;
+    const animationInterval = 0.2;
+
+    const hole = evt.target;
+    const board = document.getElementById("board");
+    const currentHole = parseInt(hole.id.split("-")[1]);
+    
+    Array.from(hole.children).reverse().forEach((seed, idx) => {
+        setTimeout(() => {
+            const nextHole = document.getElementById(`hole${el}-${currentHole + idx + 1}`);
+            const {left, top, height, width} = hole.getBoundingClientRect();
+            const {left: leftLast, topLast} = nextHole.getBoundingClientRect();
+            const fakeHole = hole.cloneNode();
+            
+            fakeHole.id = `fake-hole-${idx}`;
+            fakeHole.style.backgroundColor = "rgba(0,0,0,0)";
+    
+            fakeHole.style.position = "absolute";
+            fakeHole.style.transition = `left ${positionDuration}s, top ${positionDuration}s, width ${dimensionDuration}s, height ${dimensionDuration}s`;
+            fakeHole.style.left = `${left}px`;
+            fakeHole.style.top = `${top}px`;
+            fakeHole.style.width = `${width}px`;
+            fakeHole.style.height = `${height}px`;
+    
+            fakeHole.append(seed);
+            board.append(fakeHole);
+    
+            setTimeout(() => {
+                fakeHole.style.left = `${leftLast}px`;
+                fakeHole.style.top = `${topLast}px`;
+                fakeHole.style.width = `${width + 100}px`;
+                fakeHole.style.height = `${height + 100}px`;
+            }, animationDelay * 1000);
+    
+            setTimeout(() => {
+                fakeHole.style.width = `${width}px`;
+                fakeHole.style.height = `${height}px`;
+            }, (animationDelay + dimensionDuration) * 1000);
+    
+            setTimeout(() => {
+                nextHole.append(seed);
+                fakeHole.remove();
+            }, animationDuration * 1000);
+        }, animationInterval * idx * 1000);
+    });
+}
 
 function setupBoard(nHoles) {
     const board = document.getElementById("board");
@@ -83,7 +133,14 @@ function setupBoard(nHoles) {
             seedCounterWrapper.appendChild(seedCounter);
 
             const seedHole = document.createElement("div");
-            seedHole.className = `hole ${el == 0 ? " player-hole" : ""}`;
+            
+            if (el == 0) {
+                seedHole.className = "hole player-hole";
+                seedHole.addEventListener("click", (e) => changeHole(e, el));
+            } else {
+                seedHole.className = "hole";
+            }
+            
             seedHole.id = `hole${el}-${i}`;
             board.appendChild(seedHole);
         }

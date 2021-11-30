@@ -260,4 +260,5 @@ div.game .message::before {
   background-color: #bfbfbf;
   border: 1px solid #8c8c8c;
   position: absolute;
+  pointer-events: none;
 }
