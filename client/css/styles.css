@@ -647,6 +647,30 @@ i.button {
   }
 }
 
+@media (max-width: 800px), (max-height: 475px) {
+  section#game-status > header {
+    padding: 0.5em;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    height: 4em;
+    border-radius: 1.5em 0 0 1.5em;
+  }
+
+  section#game-status > header > h2 {
+    display: none;
+  }
+
+  section#game-status > header > svg {
+    width: 2em;
+  }
+
+  section#game-status > #game-status-info {
+    border-radius: 0 0 0 1.5em;
+  }
+}
+
 @media (max-width: 800px) {
   section#config div.config-layout {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
@@ -690,28 +714,6 @@ i.button {
 
   button {
     font-size: 16px;
-  }
-
-  section#game-status > header {
-    padding: 0.5em;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
-    height: 4em;
-    border-radius: 1.5em 0 0 1.5em;
-  }
-
-  section#game-status > header > h2 {
-    display: none;
-  }
-
-  section#game-status > header > svg {
-    width: 2em;
-  }
-
-  section#game-status > #game-status-info {
-    border-radius: 0 0 0 1.5em;
   }
 }
 
