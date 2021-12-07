@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 function setupPopupWindows() {
     ["rules", "leaderboard"].forEach((target) => {
