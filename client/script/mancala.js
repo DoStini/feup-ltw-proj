@@ -1,5 +1,7 @@
 "use strict";
 
+const ANIM_EVENT = new Event('animation-end');
+
 function addMessage(messageText) {
     const message = document.createElement("span");
     const board = document.getElementById("message-board");
@@ -57,8 +59,6 @@ class Board {
 
         this.seeds = container;
     }
-
-    
 
     render () {
         const boardElement = document.getElementById("board");
@@ -139,7 +139,8 @@ class PlayerState extends GameState {
     sowSeeds(hole) {
         console.log(hole);
 
-        this.nextState();
+        this.game.nextPlayerState();
+        this.game.nextEnemyState();
     }
     
     run() {
@@ -154,6 +155,16 @@ class PlayerState extends GameState {
 
     nextState() {
         return new WaitState(this.game, this.board, this.player);
+    }
+}
+
+class AnimationState extends GameState {
+    constructor(game, board, player, nextStateConstructor) {
+        super(game, board, player);
+    }
+
+    nextState() {
+        return new nextStateConstructor(this.game, this.board, this.player);
     }
 }
 
@@ -190,7 +201,7 @@ class PlayAIState extends GameState {
 
         setTimeout(function () {
             this.game.nextPlayerState();
-            this.nextState();
+            this.game.nextEnemyState();
         }.bind(this), 2000);
     }
 
