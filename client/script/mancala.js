@@ -139,8 +139,8 @@ class PlayerState extends GameState {
      */
     sowSeeds(hole) {
         console.log(hole);
-        animateSeeds(hole, this.player.id);
         this.game.nextPlayerState(this.player);
+        animateSeeds(hole, this.player.id);
     }
     
     run() {
@@ -215,8 +215,8 @@ class PlayAIState extends GameState {
 
     sowSeeds(hole) {
         console.log(hole);
-        animateSeeds(hole, this.player.id);
         this.game.nextPlayerState(this.player);
+        animateSeeds(hole, this.player.id);
     }
 
     run() {
@@ -394,12 +394,13 @@ async function animateSeeds(holeId, el) {
                 fakeHole.remove();
             }, animationDuration * 1000);
         }, animationInterval * idx * 1000);
-    
+    });
+
+
     setTimeout(() => {
         console.log("dispatch")
         dispatchEvent(ANIM_EVENT);
     }, (animationDuration + animationInterval * numSeeds) * 1000);
 
-    });
 }
 
