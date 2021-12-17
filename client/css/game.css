@@ -112,7 +112,9 @@ div.game-area div.player-hole:hover {
   cursor: pointer;
 }
 
-div.game-area div#storage0 {
+div.game-area div#storage-0 {
+  position: relative;
+  z-index: -1000;
   background-color: #373f41;
   grid-area: storage0;
   min-width: 0;
@@ -121,7 +123,9 @@ div.game-area div#storage0 {
   box-shadow: 0.1em 0.2em 0.1em rgba(0, 0, 0, 0.2);
 }
 
-div.game-area div#storage1 {
+div.game-area div#storage-1 {
+  position: relative;
+  z-index: -1000;
   background-color: #373f41;
   grid-area: storage1;
   min-width: 0;
@@ -179,8 +183,8 @@ div.player-turn > div.player-back {
 }
 
 .player-wait > .player-back {
-    border-bottom: 0;
-  }
+  border-bottom: 0;
+}
 
 /* MESSAGE BOARD */
 div.game-area > section#message-board {
