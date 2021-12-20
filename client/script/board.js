@@ -32,6 +32,12 @@ class Board {
 
         document.getElementById("board").innerHTML = null;
 
+        // this.storage.forEach((store, idx) => {
+        //     store.forEach(seed => {
+        //         seed.render(document.getElementById(`storage-${idx}`));
+        //     })
+        // });
+
         [1, 0].forEach(el => {
             const seedCounterWrapper = document.getElementById(`seeds${el}`);
             seedCounterWrapper.innerHTML = "";
@@ -41,14 +47,12 @@ class Board {
                 const seedCounter = document.createElement("span");
                 seedCounter.className = "seed-num";
                 seedCounter.id = `seeds${el === 0 ? i : this.nHoles * 2 - i - 1}`;
-                console.log(idx, this.seeds)
 
                 seedCounter.innerHTML = this.seeds[idx].length;
                 seedCounterWrapper.appendChild(seedCounter);
 
                 const seedHole = document.createElement("div");
                 seedHole.className = `hole${el === 0 ? " player-hole" : ""}`;
-                console.log(seedHole)
                 seedHole.id = `hole-${el === 0 ? i : this.nHoles * 2 - i - 1}`;
                 boardElement.appendChild(seedHole);
                 this.seeds[idx].forEach(seed => {

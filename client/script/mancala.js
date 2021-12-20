@@ -32,13 +32,10 @@ class GameState {
      * @param {number} hole
      */
     sowSeeds(hole) {
-        console.log(hole);
         let seeds = this.board.seeds[hole].length;
         let lastHole = hole
         let curHole = lastHole;
         let destHoles = [];
-
-        console.log(seeds);
 
         for (let i = 0; i < seeds; i++) {
             if (lastHole == this.player.id * this.board.nHoles + this.board.nHoles - 1) {
@@ -55,8 +52,6 @@ class GameState {
                 lastHole = curHole;
             }
         }
-
-        console.log("dest holes ", destHoles);
 
         return destHoles;
     }
@@ -109,7 +104,6 @@ class AnimationState extends GameState {
         this.callback = this.handleEvent.bind(this);
 
         window.addEventListener(ANIM_EVENT_NAME, this.callback);
-        console.log("hello ", this.player, " is animating");
     }
 
     sowSeeds(hole) {
@@ -120,8 +114,7 @@ class AnimationState extends GameState {
     }
 
     handleEvent() {
-        console.log("hello ", this.player, " finished animating");
-
+        // this.board.render();
         this.game.nextPlayerState(() => {
             return this.nextStateConstructor(this.game, this.board, this.player, this.otherPlayer)
         });
@@ -176,7 +169,7 @@ class PlayAIState extends GameState {
                     return new AnimationState(this.game, this.board, this.player, this.otherPlayer, (game, board, player, otherPlayer) => new PlayerState(game, board, otherPlayer, player));
                 });
             }
-    
+
             animateSeeds(hole, this.board.nHoles, destHoles);
         }.bind(this), 2000);
     }
@@ -254,6 +247,35 @@ function setupGame(nHoles, seedsPerHole, turn) {
 }
 
 
+function calculateTargetPosition(seed, hole) {
+    const copySeed = seed.cloneNode();
+    copySeed.style.transform = "";
+    copySeed.id = `copy-${seed.id}`;
+
+    hole.append(copySeed);
+    const { left, top } = copySeed.getBoundingClientRect();
+
+    copySeed.remove();
+
+    return {
+        left,
+        top,
+    }
+}
+
+function calculateInitialPosition(seed, hole) {
+    const copySeed = seed.cloneNode();
+    copySeed.style.transform = "";
+    copySeed.id = `copy-${seed.id}`;
+
+    hole.append(copySeed);
+    const rect = copySeed.getBoundingClientRect();
+
+    copySeed.remove();
+
+    return rect;
+}
+
 async function animateSeeds(holeId, nHoles, idList) {
     const animationDuration = 2;
     const animationDelay = 0.1;
@@ -265,7 +287,6 @@ async function animateSeeds(holeId, nHoles, idList) {
 
     const hole = document.getElementById(`hole-${holeId}`);
     const board = document.getElementById("board");
-    const currentHole = parseInt(hole.id.split("-")[1]);
 
     const numSeeds = hole.children.length;
 
@@ -274,45 +295,41 @@ async function animateSeeds(holeId, nHoles, idList) {
             const currentHoleId = idList[idx];
             const isHole = currentHoleId < boardOffset;
             const nextHole = document.getElementById(isHole ? `hole-${currentHoleId}` : `storage-${currentHoleId - boardOffset}`);
-            console.log("holeeee", isHole, currentHoleId, isHole ? `hole-${currentHoleId}` : `storage-${currentHoleId - boardOffset}`)
-            const { left, top, height, width } = hole.getBoundingClientRect();
-            const { left: leftLast, top: topLast, height: heightLast, width: widthLast } = nextHole.getBoundingClientRect();
-            const fakeHole = hole.cloneNode();
-            console.log("cont", leftLast, topLast, height, width);
-            fakeHole.id = `fake-hole-${idx}`;
-            fakeHole.style.backgroundColor = "rgba(0,0,0,0)";
+            const {left: targetLeft, top: targetTop} = calculateTargetPosition(seed, nextHole, board);
 
-            fakeHole.style.position = "absolute";
-            fakeHole.style.transition = `left ${positionDuration}s, top ${positionDuration}s, width ${dimensionDuration}s, height ${dimensionDuration}s`;
-            fakeHole.style.left = `${left}px`;
-            fakeHole.style.top = `${top}px`;
-            fakeHole.style.width = `${width}px`;
-            fakeHole.style.height = `${height}px`;
+            const { left, top, height, width } = calculateInitialPosition(seed, hole);
 
-            fakeHole.append(seed);
-            board.append(fakeHole);
+            seed.remove();
+
+            const fakeSeed = seed.cloneNode();
+
+            board.appendChild(fakeSeed);
+            fakeSeed.style.position = "fixed";
+            fakeSeed.id = `fake-${seed.id}`;
+            fakeSeed.style.left = `${left}px`;
+            fakeSeed.style.top = `${top}px`;
+            fakeSeed.style.zIndex = "1000000000";
+            fakeSeed.style.width = `${width}px`;
+            fakeSeed.style.height = `${height}px`;
+
 
             setTimeout(() => {
-                fakeHole.style.left = `${leftLast}px`;
-                fakeHole.style.top = `${topLast}px`;
-                fakeHole.style.width = `${width + 100}px`;
-                fakeHole.style.height = `${height + 100}px`;
+                fakeSeed.style.transition = `left ${positionDuration}s, top ${positionDuration}s, width ${dimensionDuration}s, height ${dimensionDuration}s`;
+                fakeSeed.style.left = `${targetLeft}px`;
+                fakeSeed.style.top = `${targetTop}px`;
+                fakeSeed.style.width = `${width + 30}px`;
+                fakeSeed.style.height = `${height + 30}px`;
+                
             }, animationDelay * 1000);
 
             setTimeout(() => {
-                fakeHole.style.width = `${width}px`;
-                fakeHole.style.height = `${height}px`;
+                fakeSeed.style.width = `${width}px`;
+                fakeSeed.style.height = `${height}px`;
             }, (animationDelay + dimensionDuration) * 1000);
 
             setTimeout(() => {
-                const fake = seed.cloneNode();
-                fake.style.backgroundColor = "rgba(125,12,125,255)";
-                nextHole.append(fake);
-            })
-
-            setTimeout(() => {
+                fakeSeed.remove();
                 nextHole.append(seed);
-                fakeHole.remove();
             }, animationDuration * 1000);
 
         }, animationInterval * idx * 1000);
@@ -320,7 +337,6 @@ async function animateSeeds(holeId, nHoles, idList) {
 
 
     setTimeout(() => {
-        console.log("dispatch")
         dispatchEvent(ANIM_EVENT);
     }, (animationDuration + animationInterval * numSeeds) * 1000);
 

@@ -69,6 +69,7 @@ div#seeds1 {
 
 div.game-area > div#board {
   grid-area: board;
+  position: relative;
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
@@ -264,9 +265,11 @@ div.game .message::before {
 }
 
 .seed {
-  width: 35%;
-  height: 0;
-  padding-bottom: 20%;
+  box-sizing: border-box;
+  width: 2.5vw;
+  height: 1.2vw;
+  margin: 0;
+  padding: 0;
   border-radius: 100%;
   background-color: #bfbfbf;
   border: 1px solid #8c8c8c;
