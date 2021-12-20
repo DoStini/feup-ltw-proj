@@ -71,29 +71,51 @@ class PlayerState extends GameState {
         document.getElementById(`name${this.player.id}`).classList.add("player-turn");
         document.getElementById(`name${this.otherPlayer.id}`).classList.remove("player-turn");
         addMessage(MESSAGE.otherTurn(this.player.name));
-
+        console.log("hello?")
         for (let i = 0; i < this.board.nHoles; i++) {
             document.getElementById(`hole-${i}`).classList.add("player-hole");
         }
     }
 
-    clickHole(hole) {
+    async clickHole(hole) {
+        if (this.board.seeds[hole].length === 0) return;
         this.game.nextPlayerState(() => new WaitState(this.game, this.board, this.player, this.otherPlayer));
 
         let destHoles = this.sowSeeds(hole); /** @property {Array} destHoles */
         let lastHole = destHoles[destHoles.length - 1];
 
+        await animateSeeds(hole, this.board.nHoles, destHoles);
+        console.log("finished");
+        console.log(destHoles);
         if (lastHole == this.board.nHoles * 2 + this.player.id) {
             this.game.nextPlayerState(() => {
-                return new AnimationState(this.game, this.board, this.player, this.otherPlayer, (game, board, player, otherPlayer) => new PlayerState(game, board, player, otherPlayer));
+                return new PlayerState(this.game, this.board, this.player, this.otherPlayer);
             });
         } else {
+            console.log(this.board.seeds[lastHole].length);
+            if(lastHole >= this.board.nHoles * this.player.id && lastHole < this.board.nHoles * (this.player.id + 1) &&this.board.seeds[lastHole].length === 1) {
+                let storage = this.board.nHoles * 2 + this.player.id;
+                let oppositeHole = this.board.nHoles*2 - 1 - lastHole;
+                let oppositeSeeds = this.board.seeds[oppositeHole].length;
+                console.log("ceazy ");
+
+                for(let i = 0; i < oppositeSeeds; i++) {
+                    this.board.storage[this.player.id].push(this.board.seeds[oppositeHole].pop())
+                }
+                this.board.storage[this.player.id].push(this.board.seeds[lastHole].pop());
+
+                console.log(oppositeHole, [storage], Array(oppositeSeeds).fill(storage), oppositeSeeds);
+
+                await Promise.all([
+                    animateSeeds(lastHole, this.board.nHoles, [storage]),
+                    animateSeeds(oppositeHole, this.board.nHoles, Array(oppositeSeeds).fill(storage)),
+                ], () => console.log("finish both"));
+            }
+
             this.game.nextPlayerState(() => {
-                return new AnimationState(this.game, this.board, this.player, this.otherPlayer, (game, board, player, otherPlayer) => new PlayAIState(game, board, otherPlayer, player));
+                return new PlayAIState(this.game, this.board, this.otherPlayer, this.player);
             });
         }
-
-        animateSeeds(hole, this.board.nHoles, destHoles);
     }
 }
 
@@ -149,28 +171,61 @@ class PlayAIState extends GameState {
         super(game, board, player, otherPlayer);
     }
 
-    run() {
+    async run() {
         addMessage(MESSAGE.otherTurn(this.player.name));
         document.getElementById(`name${this.player.id}`).classList.add("player-turn");
         document.getElementById(`name${this.otherPlayer.id}`).classList.remove("player-turn");
 
-        setTimeout(function () {
-            let hole = ((Math.random() * this.board.nHoles) >> 0) + this.board.nHoles;
+        setTimeout(async function () {
+            let avail = [];
+
+            for(let i = this.board.nHoles * this.player.id; i < this.board.nHoles * (this.player.id + 1); i++) {
+                if(this.board.seeds[i].length > 0) {
+                    avail.push(i);
+                }
+            }
+
+            if(avail.length === 0) {
+                return;
+            }
+            let hole = avail[(Math.random() * avail.length) >> 0];
 
             let destHoles = this.sowSeeds(hole); /** @property {Array} destHoles */
             let lastHole = destHoles[destHoles.length - 1];
-    
+
+            await animateSeeds(hole, this.board.nHoles, destHoles);
+            console.log("finished");
+            console.log(destHoles, lastHole);
             if (lastHole == this.board.nHoles * 2 + this.player.id) {
                 this.game.nextPlayerState(() => {
-                    return new AnimationState(this.game, this.board, this.player, this.otherPlayer, (game, board, player, otherPlayer) => new PlayAIState(game, board, player, otherPlayer));
+                    return new PlayAIState(this.game, this.board, this.player, this.otherPlayer);
                 });
             } else {
+                if(lastHole >= this.board.nHoles * this.player.id && lastHole < this.board.nHoles * (this.player.id + 1) && this.board.seeds[lastHole].length === 1) {
+                    let storage = this.board.nHoles * 2 + this.player.id;
+                    let oppositeHole = this.board.nHoles*2 - 1 - lastHole;
+                    let oppositeSeeds = this.board.seeds[oppositeHole].length;
+                    console.log("ceazy ");
+    
+                    for(let i = 0; i < oppositeSeeds; i++) {
+                        this.board.storage[this.player.id].push(this.board.seeds[oppositeHole].pop())
+                    }
+                    this.board.storage[this.player.id].push(this.board.seeds[lastHole].pop());
+    
+                    console.log(oppositeHole, [storage], Array(oppositeSeeds).fill(storage), oppositeSeeds);
+    
+                    await Promise.all([
+                        animateSeeds(lastHole, this.board.nHoles, [storage]),
+                        animateSeeds(oppositeHole, this.board.nHoles, Array(oppositeSeeds).fill(storage)),
+                    ], () => console.log("finish both"));
+    
+                    /// TODO:: HOW TO WAIT UNTIL BOTH ANIMS END?
+                }
+    
                 this.game.nextPlayerState(() => {
-                    return new AnimationState(this.game, this.board, this.player, this.otherPlayer, (game, board, player, otherPlayer) => new PlayerState(game, board, otherPlayer, player));
+                    return new PlayerState(this.game, this.board, this.otherPlayer, this.player);
                 });
             }
-
-            animateSeeds(hole, this.board.nHoles, destHoles);
         }.bind(this), 2000);
     }
 }
@@ -194,8 +249,8 @@ class Game {
         this.state.run();
     }
 
-    sowSeeds(hole) {
-        this.state.clickHole(hole);
+    async sowSeeds(hole) {
+        await this.state.clickHole(hole);
     }
 }
 
@@ -336,9 +391,7 @@ async function animateSeeds(holeId, nHoles, idList) {
     });
 
 
-    setTimeout(() => {
-        dispatchEvent(ANIM_EVENT);
-    }, (animationDuration + animationInterval * numSeeds) * 1000);
+    return new Promise(_ => setTimeout(_ , (animationDuration + animationInterval * numSeeds) * 1000));
 
 }
 
