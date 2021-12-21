@@ -115,7 +115,7 @@ div.game-area div.player-hole:hover {
 
 div.game-area div#storage-0 {
   position: relative;
-  z-index: -1000;
+  z-index: -10;
   background-color: #373f41;
   grid-area: storage0;
   min-width: 0;
@@ -126,7 +126,7 @@ div.game-area div#storage-0 {
 
 div.game-area div#storage-1 {
   position: relative;
-  z-index: -1000;
+  z-index: -10;
   background-color: #373f41;
   grid-area: storage1;
   min-width: 0;

@@ -16,7 +16,9 @@
     <script src="https://kit.fontawesome.com/4616109396.js" crossorigin="anonymous"></script>
 
     <script src="../common/constants/mancala.js"></script>
+    <script src="script/common.js" defer></script>
     <script src="script/player.js" defer></script>
+    <script src="script/renderer.js" defer></script>
     <script src="script/seed.js" defer></script>
     <script src="script/board.js" defer></script>
     <script src="script/mancala.js" defer></script>
@@ -45,7 +47,7 @@
 
     <section id="game-section" class="in-body">
         <header>
-            <h3>XXXX's Turn</h3>
+            <h3><span id="status-turn-name"></span>'s Turn</h3>
         </header>
         <div class="game">
             <div class="game-area">
@@ -119,7 +121,7 @@
             <h2>STATUS</h2>
         </header>
         <div id="game-status-info">
-            <h3>Current Turn<br />2</h3>
+            <h3>Current Turn<br /><span id="status-turn">2</span></h3>
 
             <table class="status-player">
                 <tr>

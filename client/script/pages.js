@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 /**
  * 
@@ -51,6 +51,8 @@ function cleanupGame() {
     if(toggleGameStatus.open) {
         toggleGameStatus();
     }
+
+    clearTimeouts();
 
     document.getElementById("message-board").innerText = "";
 }
