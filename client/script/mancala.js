@@ -104,13 +104,20 @@ class PlayerState extends GameState {
     }
 
     run() {
+        this.game.nextTurn();
+        this.game.renderAll();
+
         document.getElementById(`name${this.player.id}`).classList.add("player-turn");
         document.getElementById(`name${this.otherPlayer.id}`).classList.remove("player-turn");
         addMessage(MESSAGE.otherTurn(this.player.name));
 
-        
+        let avail = this.game.getAvailHoles(this.player);
 
-        this.game.nextTurn();
+        if (avail.length === 0) {
+            this.game.endGame(this.player.id);
+
+            return;
+        }
     }
 
     async clickHole(hole) {
@@ -119,7 +126,6 @@ class PlayerState extends GameState {
         this.game.nextPlayerState(() => new WaitState(this.game, this.player, this.otherPlayer));
 
         await this.play(hole);
-        this.game.renderAll();
     }
 }
 /**
@@ -143,6 +149,63 @@ class WaitState extends GameState {
     }
 }
 
+/**
+ * 
+ * @param {Game} game
+ * @param {Board} board 
+ */
+ class EndState extends GameState {
+    constructor(game, player, otherPlayer, lastPlayerId) {
+        super(game, player, otherPlayer);
+        this.lastPlayerId = lastPlayerId;
+    }
+
+    clickHole(hole) {
+
+    }
+
+    calculateWinner() {
+        const score1 = this.game.player1Points();
+        const score2 = this.game.player2Points();
+        return score1 > score2
+            ? {player: this.player, score: score1}
+            : {player: this.otherPlayer, score: score2}
+    }
+
+    showWinner() {
+        const winner = this.calculateWinner();
+   
+        launchEndGame(winner.player.id === 0, winner.player.name, winner.score);
+    }
+
+    async run() {
+        for (let i = 0; i < this.board.nHoles; i++) {
+            document.getElementById(`hole-${i}`).classList.remove("player-hole");
+        }
+       console.log(this.playerId)
+        let destHoles = this.game.collectAllSeeds(
+            this.lastPlayerId === 0 
+                ? this.otherPlayer
+                : this.player); // ????????? what what what what what what what what what
+
+        console.log("destHoles", destHoles)
+
+        const promise = Promise.all(Object.keys(destHoles).map(async function (origin) {
+            let destinations = destHoles[origin];
+            console.log("destination", destinations)
+            
+            await animateSeeds(origin, this.board.nHoles, destinations);
+        }.bind(this)));
+
+        console.log(promise);
+        await promise;
+
+        this.game.renderAll();
+
+        this.showWinner();
+    }
+}
+
 class PlayAIState extends GameState {
     constructor(game, player, otherPlayer) {
         super(game, player, otherPlayer);
@@ -157,30 +220,24 @@ class PlayAIState extends GameState {
     }
 
     async run() {
+        this.game.nextTurn();
+        this.game.renderAll();
+
         addMessage(MESSAGE.otherTurn(this.player.name));
         document.getElementById(`name${this.player.id}`).classList.add("player-turn");
         document.getElementById(`name${this.otherPlayer.id}`).classList.remove("player-turn");
-        this.game.nextTurn();
 
         setTimeoutClearable(async function () {
             let avail = this.game.getAvailHoles(this.player);
 
             if (avail.length === 0) {
-                let destHoles = this.game.collectAllSeeds(this.otherPlayer);
-
-                Object.keys(destHoles).forEach(async function (origin) {
-                    let destinations = destHoles[origin];
-                    
-                    await animateSeeds(origin, this.board.nHoles, destinations);
-                });
-
+                this.game.endGame(this.player.id);
+    
                 return;
             }
             let hole = avail[(Math.random() * avail.length) >> 0];
 
             await this.play(hole);
-            this.game.renderAll();
-
         }.bind(this), 2000);
     }
 }
@@ -227,6 +284,19 @@ class Game {
         this.state.run();
     }
 
+    endGame(playerId) {
+        this.state = new EndState(this, this.player1, this.player2, playerId);
+        this.state.run();
+    }
+
+    player1Points() {
+        return this.board.storage[0].length;
+    }
+
+    player2Points() {
+        return this.board.storage[1].length;
+    }
+
     nextTurn() {
         this.turn++;
     }
@@ -260,14 +330,13 @@ class Game {
     collectAllSeeds(player) {
         let avail = this.getAvailHoles(player);
         let destHoles = {};
-
         avail.forEach((hole) => {
             let storage = this.board.nHoles * 2 + player.id;
             let seeds = this.board.seeds[hole].length;
             destHoles[hole] = Array(seeds).fill(storage);
 
             for(let i = 0; i < seeds; i++) {
-                this.board.storage[this.player.id].push(this.board.seeds[hole].pop());
+                this.board.storage[player.id].push(this.board.seeds[hole].pop());
             }
         });
 
@@ -347,6 +416,7 @@ function calculateInitialPosition(seed, hole) {
 }
 
 async function animateSeeds(holeId, nHoles, idList) {
+
     const animationDuration = 2;
     const animationDelay = 0.1;
     const positionDuration = animationDuration - animationDelay;
@@ -354,7 +424,7 @@ async function animateSeeds(holeId, nHoles, idList) {
     const animationInterval = 0.2;
 
     const boardOffset = nHoles * 2;
-
+    console.log("hole id",`hole-${holeId}`, holeId, document.getElementById(`hole-${holeId}`));
     const hole = document.getElementById(`hole-${holeId}`);
     const board = document.getElementById("board");
 

@@ -16,13 +16,16 @@ function setupPopupWindows() {
             } else {
                 targetElement.style.visibility = "visible";
             }
-        })
+        });
+    });
 
+    ["rules", "leaderboard", "end-game"].forEach((target) => {
         document.getElementById(`close-${target}`).addEventListener('click', () => {
             document.getElementById(target).style.opacity = null;
             document.getElementById(target).style.visibility = null;
-        })
-    })
+        });
+    });
+
 
     document.addEventListener('keydown', (e) => {
         if(e.key === "Escape") {
@@ -32,6 +35,23 @@ function setupPopupWindows() {
             })
         }
     });
+}
+
+function launchEndGame(isWinner, name, points) {
+    const target = document.getElementById("end-game");
+    target.style.opacity = "1";
+    target.style.visibility = "visible";
+
+    const icon = document.getElementById(`${isWinner ? "win" : "lose"}-icon`);
+
+    icon.style.opacity = "1";
+    icon.style.visibility = "visible";
+
+    const nameText = document.getElementById("end-player-name");
+    nameText.innerText = `${name} won the game!`;
+
+    const pointsText = document.getElementById("end-player-points");
+    pointsText.innerText = `The winner conquered ${points} points!`;
 }
 
 function toggleGameStatus() {

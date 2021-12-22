@@ -587,6 +587,45 @@ i.button {
   padding: 0 1em;
 }
 
+.end-game {
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  visibility: collapse;
+}
+
+.end-game-content {
+  overflow-y: auto;
+  position: relative;
+  bottom: 0;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  padding: 1.8em;
+  padding-right: 3.5em;
+  font-size: 16px;
+  padding-top: 0;
+  line-height: 1.8;
+}
+
+.end-game-content > h1 {
+  font-size: 2.5em;
+}
+
+.win-icon {
+  font-size: 10em;
+  visibility: collapse;
+  color: green;
+}
+
+.lose-icon {
+  font-size: 10em;
+  visibility: collapse;
+  color: red;
+}
+
 .popup-window {
   position: absolute;
   top: 15%;
