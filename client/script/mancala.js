@@ -63,7 +63,7 @@ class GameState {
         if (lastHole == this.board.nHoles * 2 + this.player.id) {
             this.game.nextPlayerState(this.getCurrentState.bind(this));
         } else {
-            if (this.game.holeBelongsToPlayer(hole, this.player) && this.board.seeds[lastHole].length === 1) {
+            if (this.game.holeBelongsToPlayer(lastHole, this.player) && this.board.seeds[lastHole].length === 1) {
                 let storage = this.board.nHoles * 2 + this.player.id;
                 let oppositeHole = this.board.nHoles * 2 - 1 - lastHole;
                 let oppositeSeeds = this.board.seeds[oppositeHole].length;
