@@ -1,5 +1,34 @@
 'use strict'
 
+async function leaderboardHandler() {
+    let leaderboard = await retrieveLeaderboard();
+
+    const htmlEntry = (entry, position) => {
+        
+        const elem = document.createElement('tr');
+        elem.innerHTML = `
+                <td>${position}</td>
+                <td class="name-row">${entry.nick}</td>
+                <td>${entry.games}</td>
+                <td>${entry.victories}</td>
+            `;
+        
+        return elem;
+    }
+
+    const tableBody = document.querySelectorAll(".server-leaderboard .leaderboard-table > tbody")[0];
+    tableBody.innerHTML = "";
+
+    for (let i = 0; i < Math.min(5, leaderboard.length - 1); i++) {
+        const entry = leaderboard.at(i);
+        tableBody.append(htmlEntry(entry, i + 1));
+    }
+
+
+    console.log(leaderboard)
+    console.log();
+}
+
 function setupPopupWindows() {
     ["rules", "leaderboard"].forEach((target) => {
         document.getElementById(`${target}-open-btn`).addEventListener('click', () => {
@@ -9,6 +38,8 @@ function setupPopupWindows() {
                 targetElement.style.opacity = "0";
             } else {
                 targetElement.style.opacity = "1";
+                if (target === "leaderboard")
+                    leaderboardHandler();
             }
 
             if (targetElement.style.visibility === "visible") {
