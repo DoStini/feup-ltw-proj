@@ -37,15 +37,45 @@ function setupPopupWindows() {
     });
 }
 
+function launchTieGame(points) {
+    const target = document.getElementById("end-game");
+    target.style.opacity = "1";
+    target.style.visibility = "visible";
+
+    ["win-icon", "lose-icon"].forEach((id) => {
+        const target = document.getElementById(id);
+        target.style.opacity = "";
+        target.style.visibility = "";    
+    });
+
+    const icon = document.getElementById("tie-icon");
+    icon.style.opacity = "1";
+    icon.style.visibility = "visible";
+
+    const nameText = document.getElementById("end-player-name");
+    nameText.innerText = "It was a Tie!";
+
+    const pointsText = document.getElementById("end-player-points");
+    pointsText.innerText = `Both players conquered ${points} points!`;
+
+}
+
 function launchEndGame(isWinner, name, points) {
     const target = document.getElementById("end-game");
     target.style.opacity = "1";
     target.style.visibility = "visible";
 
-    const icon = document.getElementById(`${isWinner ? "win" : "lose"}-icon`);
+    const visibleIcon = document.getElementById(`${isWinner ? "win" : "lose"}-icon`);
+    const invisibleIcon = document.getElementById(`${isWinner ? "lose" : "win"}-icon`);
+    const tieIcon = document.getElementById("tie-icon");
 
-    icon.style.opacity = "1";
-    icon.style.visibility = "visible";
+    visibleIcon.style.opacity = "1";
+    visibleIcon.style.visibility = "visible";
+
+    [tieIcon, invisibleIcon].forEach((target) => {
+        target.style.opacity = "";
+        target.style.visibility = "";
+    })
 
     const nameText = document.getElementById("end-player-name");
     nameText.innerText = `${name} won the game!`;

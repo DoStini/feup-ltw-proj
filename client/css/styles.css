@@ -626,6 +626,12 @@ i.button {
   color: red;
 }
 
+.tie-icon {
+  font-size: 10em;
+  visibility: collapse;
+  color: yellow;
+}
+
 .popup-window {
   position: absolute;
   top: 15%;

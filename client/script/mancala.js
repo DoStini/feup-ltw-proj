@@ -165,17 +165,22 @@ class WaitState extends GameState {
     }
 
     calculateWinner() {
+    }
+    
+    showWinner() {
         const score1 = this.game.player1Points();
         const score2 = this.game.player2Points();
-        return score1 > score2
+
+
+        if (score1 === score2) {
+            launchTieGame(score1);
+        } else {
+            const winner = score1 > score2
             ? {player: this.player, score: score1}
             : {player: this.otherPlayer, score: score2}
-    }
-
-    showWinner() {
-        const winner = this.calculateWinner();
    
-        launchEndGame(winner.player.id === 0, winner.player.name, winner.score);
+            launchEndGame(winner.player.id === 0, winner.player.name, winner.score);
+        }
     }
 
     async run() {
@@ -186,19 +191,16 @@ class WaitState extends GameState {
         let destHoles = this.game.collectAllSeeds(
             this.lastPlayerId === 0 
                 ? this.otherPlayer
-                : this.player); // ????????? what what what what what what what what what
+                : this.player);
 
         console.log("destHoles", destHoles)
 
-        const promise = Promise.all(Object.keys(destHoles).map(async function (origin) {
+        await Promise.all(Object.keys(destHoles).map(async function (origin) {
             let destinations = destHoles[origin];
             console.log("destination", destinations)
             
             await animateSeeds(origin, this.board.nHoles, destinations);
         }.bind(this)));
-
-        console.log(promise);
-        await promise;
 
         this.game.renderAll();
 
