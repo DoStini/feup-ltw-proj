@@ -29,6 +29,8 @@ PageManager.prototype.setPage = function (elementId) {
     element.classList.toggle("show");
 
     this.curPage = elementId;
+
+    updateAuthButtons();
 }
 
 function startGame() {
@@ -48,7 +50,16 @@ function cleanupGame() {
     }
 }
 
+function setMenu() {
+    pageManager.setPage("init-menu");
+}
+
+function setAuth() {
+    startAuth();
+}
+
 function startAuth() {
+    if (isAuthenticated()) return;
     pageManager.setPage("auth");
 
     document.getElementById("log-in-header").style.visibility = "hidden";
@@ -71,6 +82,41 @@ function setupInitMenu() {
     let setInitMenu = pageManager.setPage.bind(pageManager, "init-menu");
 
     document.getElementById("start-button-ai").addEventListener('click', setPageConfig);
+    
+    document.getElementById("start-button-server").addEventListener('click', (e) => {
+        if (isAuthenticated()) {
+            alert("create a server");
+        }
+    });
+    
+    document.getElementById("join-button-server").addEventListener('click', (e) => {
+        if (isAuthenticated()) {
+            alert("join server");
+        }
+    });
+
+    ["start-button-server", "join-button-server"].forEach(
+        (id) => document.getElementById(id).addEventListener('mouseover', (e) => {
+        const elem = e.target;
+        if (isAuthenticated()) {
+            elem.style.backgroundColor = "#373f41";
+            elem.style.fontWeight = "600";
+            elem.style.cursor = "pointer";
+        } else {
+            elem.style.backgroundColor = "";
+            elem.style.fontWeight = "";
+        }
+    }));
+
+    ["start-button-server", "join-button-server"].forEach(
+        (id) => document.getElementById(id).addEventListener('mouseleave', (e) => {
+            const elem = e.target;
+            elem.style.cursor = "";
+            elem.style.backgroundColor = "";
+            elem.style.fontWeight = "";
+        })
+    );
+
     document.getElementById("header-logo").addEventListener('click', setInitMenu);
     document.getElementById("log-in-header").addEventListener('click', startAuth);
 

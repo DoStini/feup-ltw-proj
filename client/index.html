@@ -15,10 +15,12 @@
 
     <script src="https://kit.fontawesome.com/4616109396.js" crossorigin="anonymous"></script>
     <script src="script/config.js" defer></script>
+    <script src="script/status.js" defer></script>
     <script src="script/config.local.js" defer></script>
     <script src="script/pages.js" defer></script>
-    <script src="script/script.js" defer></script>
     <script src="script/communication.js" defer></script>
+    <script src="script/auth.js" defer></script>
+    <script src="script/script.js" defer></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -35,7 +37,8 @@
             <a id="leaderboard-open-btn">Leaderboards</a>
         </nav>
         <div>
-            <button id="log-in-header">Log In</button>
+            <button id="log-in-header" class="auth-btn">Log In</button>
+            <button id="log-out-header" class="auth-btn">Log out</button>
         </div>
     </header>
 
@@ -101,12 +104,12 @@
                 </header>
                 <form id="login-form">
                     <label for="username-login">User Name</label>
-                    <input id="username-login" name="username" type="text" onkeypress="return event.charCode != 32">
+                    <input id="username-login" name="nick" type="text" onkeypress="return event.charCode != 32">
 
                     <label for="password-login">Password</label>
                     <input id="password-login" name="password" type="password">
 
-                    <button value="login">Login</button>
+                    <button type="submit" id="login-btn">Login</button>
                 </form>
 
             </section>
@@ -334,8 +337,8 @@
     <section id="init-menu" class="in-body">
         <h2>Mancalada<br>Sow With Your Friends.</h2>
         <button id="start-button-ai" value="play-alone">Play Against the All Knowing AI</button>
-        <button value="start-server">Play Against a Friend</button>
-        <button value="join-server">Join a Friend's Game</button>
+        <button id="start-button-server" class="no-hover-btn" value="start-server">Play Against a Friend</button>
+        <button id="join-button-server" class="no-hover-btn" value="join-server">Join a Friend's Game</button>
     </section>
 
     <!--Config Area-->

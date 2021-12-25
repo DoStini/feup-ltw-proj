@@ -92,6 +92,12 @@ button:hover {
   cursor: pointer;
 }
 
+.no-hover-btn:hover {
+  background-color: #3c64b1;
+  font-weight: 400;
+  cursor: default;
+}
+
 a:hover {
   color: #3c64b1;
   font-weight: 600;
@@ -773,4 +779,8 @@ i.button {
   to {
     opacity: 1;
   }
+}
+
+.auth-btn {
+  visibility: collapse;
 }

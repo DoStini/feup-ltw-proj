@@ -23,10 +23,6 @@ async function leaderboardHandler() {
         const entry = leaderboard.at(i);
         tableBody.append(htmlEntry(entry, i + 1));
     }
-
-
-    console.log(leaderboard)
-    console.log();
 }
 
 function setupPopupWindows() {
@@ -214,4 +210,9 @@ function main() {
     window.addEventListener('load', setupGameStatus);
 }
 
-main();
+function setup() {
+    setupAuth();
+    main();
+}
+
+setup();
