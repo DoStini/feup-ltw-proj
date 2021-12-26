@@ -26,12 +26,13 @@ function setCookie(name,value,minutes) {
     if (minutes) {
         const date = new Date();
         date.setTime(date.getTime() + (minutes*60*1000));
-        expires = "; expires=" + date.toUTCString();
+        expires = ", expires=" + date.toUTCString();
     }
-    document.cookie = name + "=" + (value || "")  + expires + "; SameSite=None; Secure;";
+    document.cookie = name + "=" + (value || "")  + expires + ";";
 }
 
 function getCookie(name) {
+    console.log("try my cookie cookie", document.cookie)
     return document.cookie
     .split('; ')
     ?.find(row => row.startsWith(`${name}=`))

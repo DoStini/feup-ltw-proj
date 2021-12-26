@@ -1,3 +1,6 @@
+let session = {
+}
+
 function setupClickListeners() {
     const form = document.getElementById("login-form");
 
@@ -15,8 +18,16 @@ async function loginHandler(data) {
     console.log(resp)
 
     if (resp.status === STATUS_CODES.OK) {
+        // Use cookies to persist session in broswer
         setCookie("user", data.nick, 30);
         setCookie("pass", data.password, 30);
+        
+        // Use dynamic session to prevent losing session after cookies expired
+        session = {
+            user: data.nick,
+            pass: data.password,
+        };
+
         setMenu();
         launchSuccessSnackbar("Logged in successfully");
     } else {
@@ -29,13 +40,16 @@ function setupAuth() {
 }
 
 function isAuthenticated() {
-    console.log(getCookie("user"))
-    return getCookie("user") && getCookie("pass");
+    console.log(session?.user)
+    return session?.user && session?.pass;
 }
 
 function logout() {
     setCookie("user", "", -1);
     setCookie("pass", "", -1);
+
+    session = {};
+
     launchSuccessSnackbar("Logged out successfully");
     startAuth();
 }
@@ -64,8 +78,22 @@ function updateAuthButtons() {
     }
 }
 
+// Cookies nit working after broswer restart
+
+function restoreSession() {
+    const userCookie = getCookie("user");
+    const passCookie = getCookie("pass");
+    if (userCookie && passCookie) {
+        session = {
+            user: userCookie,
+            pass: passCookie,
+        }
+    }
+}
+
 setInterval(() => {
     updateAuthButtons();
 }, 1000);
 
+restoreSession();
 updateAuthButtons();
