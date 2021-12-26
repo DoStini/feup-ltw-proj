@@ -784,3 +784,39 @@ i.button {
 .auth-btn {
   visibility: collapse;
 }
+
+.snackbar {
+  transition: all 1s;
+  position: fixed;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  background-color: #2a2b2b;
+  border-radius: 0.5em;
+  padding: 0 2em;
+  width: 50vw;
+  bottom: 5vh;
+  right: 0;
+  left: 0;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.snackbar i {
+  font-size: 2em;
+}
+
+.snackbar i[success] {
+  color: green;
+}
+
+.snackbar i[error] {
+  color: red;
+}
+
+.snackbar > p {
+  font-size: 1.3em;
+  margin-left: 2em;
+  color: white;
+}

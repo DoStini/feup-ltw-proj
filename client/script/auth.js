@@ -15,10 +15,12 @@ async function loginHandler(data) {
     console.log(resp)
 
     if (resp.status === STATUS_CODES.OK) {
-        console.log("hello")
         setCookie("user", data.nick, 30);
         setCookie("pass", data.password, 30);
         setMenu();
+        launchSuccessSnackbar("Logged in successfully");
+    } else {
+        launchErrorSnackbar(resp.data.error);
     }
 }
 
@@ -34,6 +36,7 @@ function isAuthenticated() {
 function logout() {
     setCookie("user", "", -1);
     setCookie("pass", "", -1);
+    launchSuccessSnackbar("Logged out successfully");
     startAuth();
 }
 
