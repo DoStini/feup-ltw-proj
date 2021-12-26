@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 /**
  * 
@@ -31,11 +31,16 @@ PageManager.prototype.setPage = function (elementId) {
     this.curPage = elementId;
 }
 
-function startGame() {
+function startGame(pageManager) {
     let holes = document.getElementById("holes").value;
     let seeds = document.getElementById("seeds").value;
+    let turn = 0;
 
-    setupGame(holes, seeds);
+    if(document.getElementById("ai-order-ai").checked) {
+        turn = 1;
+    }
+
+    setupGame(holes, seeds, turn);
     pageManager.setPage("game-section");
     document.getElementById("game-status").classList.remove("hidden");
 }
@@ -46,9 +51,13 @@ function cleanupGame() {
     if(toggleGameStatus.open) {
         toggleGameStatus();
     }
+
+    clearTimeouts();
+
+    document.getElementById("message-board").innerText = "";
 }
 
-function startAuth() {
+function startAuth(pageManager) {
     pageManager.setPage("auth");
 
     document.getElementById("log-in-header").style.visibility = "hidden";
@@ -66,22 +75,22 @@ function cleanupAuth() {
     document.getElementById("log-in-header").style.display = null;
 }
 
-function setupInitMenu() {
+function setupInitMenu(pageManager) {
     let setPageConfig = pageManager.setPage.bind(pageManager, "config");
     let setInitMenu = pageManager.setPage.bind(pageManager, "init-menu");
 
     document.getElementById("start-button-ai").addEventListener('click', setPageConfig);
     document.getElementById("header-logo").addEventListener('click', setInitMenu);
-    document.getElementById("log-in-header").addEventListener('click', startAuth);
+    document.getElementById("log-in-header").addEventListener('click', () => startAuth(pageManager));
 
     pageManager.pageCleanup["auth"] = cleanupAuth;
 }
 
-function setupConfig() {
+function setupConfig(pageManager) {
     let startGameButton = document.getElementById("start-game-button");
 
     pageManager.pageCleanup["game-section"] = cleanupGame;
-    startGameButton.addEventListener('click', startGame);
+    startGameButton.addEventListener('click',  () => startGame(pageManager));
 }
 
 function setupPages() {
@@ -89,10 +98,10 @@ function setupPages() {
         bodyElement.style.display = "none";
     });
 
-    setupInitMenu();
-    setupConfig();
+    const pageManager = new PageManager();
+
+    setupInitMenu(pageManager);
+    setupConfig(pageManager);
 
     pageManager.setPage("init-menu");
 }
-
-let pageManager = new PageManager();
