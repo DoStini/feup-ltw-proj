@@ -52,7 +52,11 @@ function openSnackbar(snackbar) {
 }
 
 function closeSnackbar(snackbar) {
-    setTimeout(() => snackbar.style.transform = `translateX(${diffPosition})`,10);
+    setTimeout(() => {
+        snackbar.style.transform = `translateX(${diffPosition})`
+        snackbar.style.opacity = "0";
+    },10);
+
     setTimeout(() => snackbar.remove(), 1010);
 }
 
