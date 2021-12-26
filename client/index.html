@@ -1,33 +1,41 @@
-<!doctype html>
+<!DOCTYPE html>
 
 <html lang="en">
 
 <head>
-    <meta charset="utf-8">
+    <meta charset="utf-8" />
     <title>Mancalada</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Mancalada">
-    <meta name="author" content="Nuno and Moreira">
-    <meta property="title" content="Mancalada">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Mancalada" />
+    <meta name="author" content="Nuno and Moreira" />
+    <meta property="title" content="Mancalada" />
 
-    <link rel="stylesheet" href="css/game.css">
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/game.css" />
+    <link rel="stylesheet" href="css/styles.css" />
 
     <script src="https://kit.fontawesome.com/4616109396.js" crossorigin="anonymous"></script>
     <script src="script/config.js" defer></script>
     <script src="script/snackbar.js" defer></script>
     <script src="script/status.js" defer></script>
     <script src="script/config.local.js" defer></script>
+    <script src="../common/constants/mancala.js"></script>
+    <script src="script/common.js" defer></script>
+    <script src="script/player.js" defer></script>
+    <script src="script/renderer.js" defer></script>
+    <script src="script/seed.js" defer></script>
+    <script src="script/board.js" defer></script>
+    <script src="script/mancala.js" defer></script>
     <script src="script/pages.js" defer></script>
     <script src="script/communication.js" defer></script>
     <script src="script/auth.js" defer></script>
     <script src="script/multiplayer.js" defer></script>
     <script src="script/script.js" defer></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
         href="https://fonts.googleapis.com/css2?family=Mulish:ital,wght@0,200;0,300;0,400;0,600;0,800;1,200;1,300;1,400;1,600;1,800&display=swap"
-        rel="stylesheet">
+        rel="stylesheet" />
 </head>
 
 <body>
@@ -46,55 +54,43 @@
 
     <section id="game-section" class="in-body">
         <header>
-            <h3>XXXX's Turn </h3>
+            <h3><span id="status-turn-name"></span>'s Turn</h3>
         </header>
         <div class="game">
             <div class="game-area">
                 <div class="player-name player-turn" id="name1">
-                    <div class="player-back">
-                        Other
-                    </div>
+                    <div class="player-back">Other</div>
                 </div>
-                <div id="storage1"></div>
+                <div id="storage-1"></div>
 
                 <div id="seeds1" class="seed-box"></div>
 
-                <div id="board">
-                </div>
+                <div id="board"></div>
 
                 <div id="seeds0" class="seed-box"></div>
 
-                <div id="storage0">
-
-                </div>
+                <div id="storage-0"></div>
                 <div class="player-name" id="name0">
-                    <div class="player-back">
-                        You
-                    </div>
+                    <div class="player-back">You</div>
                 </div>
 
-                <section id="message-board">
-                    <span class=message>Player 1, it is your turn to play</span>
-                    <span class=message>It is Player 2's turn</span>
-                    <span class=message>Player 1, it is your turn to play</span>
-                    <span class=message>It is Player 2's turn</span>
-                    <span class=message>Player 1, it is your turn to play</span>
-                    <span class=message>It is Player 2's turn</span>
-                    <span class=message>Player 1, it is your turn to play</span>
-                    <span class=message>It is Player 2's turn</span>
-                    <span class=message>Player 1, it is your turn to play</span>
-                    <span class=message>It is Player 2's turn</span>
-                    <span class=message>Player 1, it is your turn to play</span>
-                    <span class=message>It is Player 2's turn</span>
-                    <span class=message>Player 1, it is your turn to play</span>
-                    <span class=message>It is Player 2's turn</span>
-                    <span class=message>Player 1, it is your turn to play</span>
-                    <span class=message>It is Player 2's turn</span>
-                    <span class=message>Player 1, it is your turn to play</span>
-                    <span class=message>It is Player 2's turn</span>
-                </section>
-
+                <section id="message-board"></section>
             </div>
+        </div>
+    </section>
+
+   <!--End of game Page-->
+   <section id="end-game" class="popup-window end-game">
+        <header>
+            <h2>End Game</h2>
+            <i id="close-end-game" class="popup-window-close far fa-times-circle"></i>
+        </header>
+        <div class="end-game-content">
+            <h1 id="end-player-name">[target] won the game!</h1>
+            <i id="win-icon"  class="fas fa-check-circle     win-icon"></i>
+            <i id="lose-icon" class="fas far fa-times-circle lose-icon"></i>
+            <i id="tie-icon"  class="fas fa-pause-circle     tie-icon"></i>
+            <h2 id="end-player-points">The winner conquered [target] points</h2>
         </div>
     </section>
 
@@ -109,11 +105,10 @@
                     <input id="username-login" name="nick" type="text" onkeypress="return event.charCode != 32">
 
                     <label for="password-login">Password</label>
-                    <input id="password-login" name="password" type="password">
+                    <input id="password-login" name="password" type="password" />
 
                     <button type="submit" id="login-btn">Login</button>
                 </form>
-
             </section>
 
             <section id="register">
@@ -122,21 +117,20 @@
                 </header>
                 <form id="register-form">
                     <label for="username-register">User Name</label>
-                    <input id="username-register" name="username" type="text" onkeypress="return event.charCode != 32">
+                    <input id="username-register" name="username" type="text"
+                        onkeypress="return event.charCode != 32" />
 
                     <label for="password-register">Password</label>
-                    <input id="password-register" name="password" type="password">
+                    <input id="password-register" name="password" type="password" />
 
                     <label for="confirm-password">Confirm Password</label>
-                    <input id="confirm-password" name="confirm-password" type="password">
+                    <input id="confirm-password" name="confirm-password" type="password" />
 
                     <button value="register">Register</button>
                 </form>
-
             </section>
         </div>
     </section>
-
 
     <!--Game status sidebar-->
     <section id="game-status" class="hidden">
@@ -149,11 +143,13 @@
             <h2>STATUS</h2>
         </header>
         <div id="game-status-info">
-            <h3>Current Turn<br>2</h3>
+            <h3>Current Turn<br /><span id="status-turn">2</span></h3>
 
             <table class="status-player">
                 <tr>
-                    <td id="status-p0" class="status-player-name" colspan="2">André Moreira</td>
+                    <td id="status-p0" class="status-player-name" colspan="2">
+                        André Moreira
+                    </td>
                 </tr>
                 <tr>
                     <td>Storage Seeds</td>
@@ -171,7 +167,9 @@
 
             <table class="status-player">
                 <tr>
-                    <td id="status-p1" class="status-player-name" colspan="2">Nuno Alves</td>
+                    <td id="status-p1" class="status-player-name" colspan="2">
+                        Nuno Alves
+                    </td>
                 </tr>
                 <tr>
                     <td>Storage Seeds</td>
@@ -189,7 +187,6 @@
         </div>
     </section>
 
-
     <!--Rules Page-->
     <section id="rules" class="popup-window rules">
         <header>
@@ -199,32 +196,64 @@
         <div class="rules-content">
             <h3>Board</h3>
             <ul>
-                <li>The board is made up of cavities and containers. There is a container per player and a variable
-                    amount of cavities. Both players must have the same amount of cavities in each side.</li>
-                <li>The pieces are seeds. Each player control the seeds that are stored in their side's cavities.</li>
-                <li>In the beginning of the game, the storage is empty and the cavities are equally filled with seeds.
+                <li>
+                    The board is made up of cavities and containers. There is a
+                    container per player and a variable amount of cavities. Both players
+                    must have the same amount of cavities in each side.
                 </li>
-                <li>If you run into your own Mancala (store), deposit one piece in it. If you run into your opponent's
-                    Mancala, skip it and continue moving to the next pocket.</li>
+                <li>
+                    The pieces are seeds. Each player control the seeds that are stored
+                    in their side's cavities.
+                </li>
+                <li>
+                    In the beginning of the game, the storage is empty and the cavities
+                    are equally filled with seeds.
+                </li>
+                <li>
+                    If you run into your own Mancala (store), deposit one piece in it.
+                    If you run into your opponent's Mancala, skip it and continue moving
+                    to the next pocket.
+                </li>
             </ul>
             <h3>Gameplay</h3>
             <ul>
-                <li>Players sow their seeds in turns. In each turn, a player chooses the cavity from which to sow their
-                    seeds.</li>
-                <li>A player chooses one of the cavities on his side and picks up all of the seeds. The player then puts
-                    all the seeds in his hand into the next cavities, one seed in each, done counter clock wise.</li>
-                <li>The player storage counts a cavity during this process, which means that if you have enough seeds to
-                    reach the storage, then a seed needs to be placed there too.</li>
-                <li>However, the adversary's storage does not count in this process,.</li>
-                <li>If the last seed is placed in the player storage, then they can play again.</li>
-                <li>If the last seed is placed in one of the player's empty cavities, then the player collects all of
-                    the seeds of the opposite cavity as well as the seed itself.</li>
+                <li>
+                    Players sow their seeds in turns. In each turn, a player chooses the
+                    cavity from which to sow their seeds.
+                </li>
+                <li>
+                    A player chooses one of the cavities on his side and picks up all of
+                    the seeds. The player then puts all the seeds in his hand into the
+                    next cavities, one seed in each, done counter clock wise.
+                </li>
+                <li>
+                    The player storage counts a cavity during this process, which means
+                    that if you have enough seeds to reach the storage, then a seed
+                    needs to be placed there too.
+                </li>
+                <li>
+                    However, the adversary's storage does not count in this process,.
+                </li>
+                <li>
+                    If the last seed is placed in the player storage, then they can play
+                    again.
+                </li>
+                <li>
+                    If the last seed is placed in one of the player's empty cavities,
+                    then the player collects all of the seeds of the opposite cavity as
+                    well as the seed itself.
+                </li>
             </ul>
             <h3>Game Termination and Score</h3>
             <ul>
-                <li>The game ends when one of the players can't play anymore because they don't have any seeds placed in
-                    their cavities.</li>
-                <li>When this happens, the other player collects the seeds from their cavities and stores them.</li>
+                <li>
+                    The game ends when one of the players can't play anymore because
+                    they don't have any seeds placed in their cavities.
+                </li>
+                <li>
+                    When this happens, the other player collects the seeds from their
+                    cavities and stores them.
+                </li>
                 <li>The player who has more seeds in storage wins.</li>
             </ul>
         </div>
@@ -334,7 +363,6 @@
         </div>
     </section>
 
-
     <!--Init Menu Area-->
     <section id="init-menu" class="in-body">
         <h2>Mancalada<br>Sow With Your Friends.</h2>
@@ -350,15 +378,17 @@
             <h2>Choose Your Game Settings</h2>
             <div class="config-layout">
                 <label for="holes">Number of holes in each side</label>
-                <input type="number" id="holes" name="holes" value="6" min="1" max="10" step="1">
+                <input type="number" id="holes" name="holes" value="6" min="1" max="10" step="1" />
 
                 <label for="seeds">Number of seeds in each hole</label>
-                <input type="number" id="seeds" name="seeds" value="4" min="1" max="12" step="1">
+                <input type="number" id="seeds" name="seeds" value="4" min="1" max="12" step="1" />
 
                 <label for="ai_difficulty">AI Difficulty</label>
                 <select name="ai_difficulty" id="ai_difficulty">
                     <option value="easy">Lets You Win</option>
-                    <option value="hard">Loses on Purpose Sometimes (but will kick your ass)</option>
+                    <option value="hard">
+                        Loses on Purpose Sometimes (but will kick your ass)
+                    </option>
                     <option value="impossible" selected>Impossible</option>
                 </select>
 
@@ -366,10 +396,10 @@
                     <legend>Who Goes First?</legend>
                     <div class="order-layout">
                         <label for="ai-order-human">The Human</label>
-                        <input type="radio" name="ai-order" id="ai-order-human" value="human-first" checked>
+                        <input type="radio" name="ai-order" id="ai-order-human" value="human-first" checked />
 
                         <label for="ai-order-ai">The All Knowing AI</label>
-                        <input type="radio" name="ai-order" id="ai-order-ai" value="ai-first">
+                        <input type="radio" name="ai-order" id="ai-order-ai" value="ai-first" />
                     </div>
                 </fieldset>
 
@@ -433,7 +463,8 @@
     </section>
 
     <footer>
-        <span>Mancalada. Sow With Your Friends.<br>Made With Love by André Moreira and Nuno Alves.</span>
+        <span>Mancalada. Sow With Your Friends.<br />Made With Love by André Moreira
+            and Nuno Alves.</span>
     </footer>
 </body>
 </html>

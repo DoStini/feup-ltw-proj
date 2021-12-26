@@ -61,8 +61,6 @@ function setupMultiplayer() {
             password: getPass(),
         };
 
-        console.log("hello")
-
         const req = await join(data);
 
 

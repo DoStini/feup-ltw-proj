@@ -1,4 +1,6 @@
-'use strict'
+'use strict';
+
+const pageManager = new PageManager();
 
 /**
  * 
@@ -33,11 +35,16 @@ PageManager.prototype.setPage = function (elementId) {
     updateAuthButtons();
 }
 
-function startGame() {
+function startGame(pageManager) {
     let holes = document.getElementById("holes").value;
     let seeds = document.getElementById("seeds").value;
+    let turn = 0;
 
-    setupGame(holes, seeds);
+    if(document.getElementById("ai-order-ai").checked) {
+        turn = 1;
+    }
+
+    setupGame(holes, seeds, turn);
     pageManager.setPage("game-section");
     document.getElementById("game-status").classList.remove("hidden");
 }
@@ -48,6 +55,10 @@ function cleanupGame() {
     if(toggleGameStatus.open) {
         toggleGameStatus();
     }
+
+    clearTimeouts();
+
+    document.getElementById("message-board").innerText = "";
 }
 
 function setMenu() {
@@ -134,7 +145,7 @@ function setupInitMenu() {
     })
 
     document.getElementById("header-logo").addEventListener('click', setInitMenu);
-    document.getElementById("log-in-header").addEventListener('click', startAuth);
+    document.getElementById("log-in-header").addEventListener('click', () => startAuth(pageManager));
 
     pageManager.pageCleanup["auth"] = cleanupAuth;
 }
@@ -143,7 +154,7 @@ function setupLocalGameConfig() {
     let startGameButton = document.getElementById("start-game-button");
 
     pageManager.pageCleanup["game-section"] = cleanupGame;
-    startGameButton.addEventListener('click', startGame);
+    startGameButton.addEventListener('click',  () => startGame(pageManager));
 }
 
 function setupPages() {
@@ -151,10 +162,8 @@ function setupPages() {
         bodyElement.style.display = "none";
     });
 
-    setupInitMenu();
-    setupLocalGameConfig();
+    setupInitMenu(pageManager);
+    setupLocalGameConfig(pageManager);
 
     pageManager.setPage("init-menu");
 }
-
-let pageManager = new PageManager();
