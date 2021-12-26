@@ -11,6 +11,29 @@ function launchSuccessSnackbar(message) {
     launchSnackbar(icon, message);
 }
 
+function launchClipboardSnackbar(message, value, timeout) {
+    const icon = document.createElement("i");
+    icon.className = "fas fa-check-square";
+    icon.setAttribute("success", "");
+
+    const elem = document.createElement("div");
+    elem.classList.add("snackbar");
+    elem.style.cursor = "pointer";
+
+    const p = document.createElement("p");
+    p.innerText = message;
+
+    elem.append(icon);
+    elem.append(p);
+
+    document.body.append(elem)
+
+    elem.addEventListener("click", () =>  navigator.clipboard.writeText(value));
+    setTimeout(() => closeSnackbar(elem), timeout);
+    
+    openSnackbar(elem);
+}
+
 function launchErrorSnackbar(message) {
     const icon = document.createElement("i");
     icon.className = "fas fa-exclamation-triangle";
@@ -38,7 +61,7 @@ function launchSnackbar(icon, message) {
     elem.classList.add("snackbar");
 
     const p = document.createElement("p");
-    p.innerText = message;
+    p.innerText = message || "Unexpected situation";
 
     elem.append(icon);
     elem.append(p);

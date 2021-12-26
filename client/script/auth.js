@@ -39,8 +39,16 @@ function setupAuth() {
     setupClickListeners();
 }
 
+function getUser() {
+    return session.user;
+}
+
+function getPass() {
+    return session.pass;
+}
+
 function isAuthenticated() {
-    console.log(session?.user)
+    console.log(session?.user, )
     return session?.user && session?.pass;
 }
 
@@ -83,6 +91,7 @@ function updateAuthButtons() {
 function restoreSession() {
     const userCookie = getCookie("user");
     const passCookie = getCookie("pass");
+    console.log("cookies:", userCookie, passCookie)
     if (userCookie && passCookie) {
         session = {
             user: userCookie,
@@ -90,10 +99,6 @@ function restoreSession() {
         }
     }
 }
-
-setInterval(() => {
-    updateAuthButtons();
-}, 1000);
 
 restoreSession();
 updateAuthButtons();

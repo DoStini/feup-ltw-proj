@@ -277,11 +277,11 @@ form#register-form > button {
   justify-self: right;
 }
 
-section#config {
+section.config {
   padding: 6em;
 }
 
-section#config fieldset {
+section.config fieldset {
   border: none;
   display: block;
   position: relative;
@@ -289,19 +289,19 @@ section#config fieldset {
   padding: 0;
 }
 
-section#config label,
-section#config input,
-section#config select {
+section.config label,
+section.config input,
+section.config select {
   display: block;
   position: relative;
 }
 
-section#config label {
+section.config label {
   font-size: 15px;
 }
 
-section#config h2,
-section#config legend {
+section.config h2,
+section.config legend {
   font-size: 32px;
   font-weight: 600;
   display: block;
@@ -317,12 +317,12 @@ select {
   border-width: 1px;
 }
 
-section#config input,
+section.config input,
 select {
   border-style: dashed;
 }
 
-section#config div.config-layout {
+section.config div.config-layout {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: 0.5fr 1fr 1fr 3fr 1fr;
@@ -336,44 +336,52 @@ section#config div.config-layout {
   column-gap: 2em;
 }
 
-section#config div.config-layout > button {
+section.config div.config-layout > button {
   grid-area: submit;
   justify-self: right;
 }
 
-section#config div.config-layout > legend {
+section.config div.config-layout > legend {
   grid-area: header;
 }
 
-section#config label[for="holes"] {
+section.config label[for^="holes"] {
   grid-area: label1;
 }
 
-section#config input#holes {
+section.config input[id^="holes"] {
   grid-area: input1;
 }
 
-section#config label[for="seeds"] {
+section.config label[for^="seeds"] {
   grid-area: label2;
 }
 
-section#config input#seeds {
+section.config input[id^="seeds"] {
   grid-area: input2;
 }
 
-section#config label[for="ai_difficulty"] {
+section.config label[for="ai_difficulty"] {
   grid-area: label3;
 }
 
-section#config select#ai_difficulty {
+section.config select#ai_difficulty {
   grid-area: input3;
 }
 
-section#config div.config-layout > fieldset {
+section#config-multiplayer-join label {
+  grid-area: label1;
+}
+
+section#config-multiplayer-join input {
+  grid-area: input1;
+}
+
+section.config div.config-layout > fieldset {
   grid-area: fields;
 }
 
-section#config div.order-layout {
+section.config div.order-layout {
   display: grid;
   grid-template-columns: 100px 140px;
   grid-template-rows: 0.5fr 0.8fr;
@@ -386,23 +394,23 @@ section#config div.order-layout {
   margin-top: 1em;
 }
 
-section#config div.order-layout > legend {
+section.config div.order-layout > legend {
   grid-area: header;
 }
 
-section#config label[for="ai-order-human"] {
+section.config label[for="ai-order-human"] {
   grid-area: label1;
 }
 
-section#config input#ai-order-human {
+section.config input#ai-order-human {
   grid-area: input1;
 }
 
-section#config label[for="ai-order-ai"] {
+section.config label[for="ai-order-ai"] {
   grid-area: label2;
 }
 
-section#config input#ai-order-ai {
+section.config input#ai-order-ai {
   grid-area: input2;
 }
 
@@ -678,7 +686,7 @@ i.button {
 }
 
 @media (max-width: 800px) {
-  section#config div.config-layout {
+  section.config div.config-layout {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     grid-template-rows: 0.5fr 1fr 0.5fr 1fr 1fr 3fr 1fr;
     grid-template-areas:
@@ -693,7 +701,7 @@ i.button {
     column-gap: 2em;
   }
 
-  section#config {
+  section.config {
     padding: 2em;
   }
 
@@ -736,7 +744,7 @@ i.button {
 }
 
 @media (max-width: 350px) {
-  section#config div.config-layout {
+  section.config div.config-layout {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     grid-template-rows: 0.5fr 1fr 0.5fr 1fr 0.5fr 1fr 1fr 3fr 1fr;
     grid-template-areas:
@@ -753,7 +761,7 @@ i.button {
     column-gap: 2em;
   }
 
-  section#config {
+  section.config {
     padding: 1em;
   }
 }

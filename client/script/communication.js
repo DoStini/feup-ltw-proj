@@ -1,6 +1,13 @@
 console.log(getApiHost())
 
-async function request(method, body, path) {
+function encodeForQuery(data) {
+    if (data == null) return null;
+    return Object.keys(data).map(function(k){
+      return encodeURIComponent(k) + '=' + encodeURIComponent(data[k])
+    }).join('&');
+}
+
+async function bodyRequest(method, body, path) {
     let options = {
         method : method,
         body : JSON.stringify(body)
@@ -17,8 +24,32 @@ async function request(method, body, path) {
     });
 }
 
+
+
+async function queryRequest(method, data, path) {
+    let options = {
+        method : method,
+    }
+
+    console.log(encodeForQuery(data))
+
+    let request = new Request(getApiHost() + path + "?" + encodeForQuery(data), options);
+
+    return fetch(request).then(async (fetched) => {
+        const data = await fetched.json();
+        return {
+            status: fetched.status,
+            data,
+        };
+    });
+}
+
 function postRequest(body, path) {
-    return request('POST', body, path);
+    return bodyRequest('POST', body, path);
+}
+
+function getRequest(body, path) {
+    return queryRequest('GET', body, path);
 }
 
 function setCookie(name,value,minutes) {
@@ -26,7 +57,7 @@ function setCookie(name,value,minutes) {
     if (minutes) {
         const date = new Date();
         date.setTime(date.getTime() + (minutes*60*1000));
-        expires = ", expires=" + date.toUTCString();
+        expires = "; expires=" + date.toUTCString();
     }
     document.cookie = name + "=" + (value || "")  + expires + ";";
 }
@@ -51,7 +82,13 @@ function retrieveLeaderboard() {
 }
 
 function login(body) {
-    const data = postRequest(body, "register");
+    return postRequest(body, "register");
+}
 
-    return data.then(response => response);
+function join(body) {
+    return postRequest(body, "join");
+}
+
+function update(body) {
+    return getRequest(body, "update");
 }
