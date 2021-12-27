@@ -2,4 +2,4 @@
 
 ## Project Preview
 
-A project preview is available [here](https://happy-fermat-43660c.netlify.app/)
+A project preview is available [here](https://mancalada-ltw.netlify.app/client)
