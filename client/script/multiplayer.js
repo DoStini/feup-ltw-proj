@@ -77,6 +77,7 @@ function setupMultiplayer() {
 }
 
 function parseBoard(data) {
+    console.log(data);
     const user = getUser();
     const enemy = Object.keys(data.board.sides).find(el => el !== user);
     const turn = data.board.turn;
@@ -92,10 +93,17 @@ function parseBoard(data) {
     }
 }
 
-function startMultiplayerGame(data) {
+class MultiplayerInfo {
+    constructor(evtSource, gameHash) {
+        this.evtSource = evtSource;
+        this.gameHash = gameHash;
+    }
+}
+
+function startMultiplayerGame(data, evtSource, gameHash) {
     const parsed = parseBoard(data);
     console.log(parsed)
-    setupMultiplayerGame(parsed.holes, parsed.board[0], parsed.turn, parsed.player, parsed.enemy);
+    setupMultiplayerGame(parsed.holes, parsed.board[0], parsed.turn, parsed.player, parsed.enemy, new MultiplayerInfo(evtSource, gameHash));
     pageManager.setPage("game-section");
     document.getElementById("game-status").classList.remove("hidden");
 }
@@ -107,7 +115,7 @@ function handleGameStart(gameHash) {
     });
 
     const evtSource = new EventSource(`${getApiHost()}update?${query}`);
-    evtSource.onmessage = (e) => startMultiplayerGame(JSON.parse(e.data));
+    evtSource.onmessage = ((e) => startMultiplayerGame(JSON.parse(e.data), evtSource, gameHash)).bind(evtSource);
     setWaitingPage();
 }
 

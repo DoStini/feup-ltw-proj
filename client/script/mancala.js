@@ -61,7 +61,7 @@ class GameState {
 
         await animateSeeds(hole, this.board.nHoles, destHoles);
         if (lastHole == this.board.nHoles * 2 + this.player.id) {
-            this.game.nextPlayerState(this.getCurrentState.bind(this));
+            return this.getCurrentState.bind(this);
         } else {
             if (this.game.holeBelongsToPlayer(lastHole, this.player) && this.board.seeds[lastHole].length === 1) {
                 let storage = this.board.nHoles * 2 + this.player.id;
@@ -79,7 +79,7 @@ class GameState {
                 ]);
             }
 
-            this.game.nextPlayerState(this.getNextState.bind(this));
+            return this.getNextState.bind(this);
         }
     }
 
@@ -96,11 +96,11 @@ class PlayerState extends GameState {
     }
 
     getCurrentState() {
-        return new PlayerState(this.game, this.player, this.otherPlayer);
+        return new PlayerState(this.game, this.player, this.otherPlayer, this.mInfo);
     }
 
     getNextState() {
-        return new PlayAIState(this.game, this.otherPlayer, this.player);
+        return new PlayAIState(this.game, this.otherPlayer, this.player, this.mInfo);
     }
 
     run() {
@@ -125,7 +125,8 @@ class PlayerState extends GameState {
         if (!(hole >= this.board.nHoles * this.player.id && hole < this.board.nHoles * (this.player.id + 1))) return;
         this.game.nextPlayerState(() => new WaitState(this.game, this.player, this.otherPlayer));
 
-        await this.play(hole);
+        
+        this.game.nextPlayerState(await this.play(hole));
     }
 }
 /**
@@ -239,25 +240,29 @@ class PlayAIState extends GameState {
             }
             let hole = avail[(Math.random() * avail.length) >> 0];
 
-            await this.play(hole);
+            this.game.nextPlayerState(await this.play(hole));
         }.bind(this), 2000);
     }
 }
 
 class PlayMPState extends GameState {
-    constructor(game, player, otherPlayer) {
+    constructor(game, player, otherPlayer, mInfo) {
         super(game, player, otherPlayer);
+        console.log(mInfo);
+        this.mInfo = mInfo;
     }
 
     getCurrentState() {
-        return new PlayMPState(this.game, this.player, this.otherPlayer);
+        return new PlayMPState(this.game, this.player, this.otherPlayer, this.mInfo);
     }
 
     getNextState() {
-        // return new PlayerState(this.game, this.otherPlayer, this.player);
+        return new WaitMPState(this.game, this.otherPlayer, this.player, this.mInfo);
     }
 
     run() {
+        this.mInfo.evtSource.onmessage = (e) => console.log(e);
+
         this.game.nextTurn();
         this.game.renderAll();
 
@@ -279,7 +284,63 @@ class PlayMPState extends GameState {
         if (!(hole >= this.board.nHoles * this.player.id && hole < this.board.nHoles * (this.player.id + 1))) return;
         this.game.nextPlayerState(() => new WaitState(this.game, this.player, this.otherPlayer));
 
-        await this.play(hole);
+        let nextState = await this.play(hole);
+
+        const data = {
+            nick: getUser(),
+            password: getPass(),
+            game: this.mInfo.gameHash,
+            move: hole
+        };
+
+        let a = await postRequest(data, 'notify');
+        console.log("after post request:", a);
+
+        this.game.nextPlayerState(nextState);
+    }
+}
+
+class WaitMPState extends GameState {
+    constructor(game, player, otherPlayer, mInfo) {
+        super(game, player, otherPlayer);
+        this.mInfo = mInfo;
+    }
+
+    getCurrentState() {
+        return new WaitMPState(this.game, this.player, this.otherPlayer, this.mInfo);
+    }
+
+    getNextState() {
+        return new PlayMPState(this.game, this.otherPlayer, this.player, this.mInfo);
+    }
+
+    getUpdate(data) {
+        console.log(data);
+    }
+
+    run() {
+        this.mInfo.evtSource.onmessage = (e) => {
+            let parsed = parseBoard(JSON.parse(e.data));
+            console.log(parsed);
+        };
+
+        this.game.nextTurn();
+        this.game.renderAll();
+
+        document.getElementById(`name${this.player.id}`).classList.add("player-turn");
+        document.getElementById(`name${this.otherPlayer.id}`).classList.remove("player-turn");
+        addMessage(MESSAGE.otherTurn(this.player.name));
+
+        let avail = this.game.getAvailHoles(this.player);
+
+        if (avail.length === 0) {
+            // this.game.endGame(this.player.id);
+            alert("game end");
+            return;
+        }
+    }
+
+    async clickHole(hole) {
     }
 }
 
@@ -392,7 +453,7 @@ class Game {
             hole.addEventListener('click', this.clickHole.bind(this, curHole))
         })
 
-        if (this.state instanceof PlayerState) {
+        if (this.state instanceof PlayerState || (this.state instanceof PlayMPState)) {
             holes.forEach(hole => {
                 let curHole = parseInt(hole.id.split("-")[1]);
 
@@ -426,7 +487,7 @@ function setupLocalGame(nHoles, seedsPerHole, turn) {
     game.renderAll();
 }
 
-function setupMultiplayerGame(nHoles, seedsPerHole, turn, playerName, enemyName) {
+function setupMultiplayerGame(nHoles, seedsPerHole, turn, playerName, enemyName, mInfo) {
     const board = new Board(nHoles, seedsPerHole);
 
     const player1 = new Player(0, playerName);
@@ -435,9 +496,9 @@ function setupMultiplayerGame(nHoles, seedsPerHole, turn, playerName, enemyName)
     const game = new Game(board, player1, player2);
 
     if (turn === player1.name) {
-        game.changePlayerState(new PlayerState(game, player1, player2));
+        game.changePlayerState(new PlayMPState(game, player1, player2, mInfo));
     } else {
-        game.changePlayerState(new PlayAIState(game, player2, player1));
+        game.changePlayerState(new WaitMPState(game, player2, player1, mInfo));
     }
 
     game.renderAll();
