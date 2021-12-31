@@ -838,6 +838,13 @@ i.button {
   visibility: collapse;
 }
 
+section#waiting-area {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
 .snackbar {
   transition: all 1s;
   position: fixed;

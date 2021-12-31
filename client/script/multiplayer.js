@@ -76,6 +76,30 @@ function setupMultiplayer() {
     });
 }
 
+function parseBoard(data) {
+    const user = getUser();
+    const enemy = Object.keys(data.board.sides).find(el => el !== user);
+    const turn = data.board.turn;
+
+    const board = [...data.board.sides[user].pits, ...data.board.sides[enemy].pits, data.board.sides[user].store, data.board.sides[enemy].store]
+
+    return {
+        player: user,
+        enemy,
+        turn,
+        board,
+        holes: parseInt((board.length - 2) / 2),
+    }
+}
+
+function startMultiplayerGame(data) {
+    const parsed = parseBoard(data);
+    console.log(parsed)
+    setupMultiplayerGame(parsed.holes, parsed.board[0], parsed.turn, parsed.player, parsed.enemy);
+    pageManager.setPage("game-section");
+    document.getElementById("game-status").classList.remove("hidden");
+}
+
 function handleGameStart(gameHash) {
     const query = encodeForQuery({
         game: gameHash,
@@ -83,8 +107,8 @@ function handleGameStart(gameHash) {
     });
 
     const evtSource = new EventSource(`${getApiHost()}update?${query}`);
-
-    evtSource.onmessage = (e) => console.log("event recv", JSON.parse(e.data))
+    evtSource.onmessage = (e) => startMultiplayerGame(JSON.parse(e.data));
+    setWaitingPage();
 }
 
 setupMultiplayer();

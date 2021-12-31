@@ -44,7 +44,7 @@ function startGame(pageManager) {
         turn = 1;
     }
 
-    setupGame(holes, seeds, turn);
+    setupLocalGame(holes, seeds, turn);
     pageManager.setPage("game-section");
     document.getElementById("game-status").classList.remove("hidden");
 }
@@ -71,6 +71,10 @@ function setAuth() {
 
 function setConfig() {
     pageManager.setPage("init-menu");
+}
+
+function setWaitingPage() {
+    pageManager.setPage("waiting-area");
 }
 
 function startAuth() {
