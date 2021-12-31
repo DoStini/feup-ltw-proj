@@ -299,8 +299,6 @@ class PlayMPState extends GameState {
         if (!(hole >= this.board.nHoles * this.player.id && hole < this.board.nHoles * (this.player.id + 1))) return;
         this.game.nextPlayerState(() => new WaitState(this.game, this.player, this.otherPlayer));
 
-        let nextState = await this.play(hole);
-
         const data = {
             nick: getUser(),
             password: getPass(),
@@ -315,6 +313,7 @@ class PlayMPState extends GameState {
 
             return;
         }
+        let nextState = await this.play(hole);
         
         this.game.nextPlayerState(nextState);
     }
@@ -378,7 +377,10 @@ class WaitMPState extends GameState {
     async handleUpdate(e) {
         let parsed = parseBoard(JSON.parse(e.data));
 
-        console.log(await this.guessHole(parsed.board, parsed.turn));
+        let hole = await this.guessHole(parsed.board, parsed.turn);
+        let nextState = await this.play(hole);
+
+        this.game.nextPlayerState(nextState);
     }
 
     run() {
