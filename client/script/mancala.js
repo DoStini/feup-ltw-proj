@@ -244,6 +244,45 @@ class PlayAIState extends GameState {
     }
 }
 
+class PlayMPState extends GameState {
+    constructor(game, player, otherPlayer) {
+        super(game, player, otherPlayer);
+    }
+
+    getCurrentState() {
+        return new PlayMPState(this.game, this.player, this.otherPlayer);
+    }
+
+    getNextState() {
+        // return new PlayerState(this.game, this.otherPlayer, this.player);
+    }
+
+    run() {
+        this.game.nextTurn();
+        this.game.renderAll();
+
+        document.getElementById(`name${this.player.id}`).classList.add("player-turn");
+        document.getElementById(`name${this.otherPlayer.id}`).classList.remove("player-turn");
+        addMessage(MESSAGE.otherTurn(this.player.name));
+
+        let avail = this.game.getAvailHoles(this.player);
+
+        if (avail.length === 0) {
+            // this.game.endGame(this.player.id);
+            alert("game end");
+            return;
+        }
+    }
+
+    async clickHole(hole) {
+        if (this.board.seeds[hole].length === 0) return;
+        if (!(hole >= this.board.nHoles * this.player.id && hole < this.board.nHoles * (this.player.id + 1))) return;
+        this.game.nextPlayerState(() => new WaitState(this.game, this.player, this.otherPlayer));
+
+        await this.play(hole);
+    }
+}
+
 class Game {
     /**
      * @param {Board} board
@@ -370,7 +409,7 @@ class Game {
     }
 }
 
-function setupGame(nHoles, seedsPerHole, turn) {
+function setupLocalGame(nHoles, seedsPerHole, turn) {
     const board = new Board(parseInt(nHoles), seedsPerHole);
 
     const player1 = new Player(0, "Player 1");
@@ -379,6 +418,23 @@ function setupGame(nHoles, seedsPerHole, turn) {
     const game = new Game(board, player1, player2);
 
     if (turn === 0) {
+        game.changePlayerState(new PlayerState(game, player1, player2));
+    } else {
+        game.changePlayerState(new PlayAIState(game, player2, player1));
+    }
+
+    game.renderAll();
+}
+
+function setupMultiplayerGame(nHoles, seedsPerHole, turn, playerName, enemyName) {
+    const board = new Board(nHoles, seedsPerHole);
+
+    const player1 = new Player(0, playerName);
+    const player2 = new Player(1, enemyName);
+
+    const game = new Game(board, player1, player2);
+
+    if (turn === player1.name) {
         game.changePlayerState(new PlayerState(game, player1, player2));
     } else {
         game.changePlayerState(new PlayAIState(game, player2, player1));
