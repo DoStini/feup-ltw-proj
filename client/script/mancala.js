@@ -272,6 +272,15 @@ class PlayMPState extends GameState {
     }
 
     handleUpdate(e) {
+        if(e.winner) {
+            let avail = this.game.getAvailHoles(this.player);
+
+            if (avail.length === 0) {
+                this.game.endGame(this.player.id);
+            } else {
+                this.game.endGame(this.otherPlayer.id);
+            }
+        }
         console.log(e);
     }
 
@@ -375,7 +384,18 @@ class WaitMPState extends GameState {
     }
 
     async handleUpdate(e) {
-        if(e.winner) return;
+        if(e.winner) {
+            let avail = this.game.getAvailHoles(this.player);
+
+            if (avail.length === 0) {
+                this.game.endGame(this.player.id);
+            } else {
+                this.game.endGame(this.otherPlayer.id);
+            }
+
+            return;
+        }
+
         let parsed = parseBoard(JSON.parse(e.data));
 
         let hole = await this.guessHole(parsed.board, parsed.turn);
@@ -393,14 +413,6 @@ class WaitMPState extends GameState {
         document.getElementById(`name${this.player.id}`).classList.add("player-turn");
         document.getElementById(`name${this.otherPlayer.id}`).classList.remove("player-turn");
         addMessage(MESSAGE.otherTurn(this.player.name));
-
-        let avail = this.game.getAvailHoles(this.player);
-
-        if (avail.length === 0) {
-            // this.game.endGame(this.player.id);
-            alert("game end");
-            return;
-        }
     }
 
     async clickHole(hole) {
