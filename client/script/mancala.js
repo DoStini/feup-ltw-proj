@@ -375,6 +375,7 @@ class WaitMPState extends GameState {
     }
 
     async handleUpdate(e) {
+        if(e.winner) return;
         let parsed = parseBoard(JSON.parse(e.data));
 
         let hole = await this.guessHole(parsed.board, parsed.turn);
