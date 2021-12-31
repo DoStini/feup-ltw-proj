@@ -19,11 +19,16 @@ class GameState {
     * @param {Player} player
     * @param {Player} otherPlayer
     */
-    constructor(game, player, otherPlayer) {
+    constructor(game, player, otherPlayer, animator) {
         this.board = game.board; /** @property {Board} board */
         this.game = game;
         this.player = player;
         this.otherPlayer = otherPlayer;
+        if(!animator) {
+            this.animator = new CSSAnimator();
+        } else {
+            this.animator = animator;
+        }
     }
     /**
      *
@@ -55,11 +60,21 @@ class GameState {
         return destHoles;
     }
 
-    async play(hole) {
+    /**
+     * 
+     * @param {Integer} hole 
+     * @param {Animator} animator 
+     * @returns 
+     */
+    async play(hole, animator) {
         let destHoles = this.sowSeeds(hole); /** @property {Array} destHoles */
         let lastHole = destHoles[destHoles.length - 1];
+        let playAnimator = this.animator;
+        if(animator) {
+            playAnimator = animator;
+        }
 
-        await animateSeeds(hole, this.board.nHoles, destHoles);
+        await playAnimator.animateSeeds(hole, this.board.nHoles, destHoles);
         if (lastHole == this.board.nHoles * 2 + this.player.id) {
             return this.getCurrentState.bind(this);
         } else {
@@ -74,8 +89,8 @@ class GameState {
                 this.board.storage[this.player.id].push(this.board.seeds[lastHole].pop());
 
                 await Promise.all([
-                    animateSeeds(lastHole, this.board.nHoles, [storage]),
-                    animateSeeds(oppositeHole, this.board.nHoles, Array(oppositeSeeds).fill(storage)),
+                    playAnimator.animateSeeds(lastHole, this.board.nHoles, [storage]),
+                    playAnimator.animateSeeds(oppositeHole, this.board.nHoles, Array(oppositeSeeds).fill(storage)),
                 ]);
             }
 
@@ -188,19 +203,16 @@ class WaitState extends GameState {
         for (let i = 0; i < this.board.nHoles; i++) {
             document.getElementById(`hole-${i}`).classList.remove("player-hole");
         }
-       console.log(this.playerId)
+
         let destHoles = this.game.collectAllSeeds(
             this.lastPlayerId === 0 
                 ? this.otherPlayer
                 : this.player);
 
-        console.log("destHoles", destHoles)
-
         await Promise.all(Object.keys(destHoles).map(async function (origin) {
             let destinations = destHoles[origin];
-            console.log("destination", destinations)
             
-            await animateSeeds(origin, this.board.nHoles, destinations);
+            await this.animator.animateSeeds(origin, this.board.nHoles, destinations);
         }.bind(this)));
 
         this.game.renderAll();
@@ -248,7 +260,6 @@ class PlayAIState extends GameState {
 class PlayMPState extends GameState {
     constructor(game, player, otherPlayer, mInfo) {
         super(game, player, otherPlayer);
-        console.log(mInfo);
         this.mInfo = mInfo;
     }
 
@@ -260,8 +271,12 @@ class PlayMPState extends GameState {
         return new WaitMPState(this.game, this.otherPlayer, this.player, this.mInfo);
     }
 
+    handleUpdate(e) {
+        console.log(e);
+    }
+
     run() {
-        this.mInfo.evtSource.onmessage = (e) => console.log(e);
+        this.mInfo.evtSource.onmessage = (e) => this.handleUpdate(e);
 
         this.game.nextTurn();
         this.game.renderAll();
@@ -294,8 +309,13 @@ class PlayMPState extends GameState {
         };
 
         let a = await postRequest(data, 'notify');
-        console.log("after post request:", a);
+        
+        if(a.status === 404) {
+            console.log("lol fail: ", a);
 
+            return;
+        }
+        
         this.game.nextPlayerState(nextState);
     }
 }
@@ -306,6 +326,47 @@ class WaitMPState extends GameState {
         this.mInfo = mInfo;
     }
 
+    /**
+     * 
+     * @param {Board} boardLeft 
+     * @param {Array} boardRight 
+     */
+    compareBoards(boardLeft, boardRight) {
+        for(let i = 0; i < boardLeft.nHoles * 2; i++) {
+            if(boardLeft.seeds[i].length !== boardRight[i]) {
+                return false;
+            }
+        }
+
+        if(boardLeft.storage[0].length !== boardRight[boardLeft.nHoles * 2]) return false;
+        if(boardLeft.storage[1].length !== boardRight[boardLeft.nHoles * 2 + 1] ) return false;
+
+        return true;
+    }
+
+    async guessHole(goalBoard, goalTurn) {
+        let origBoard = this.board;
+        this.board = JSON.parse(JSON.stringify(origBoard));
+
+        let startHole = this.player.id * this.board.nHoles;
+        let endHole = startHole + this.board.nHoles;
+        let animator = new FakeAnimator();
+        for(let hole = startHole; hole < endHole; hole++) {
+            let endState = await this.play(hole, animator);
+
+            if(this.compareBoards(this.board, goalBoard) && endState().player.name === goalTurn) {
+                this.board = origBoard;
+                return hole;
+            } 
+
+            this.board = JSON.parse(JSON.stringify(origBoard));
+        }
+
+        this.board = origBoard;
+
+        return false;
+    }
+
     getCurrentState() {
         return new WaitMPState(this.game, this.player, this.otherPlayer, this.mInfo);
     }
@@ -314,15 +375,14 @@ class WaitMPState extends GameState {
         return new PlayMPState(this.game, this.otherPlayer, this.player, this.mInfo);
     }
 
-    getUpdate(data) {
-        console.log(data);
+    async handleUpdate(e) {
+        let parsed = parseBoard(JSON.parse(e.data));
+
+        console.log(await this.guessHole(parsed.board, parsed.turn));
     }
 
     run() {
-        this.mInfo.evtSource.onmessage = (e) => {
-            let parsed = parseBoard(JSON.parse(e.data));
-            console.log(parsed);
-        };
+        this.mInfo.evtSource.onmessage = (e) => this.handleUpdate(e);
 
         this.game.nextTurn();
         this.game.renderAll();
@@ -465,7 +525,6 @@ class Game {
     }
 
     async clickHole(hole) {
-        console.log("click", hole)
         await this.state.clickHole(hole);
     }
 }
@@ -534,67 +593,80 @@ function calculateInitialPosition(seed, hole) {
     return rect;
 }
 
-async function animateSeeds(holeId, nHoles, idList) {
+class Animator {
+    async animateSeeds(holeId, nHoles, idList) {
 
-    const animationDuration = 2;
-    const animationDelay = 0.1;
-    const positionDuration = animationDuration - animationDelay;
-    const dimensionDuration = (animationDuration - animationDelay) / 2;
-    const animationInterval = 0.2;
+    };
+}
 
-    const boardOffset = nHoles * 2;
-    console.log("hole id",`hole-${holeId}`, holeId, document.getElementById(`hole-${holeId}`));
-    const hole = document.getElementById(`hole-${holeId}`);
-    const board = document.getElementById("board");
+class FakeAnimator extends Animator {
+    async animateSeeds(holeId, nHoles, idList) {
+        //
+    }
+}
 
-    const numSeeds = hole.children.length;
+class CSSAnimator extends Animator {
+    async animateSeeds(holeId, nHoles, idList) {
 
-    Array.from(hole.children).reverse().forEach((seed, idx) => {
-        setTimeoutClearable(() => {
-            const currentHoleId = idList[idx];
-            const isHole = currentHoleId < boardOffset;
-            const nextHole = document.getElementById(isHole ? `hole-${currentHoleId}` : `storage-${currentHoleId - boardOffset}`);
-            const { left: targetLeft, top: targetTop } = calculateTargetPosition(seed, nextHole, board);
-
-            const { left, top, height, width } = calculateInitialPosition(seed, hole);
-
-            seed.remove();
-
-            const fakeSeed = seed.cloneNode();
-
-            board.appendChild(fakeSeed);
-            fakeSeed.style.position = "fixed";
-            fakeSeed.id = `fake-${seed.id}`;
-            fakeSeed.style.left = `${left}px`;
-            fakeSeed.style.top = `${top}px`;
-            fakeSeed.style.zIndex = "5";
-            fakeSeed.style.width = `${width}px`;
-            fakeSeed.style.height = `${height}px`;
-
-
+        const animationDuration = 2;
+        const animationDelay = 0.1;
+        const positionDuration = animationDuration - animationDelay;
+        const dimensionDuration = (animationDuration - animationDelay) / 2;
+        const animationInterval = 0.2;
+    
+        const boardOffset = nHoles * 2;
+        const hole = document.getElementById(`hole-${holeId}`);
+        const board = document.getElementById("board");
+    
+        const numSeeds = hole.children.length;
+    
+        Array.from(hole.children).reverse().forEach((seed, idx) => {
             setTimeoutClearable(() => {
-                fakeSeed.style.transition = `left ${positionDuration}s, top ${positionDuration}s, width ${dimensionDuration}s, height ${dimensionDuration}s`;
-                fakeSeed.style.left = `${targetLeft}px`;
-                fakeSeed.style.top = `${targetTop}px`;
-                fakeSeed.style.width = `${width + 30}px`;
-                fakeSeed.style.height = `${height + 30}px`;
-
-            }, animationDelay * 1000);
-
-            setTimeoutClearable(() => {
+                const currentHoleId = idList[idx];
+                const isHole = currentHoleId < boardOffset;
+                const nextHole = document.getElementById(isHole ? `hole-${currentHoleId}` : `storage-${currentHoleId - boardOffset}`);
+                const { left: targetLeft, top: targetTop } = calculateTargetPosition(seed, nextHole, board);
+    
+                const { left, top, height, width } = calculateInitialPosition(seed, hole);
+    
+                seed.remove();
+    
+                const fakeSeed = seed.cloneNode();
+    
+                board.appendChild(fakeSeed);
+                fakeSeed.style.position = "fixed";
+                fakeSeed.id = `fake-${seed.id}`;
+                fakeSeed.style.left = `${left}px`;
+                fakeSeed.style.top = `${top}px`;
+                fakeSeed.style.zIndex = "5";
                 fakeSeed.style.width = `${width}px`;
                 fakeSeed.style.height = `${height}px`;
-            }, (animationDelay + dimensionDuration) * 1000);
-
-            setTimeoutClearable(() => {
-                fakeSeed.remove();
-                nextHole.append(seed);
-            }, animationDuration * 1000);
-
-        }, animationInterval * idx * 1000);
-    });
-
-
-    return new Promise(_ => setTimeoutClearable(_, (animationDuration + animationInterval * numSeeds) * 1000));
+    
+    
+                setTimeoutClearable(() => {
+                    fakeSeed.style.transition = `left ${positionDuration}s, top ${positionDuration}s, width ${dimensionDuration}s, height ${dimensionDuration}s`;
+                    fakeSeed.style.left = `${targetLeft}px`;
+                    fakeSeed.style.top = `${targetTop}px`;
+                    fakeSeed.style.width = `${width + 30}px`;
+                    fakeSeed.style.height = `${height + 30}px`;
+    
+                }, animationDelay * 1000);
+    
+                setTimeoutClearable(() => {
+                    fakeSeed.style.width = `${width}px`;
+                    fakeSeed.style.height = `${height}px`;
+                }, (animationDelay + dimensionDuration) * 1000);
+    
+                setTimeoutClearable(() => {
+                    fakeSeed.remove();
+                    nextHole.append(seed);
+                }, animationDuration * 1000);
+    
+            }, animationInterval * idx * 1000);
+        });
+    
+    
+        return new Promise(_ => setTimeoutClearable(_, (animationDuration + animationInterval * numSeeds) * 1000));
+    }
 }
 
