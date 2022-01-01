@@ -62,15 +62,12 @@ class GameState {
 
     checkEnd() {
         let avail = this.game.getAvailHoles(this.player);
-        console.log(avail);
 
         if (avail.length === 0) {
             return this.player.id;
         }
 
         avail = this.game.getAvailHoles(this.otherPlayer);
-        console.log(avail);
-
         
         if(avail.length === 0) {
             return this.otherPlayer.id;
@@ -296,14 +293,10 @@ class PlayMPState extends GameState {
 
         if(data.winner) {
             let endID = this.checkEnd();
-            console.log(endID);
             if(endID !== false) {
                 this.game.endGame(endID);
             }
         } else {
-            console.log(data.board.turn);
-            console.log(this.player.name);
-            console.log(data);
             if(data.board.turn === this.player.name) {
                 this.game.nextPlayerState(this.getCurrentState.bind(this));
             } else {
