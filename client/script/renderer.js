@@ -111,7 +111,7 @@ class StatusRenderer extends Renderer {
         document.getElementById("status-p0-play-seeds").innerText = seeds0;
         document.getElementById("status-p1-play-seeds").innerText = seeds1;
 
-        document.getElementById("status-turn-name").innerText = game.state ? game.state.player.name : "xx";
+        document.getElementById("status-turn-name").innerText = game.currentPlayer ? game.currentPlayer.name : "?";
 
         return status;
     }
