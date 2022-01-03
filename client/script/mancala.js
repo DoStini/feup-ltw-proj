@@ -82,13 +82,10 @@ class GameState {
      * @param {Animator} animator 
      * @returns 
      */
-    async play(hole, animator) {
+    async play(hole) {
         let destHoles = this.sowSeeds(hole); /** @property {Array} destHoles */
         let lastHole = destHoles[destHoles.length - 1];
         let playAnimator = this.animator;
-        if(animator) {
-            playAnimator = animator;
-        }
 
         await playAnimator.animateSeeds(hole, this.board.nHoles, destHoles);
         if (lastHole == this.board.nHoles * 2 + this.player.id) {
@@ -363,29 +360,6 @@ class WaitMPState extends GameState {
         return true;
     }
 
-    async guessHole(goalBoard, goalTurn) {
-        let origBoard = this.board;
-        this.board = JSON.parse(JSON.stringify(origBoard));
-
-        let startHole = this.player.id * this.board.nHoles;
-        let endHole = startHole + this.board.nHoles;
-        let animator = new FakeAnimator();
-        for(let hole = startHole; hole < endHole; hole++) {
-            let endState = await this.play(hole, animator);
-
-            if(this.compareBoards(this.board, goalBoard) && endState().player.name === goalTurn) {
-                this.board = origBoard;
-                return hole;
-            } 
-
-            this.board = JSON.parse(JSON.stringify(origBoard));
-        }
-
-        this.board = origBoard;
-
-        return false;
-    }
-
     getCurrentState() {
         return new WaitMPState(this.game, this.player, this.otherPlayer, this.mInfo);
     }
@@ -400,7 +374,7 @@ class WaitMPState extends GameState {
         if(data.board) {
             let parsed = parseBoard(data);
 
-            let hole = await this.guessHole(parsed.board, parsed.turn);
+            let hole = data.pit + this.player.id * this.board.nHoles;
             let nextState = await this.play(hole);
 
             this.game.nextPlayerState(nextState);
