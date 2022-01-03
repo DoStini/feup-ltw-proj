@@ -148,6 +148,18 @@ class GameState {
     }
 
     /**
+     * Starts a turn, and sends a message.
+     */
+    startTurn() {
+        this.game.nextTurn();
+        this.game.renderAll();
+
+        document.getElementById(`name${this.player.id}`).classList.add("player-turn");
+        document.getElementById(`name${this.otherPlayer.id}`).classList.remove("player-turn");
+        addMessage(MESSAGE.otherTurn(this.player.name));
+    }
+
+    /**
      * Handles clicking a hole
      * 
      * @param {number} hole 
@@ -184,12 +196,7 @@ class PlayerState extends GameState {
     }
 
     run() {
-        this.game.nextTurn();
-        this.game.renderAll();
-
-        document.getElementById(`name${this.player.id}`).classList.add("player-turn");
-        document.getElementById(`name${this.otherPlayer.id}`).classList.remove("player-turn");
-        addMessage(MESSAGE.otherTurn(this.player.name));
+        this.startTurn();
 
         if (this.checkEnd()) {
             this.game.endGame();
@@ -216,12 +223,7 @@ class PlayAIState extends GameState {
     }
 
     async run() {
-        this.game.nextTurn();
-        this.game.renderAll();
-
-        addMessage(MESSAGE.otherTurn(this.player.name));
-        document.getElementById(`name${this.player.id}`).classList.add("player-turn");
-        document.getElementById(`name${this.otherPlayer.id}`).classList.remove("player-turn");
+        this.startTurn();
 
         if (this.checkEnd()) {
             this.game.endGame();
@@ -297,12 +299,7 @@ class MPGameState extends GameState {
     run() {
         this.mInfo.evtSource.onmessage = this.handleUpdate.bind(this);
 
-        this.game.nextTurn();
-        this.game.renderAll();
-
-        document.getElementById(`name${this.player.id}`).classList.add("player-turn");
-        document.getElementById(`name${this.otherPlayer.id}`).classList.remove("player-turn");
-        addMessage(MESSAGE.otherTurn(this.player.name));
+        this.startTurn();
     }
 }
 
@@ -347,24 +344,6 @@ class PlayMPState extends MPGameState {
 class WaitMPState extends MPGameState {
     constructor(game, player, otherPlayer, mInfo) {
         super(game, player, otherPlayer, mInfo);
-    }
-
-    /**
-     * 
-     * @param {Board} boardLeft 
-     * @param {Array} boardRight 
-     */
-    compareBoards(boardLeft, boardRight) {
-        for (let i = 0; i < boardLeft.nHoles * 2; i++) {
-            if (boardLeft.getHoleSeedAmount(i) !== boardRight[i]) {
-                return false;
-            }
-        }
-
-        if (boardLeft.getStorageAmount(0) !== boardRight[boardLeft.nHoles * 2]) return false;
-        if (boardLeft.getStorageAmount(1) !== boardRight[boardLeft.nHoles * 2 + 1]) return false;
-
-        return true;
     }
 
     getNextState() {

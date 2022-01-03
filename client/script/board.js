@@ -77,4 +77,22 @@ class Board {
 
         return avail;
     }
+
+    /**
+     * Compares the board to an array of seed amounts per hole.
+     * 
+     * @param {Array} seeds 
+     */
+    compareBoards(seeds) {
+        for (let hole = 0; i < this.#nHoles * 2; hole++) {
+            if (this.getHoleSeedAmount(hole) !== seeds[hole]) {
+                return false;
+            }
+        }
+        
+        if (this.getStorageAmount(0) !== seeds[this.#nHoles * 2]) return false;
+        if (this.getStorageAmount(1) !== seeds[this.#nHoles * 2 + 1]) return false;
+
+        return true;
+    }
 }
