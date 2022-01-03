@@ -111,16 +111,12 @@ class GameState {
      * @returns {number|boolean} The player ID of the player who has no seeds, or false if game didn't end.
      */
     checkEnd() {
-        let avail = this.game.getAvailHoles(this.player);
+        for(let playerID = 0; playerID <= 1; playerID++) {
+            const avail = this.board.getAvailHoles(playerID);
 
-        if (avail.length === 0) {
-            return this.player.id;
-        }
-
-        avail = this.game.getAvailHoles(this.otherPlayer);
-        
-        if(avail.length === 0) {
-            return this.otherPlayer.id;
+            if (avail.length === 0) {
+                return playerID;
+            }
         }
 
         return false;
@@ -253,7 +249,7 @@ class PlayAIState extends GameState {
         }
 
         setTimeoutClearable(async function () {
-            let avail = this.game.getAvailHoles(this.player);
+            let avail = this.board.getAvailHoles(this.player.id);
 
             let hole = avail[(Math.random() * avail.length) >> 0];
 
@@ -490,10 +486,7 @@ class WaitMPState extends MPGameState {
             document.getElementById(`hole-${i}`).classList.remove("player-hole");
         }
 
-        let destHoles = this.game.collectAllSeeds(
-            this.lastPlayerId === 0 
-                ? this.otherPlayer
-                : this.player);
+        let destHoles = this.game.collectAllSeeds((this.lastPlayerId + 1) % 2);
 
         let animation = new SeedAnimation();
         animation.addStep(destHoles);
@@ -552,29 +545,17 @@ class Game {
         this.statusRenderer.render(this);
     }
 
-    getAvailHoles(player) {
-        let avail = [];
-
-        for (let i = this.board.nHoles * player.id; i < this.board.nHoles * (player.id + 1); i++) {
-            if (this.board.getHoleSeedAmount(i) > 0) {
-                avail.push(i);
-            }
-        }
-
-        return avail;
-    }
-
-
-    collectAllSeeds(player) {
-        let avail = this.getAvailHoles(player);
+    collectAllSeeds(playerID) {
+        let avail = this.board.getAvailHoles(playerID);
         let destHoles = {};
+
         avail.forEach((hole) => {
-            let storage = this.board.nHoles * 2 + player.id;
+            let storage = this.board.nHoles * 2 + playerID
             let seeds = this.board.getHoleSeedAmount(hole);
             destHoles[hole] = Array(seeds).fill(storage);
 
             for(let i = 0; i < seeds; i++) {
-                this.board.moveToStorage(hole, player.id);
+                this.board.moveToStorage(hole, playerID);
             }
         });
 

@@ -64,4 +64,17 @@ class Board {
     holeBelongsToPlayer(hole, playerID) {
         return hole >= this.#nHoles * playerID && hole < this.#nHoles * (playerID + 1);
     }
+
+
+    getAvailHoles(playerID) {
+        let avail = [];
+
+        for (let hole = this.#nHoles * playerID; hole < this.#nHoles * (playerID + 1); hole++) {
+            if (this.getHoleSeedAmount(hole) > 0) {
+                avail.push(hole);
+            }
+        }
+
+        return avail;
+    }
 }
