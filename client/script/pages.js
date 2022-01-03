@@ -49,11 +49,17 @@ function startGame(pageManager) {
     document.getElementById("game-status").classList.remove("hidden");
 }
 
-function cleanupGame() {
+function cleanupGame(gameHash, evtSource) {
     document.getElementById("game-status").classList.add("hidden");
 
     if(toggleGameStatus.open) {
         toggleGameStatus();
+    }
+
+    if(gameHash != null) {
+        console.log(gameHash);
+        evtSource.onmessage = null;
+        leaveGame(gameHash);
     }
 
     clearTimeouts();

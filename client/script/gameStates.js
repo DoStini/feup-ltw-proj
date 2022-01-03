@@ -21,7 +21,7 @@ class GameState {
         this.game = game;
         this.player = player;
         this.otherPlayer = otherPlayer;
-        if(!animator) {
+        if (!animator) {
             this.animator = new HTMLAnimator();
         } else {
             this.animator = animator;
@@ -97,14 +97,14 @@ class GameState {
     /**
      * Checks if the game has ended.
      * 
-     * @returns {number|boolean} The player ID of the player who has no seeds, or false if game didn't end.
+     * @returns {boolean} true if game ended, or false if game didn't end.
      */
     checkEnd() {
-        for(let playerID = 0; playerID <= 1; playerID++) {
+        for (let playerID = 0; playerID <= 1; playerID++) {
             const avail = this.board.getAvailHoles(playerID);
 
             if (avail.length === 0) {
-                return playerID;
+                return true;
             }
         }
 
@@ -127,14 +127,14 @@ class GameState {
         seedAnimation.addStep(holeToHoles);
         seedAnimation.addStep(this.captureSeeds(lastHole));
 
-        return {chain: this.checkChain(lastHole), animation : seedAnimation};
+        return { chain: this.checkChain(lastHole), animation: seedAnimation };
     }
 
     /**
      * Plays a turn given a hole.
      * 
      * @param {number} hole
-     * @returns {GameState} The next game state.
+     * @returns {Promise<GameState>} The next game state.
      */
     async play(hole) {
         const response = this.sowAndCapture(hole);
@@ -191,9 +191,8 @@ class PlayerState extends GameState {
         document.getElementById(`name${this.otherPlayer.id}`).classList.remove("player-turn");
         addMessage(MESSAGE.otherTurn(this.player.name));
 
-        let endID = this.checkEnd();
-        if(endID !== false) {
-            this.game.endGame(endID);
+        if (this.checkEnd()) {
+            this.game.endGame();
         }
     }
 
@@ -202,6 +201,7 @@ class PlayerState extends GameState {
         if (!this.board.holeBelongsToPlayer(hole, this.player.id)) return;
 
         this.game.changePlayerState(new WaitState(this.game, this.player, this.otherPlayer));
+
         this.game.changePlayerState(await this.play(hole));
     }
 }
@@ -223,9 +223,8 @@ class PlayAIState extends GameState {
         document.getElementById(`name${this.player.id}`).classList.add("player-turn");
         document.getElementById(`name${this.otherPlayer.id}`).classList.remove("player-turn");
 
-        let endID = this.checkEnd();
-        if(endID !== false) {
-            this.game.endGame(endID);
+        if (this.checkEnd()) {
+            this.game.endGame();
             return;
         }
 
@@ -284,17 +283,20 @@ class PlayMPState extends MPGameState {
     async handleUpdate(e) {
         let data = JSON.parse(e.data);
 
-        if(this.playedHole != null) {
+        if (this.playedHole != null) {
             await this.play(this.playedHole);
         }
 
-        if(data.winner) {
-            let endID = this.checkEnd();
-            if(endID !== false) {
-                this.game.endGame(endID);
+        if (data.winner !== undefined) {
+            if (data.winner === null) {
+                this.game.endMPGame();
+            } else if (data.winner === this.player.name) {
+                this.game.endMPGame(this.player);
+            } else {
+                this.game.endMPGame(this.otherPlayer);
             }
         } else {
-            if(data.board.turn === this.player.name) {
+            if (data.board.turn === this.player.name) {
                 this.game.changePlayerState(this.getCurrentState());
             } else {
                 this.game.changePlayerState(this.getNextState());
@@ -303,7 +305,7 @@ class PlayMPState extends MPGameState {
     }
 
     run() {
-        this.mInfo.evtSource.onmessage = (e) => this.handleUpdate.bind(this)(e);
+        this.mInfo.evtSource.onmessage = this.handleUpdate.bind(this);
 
         this.game.nextTurn();
         this.game.renderAll();
@@ -316,7 +318,7 @@ class PlayMPState extends MPGameState {
     async clickHole(hole) {
         if (this.board.getHoleSeedAmount(hole) === 0) return;
         if (!this.board.holeBelongsToPlayer(hole, this.player.id)) return;
-        this.game.changePlayerState( new WaitState(this.game, this.player, this.otherPlayer));
+        this.game.changePlayerState(new WaitState(this.game, this.player, this.otherPlayer));
         this.playedHole = hole;
 
         const data = {
@@ -327,8 +329,8 @@ class PlayMPState extends MPGameState {
         };
 
         let a = await postRequest(data, 'notify');
-        
-        if(a.status === 404) {
+
+        if (a.status === 404) {
             console.log("lol fail: ", a);
 
             return;
@@ -347,14 +349,14 @@ class WaitMPState extends MPGameState {
      * @param {Array} boardRight 
      */
     compareBoards(boardLeft, boardRight) {
-        for(let i = 0; i < boardLeft.nHoles * 2; i++) {
-            if(boardLeft.getHoleSeedAmount(i) !== boardRight[i]) {
+        for (let i = 0; i < boardLeft.nHoles * 2; i++) {
+            if (boardLeft.getHoleSeedAmount(i) !== boardRight[i]) {
                 return false;
             }
         }
 
-        if(boardLeft.getStorageAmount(0) !== boardRight[boardLeft.nHoles * 2]) return false;
-        if(boardLeft.getStorageAmount(1) !== boardRight[boardLeft.nHoles * 2 + 1] ) return false;
+        if (boardLeft.getStorageAmount(0) !== boardRight[boardLeft.nHoles * 2]) return false;
+        if (boardLeft.getStorageAmount(1) !== boardRight[boardLeft.nHoles * 2 + 1]) return false;
 
         return true;
     }
@@ -366,7 +368,7 @@ class WaitMPState extends MPGameState {
     async handleUpdate(e) {
         let data = JSON.parse(e.data);
 
-        if(data.board) {
+        if (data.board) {
             let parsed = parseBoard(data);
 
             let hole = data.pit + this.player.id * this.board.nHoles;
@@ -375,18 +377,19 @@ class WaitMPState extends MPGameState {
             this.game.changePlayerState(nextState);
         }
 
-        if(data.winner) {
-            let endID = this.checkEnd();
-            if(endID !== false) {
-                this.game.endGame(endID);
+        if (data.winner !== undefined) {
+            if (data.winner === null) {
+                this.game.endMPGame();
+            } else if (data.winner === this.player.name) {
+                this.game.endMPGame(this.player);
+            } else {
+                this.game.endMPGame(this.otherPlayer);
             }
-
-            return;
         }
     }
 
     run() {
-        this.mInfo.evtSource.onmessage = (e) => this.handleUpdate.bind(this)(e);
+        this.mInfo.evtSource.onmessage = this.handleUpdate.bind(this);
 
         this.game.nextTurn();
         this.game.renderAll();
@@ -405,7 +408,7 @@ class WaitMPState extends MPGameState {
  * @param {Game} game
  * @param {Board} board 
  */
- class WaitState extends GameState {
+class WaitState extends GameState {
     constructor(game, player, otherPlayer) {
         super(game, player, otherPlayer);
     }
@@ -421,36 +424,37 @@ class WaitMPState extends MPGameState {
     }
 }
 
-/**
- * 
- * @param {Game} game
- * @param {Board} board 
- */
- class EndState extends GameState {
-    constructor(game, player, otherPlayer, lastPlayerId) {
+class EndState extends GameState {
+    /** @property {Player} winner */
+    winner;
+
+    /**
+     * 
+     * @param {Game} game 
+     * @param {Player} player 
+     * @param {Player} otherPlayer 
+     * @param {Player} winner 
+     */
+    constructor(game, player, otherPlayer, winner) {
         super(game, player, otherPlayer);
-        this.lastPlayerId = lastPlayerId;
+        this.winner = winner;
     }
 
-    clickHole(hole) {
-
-    }
-
-    calculateWinner() {
-    }
-    
     showWinner() {
         const score1 = this.board.getStorageAmount(this.player.id);
         const score2 = this.board.getStorageAmount(this.otherPlayer.id);
 
+        if (this.winner != null) {
+            launchEndGame(this.winner.id === 0, this.winner.name, this.winner.id === 0 ? score1 : score2);
+            return;
+        }
+
+        this.winner = score1 > score2 ? this.player : this.otherPlayer;
+
         if (score1 === score2) {
             launchTieGame(score1);
         } else {
-            const winner = score1 > score2
-            ? {player: this.player, score: score1}
-            : {player: this.otherPlayer, score: score2}
-   
-            launchEndGame(winner.player.id === 0, winner.player.name, winner.score);
+            launchEndGame(this.winner.id === 0, this.winner.name, this.winner.id === 0 ? score1 : score2);
         }
     }
 
@@ -459,7 +463,7 @@ class WaitMPState extends MPGameState {
             document.getElementById(`hole-${i}`).classList.remove("player-hole");
         }
 
-        let destHoles = this.game.collectAllSeeds((this.lastPlayerId + 1) % 2);
+        let destHoles = this.game.collectAllSeeds();
 
         let animation = new SeedAnimation();
         animation.addStep(destHoles);

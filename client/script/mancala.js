@@ -90,9 +90,19 @@ class Game {
      * 
      * @param {number} playerId The player without seeds.
      */
-    endGame(playerId) {
-        this.#state = new EndState(this, this.#player1, this.#player2, playerId);
-        this.#state.run();
+    endGame() {
+        this.changePlayerState(new EndState(this, this.#player1, this.#player2));
+    }
+
+    /**
+     * Ends the multiplayer game.
+     * 
+     * @param {Player} winner The player who won.
+     */
+    endMPGame(winner) {
+        pageManager.pageCleanup["game-section"] = cleanupGame;
+
+        this.changePlayerState(new EndState(this, this.#player1, this.#player2, winner));
     }
 
     /**
@@ -114,22 +124,24 @@ class Game {
     /**
      * Collects all remaining seeds in the board and stores them in the appropriate storage.
      * 
-     * @param {number} playerID The id of the player with seeds still in play.
-     * @returns 
+     * @returns {Object.<number, Array.<number>>}
      */
-    collectAllSeeds(playerID) {
-        let avail = this.#board.getAvailHoles(playerID);
+    collectAllSeeds() {
         let destHoles = {};
 
-        avail.forEach((hole) => {
-            let storage = this.#board.nHoles * 2 + playerID
-            let seeds = this.#board.getHoleSeedAmount(hole);
-            destHoles[hole] = Array(seeds).fill(storage);
-
-            for(let i = 0; i < seeds; i++) {
-                this.#board.moveToStorage(hole, playerID);
-            }
-        });
+        for(let playerID = 0; playerID <= 1; playerID++) {
+            let avail = this.#board.getAvailHoles(playerID);
+    
+            avail.forEach((hole) => {
+                let storage = this.#board.nHoles * 2 + playerID
+                let seeds = this.#board.getHoleSeedAmount(hole);
+                destHoles[hole] = Array(seeds).fill(storage);
+    
+                for(let i = 0; i < seeds; i++) {
+                    this.#board.moveToStorage(hole, playerID);
+                }
+            });
+        }
 
         return destHoles;
     }

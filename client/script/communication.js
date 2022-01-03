@@ -24,8 +24,6 @@ async function bodyRequest(method, body, path) {
     });
 }
 
-
-
 async function queryRequest(method, data, path) {
     let options = {
         method : method,
@@ -87,6 +85,10 @@ function login(body) {
 
 function join(body) {
     return postRequest(body, "join");
+}
+
+function leave(body) {
+    return postRequest(body, "leave");
 }
 
 function update(body) {
