@@ -262,6 +262,48 @@ class MPGameState extends GameState {
     handleUpdate(e) {
 
     };
+
+    changeStateOrEnd(data) {
+        if (data.winner !== undefined) {
+            if (data.winner === null) {
+                this.game.endMPGame(null);
+            } else if (data.winner === this.player.name) {
+                this.game.endMPGame(this.player);
+            } else {
+                this.game.endMPGame(this.otherPlayer);
+            }
+        } else {
+            if (data.board.turn === this.player.name) {
+                this.game.changePlayerState(this.getCurrentState());
+            } else {
+                this.game.changePlayerState(this.getNextState());
+            }
+        }
+    }
+
+    async handleUpdate(e) {
+        let data = JSON.parse(e.data);
+
+        if (data.board) {
+            let parsed = parseBoard(data);
+
+            let hole = data.pit + this.player.id * this.board.nHoles;
+            await this.play(hole);
+        }
+
+        this.changeStateOrEnd(data);
+    }
+
+    run() {
+        this.mInfo.evtSource.onmessage = this.handleUpdate.bind(this);
+
+        this.game.nextTurn();
+        this.game.renderAll();
+
+        document.getElementById(`name${this.player.id}`).classList.add("player-turn");
+        document.getElementById(`name${this.otherPlayer.id}`).classList.remove("player-turn");
+        addMessage(MESSAGE.otherTurn(this.player.name));
+    }
 }
 
 class PlayMPState extends MPGameState {
@@ -280,46 +322,10 @@ class PlayMPState extends MPGameState {
         return new WaitMPState(this.game, this.otherPlayer, this.player, this.mInfo);
     }
 
-    async handleUpdate(e) {
-        let data = JSON.parse(e.data);
-
-        if (this.playedHole != null) {
-            await this.play(this.playedHole);
-        }
-
-        if (data.winner !== undefined) {
-            if (data.winner === null) {
-                this.game.endMPGame();
-            } else if (data.winner === this.player.name) {
-                this.game.endMPGame(this.player);
-            } else {
-                this.game.endMPGame(this.otherPlayer);
-            }
-        } else {
-            if (data.board.turn === this.player.name) {
-                this.game.changePlayerState(this.getCurrentState());
-            } else {
-                this.game.changePlayerState(this.getNextState());
-            }
-        }
-    }
-
-    run() {
-        this.mInfo.evtSource.onmessage = this.handleUpdate.bind(this);
-
-        this.game.nextTurn();
-        this.game.renderAll();
-
-        document.getElementById(`name${this.player.id}`).classList.add("player-turn");
-        document.getElementById(`name${this.otherPlayer.id}`).classList.remove("player-turn");
-        addMessage(MESSAGE.otherTurn(this.player.name));
-    }
-
     async clickHole(hole) {
         if (this.board.getHoleSeedAmount(hole) === 0) return;
         if (!this.board.holeBelongsToPlayer(hole, this.player.id)) return;
         this.game.changePlayerState(new WaitState(this.game, this.player, this.otherPlayer));
-        this.playedHole = hole;
 
         const data = {
             nick: getUser(),
@@ -364,43 +370,6 @@ class WaitMPState extends MPGameState {
     getNextState() {
         return new PlayMPState(this.game, this.otherPlayer, this.player, this.mInfo);
     }
-
-    async handleUpdate(e) {
-        let data = JSON.parse(e.data);
-
-        if (data.board) {
-            let parsed = parseBoard(data);
-
-            let hole = data.pit + this.player.id * this.board.nHoles;
-            let nextState = await this.play(hole);
-
-            this.game.changePlayerState(nextState);
-        }
-
-        if (data.winner !== undefined) {
-            if (data.winner === null) {
-                this.game.endMPGame();
-            } else if (data.winner === this.player.name) {
-                this.game.endMPGame(this.player);
-            } else {
-                this.game.endMPGame(this.otherPlayer);
-            }
-        }
-    }
-
-    run() {
-        this.mInfo.evtSource.onmessage = this.handleUpdate.bind(this);
-
-        this.game.nextTurn();
-        this.game.renderAll();
-
-        document.getElementById(`name${this.player.id}`).classList.add("player-turn");
-        document.getElementById(`name${this.otherPlayer.id}`).classList.remove("player-turn");
-        addMessage(MESSAGE.otherTurn(this.player.name));
-    }
-
-    async clickHole(hole) {
-    }
 }
 
 /**
@@ -444,6 +413,11 @@ class EndState extends GameState {
         const score1 = this.board.getStorageAmount(this.player.id);
         const score2 = this.board.getStorageAmount(this.otherPlayer.id);
 
+        if(this.winner === null) {
+            launchTieGame(score1);
+            return;
+        } 
+        
         if (this.winner != null) {
             launchEndGame(this.winner.id === 0, this.winner.name, this.winner.id === 0 ? score1 : score2);
             return;
