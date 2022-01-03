@@ -20,13 +20,20 @@ class SeedRenderer extends Renderer {
 }
 
 class BoardRenderer extends Renderer {
+    /** @property {Renderer} seedRenderer*/
+    #seedRenderer;
+
+    /**
+     * 
+     * @param {Renderer} seedRenderer 
+     */
     constructor(seedRenderer) {
         super();
 
         if(seedRenderer == null) {
-            this.seedRenderer = new SeedRenderer();
+            this.#seedRenderer = new SeedRenderer();
         } else {
-            this.seedRenderer = seedRenderer;
+            this.#seedRenderer = seedRenderer;
         }
     }
 
@@ -62,14 +69,14 @@ class BoardRenderer extends Renderer {
                 seedHole.id = `hole-${idx}`;
                 boardElement.appendChild(seedHole);
                 board.seeds[idx].forEach(seed => {
-                    seedHole.appendChild(this.seedRenderer.render(seed));
+                    seedHole.appendChild(this.#seedRenderer.render(seed));
                 });
             }
         });
 
         board.storage.forEach((store, idx) => {
             store.forEach(seed => {
-                document.getElementById(`storage-${idx}`).appendChild(this.seedRenderer.render(seed));
+                document.getElementById(`storage-${idx}`).appendChild(this.#seedRenderer.render(seed));
             })
         });
 

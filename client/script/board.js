@@ -44,6 +44,10 @@ class Board {
         return this.#seeds[hole].length;
     }
 
+    getStorageAmount(playerID) {
+        return this.#storage[playerID].length;
+    }
+
     generateSeeds() {
         const container = [];
 

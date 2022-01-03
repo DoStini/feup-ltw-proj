@@ -386,9 +386,8 @@ class WaitMPState extends GameState {
     }
     
     showWinner() {
-        const score1 = this.game.player1Points();
-        const score2 = this.game.player2Points();
-
+        const score1 = this.board.getStorageAmount(this.player.id);
+        const score2 = this.board.getStorageAmount(this.otherPlayer.id);
 
         if (score1 === score2) {
             launchTieGame(score1);
@@ -459,14 +458,6 @@ class Game {
     endGame(playerId) {
         this.state = new EndState(this, this.player1, this.player2, playerId);
         this.state.run();
-    }
-
-    player1Points() {
-        return this.board.storage[0].length;
-    }
-
-    player2Points() {
-        return this.board.storage[1].length;
     }
 
     nextTurn() {
