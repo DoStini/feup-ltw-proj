@@ -25,7 +25,7 @@ class Animator {
     }
 }
 
-class CSSAnimator extends Animator {
+class HTMLAnimator extends Animator {
     /**
      * 
      * @param {number} nHoles 

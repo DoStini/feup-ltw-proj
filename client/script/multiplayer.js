@@ -94,9 +94,26 @@ function parseBoard(data) {
 }
 
 class MultiplayerInfo {
+    /** @property {EventSource} evtSource */
+    #evtSource;
+    #gameHash;
+
+    /**
+     * 
+     * @param {EventSource} evtSource 
+     * @param {*} gameHash 
+     */
     constructor(evtSource, gameHash) {
-        this.evtSource = evtSource;
-        this.gameHash = gameHash;
+        this.#evtSource = evtSource;
+        this.#gameHash = gameHash;
+    }
+
+    get evtSource() {
+        return this.#evtSource;
+    }
+
+    get gameHash() {
+        return this.#gameHash;
     }
 }
 
