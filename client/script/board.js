@@ -84,7 +84,7 @@ class Board {
      * @param {Array} seeds 
      */
     compareBoards(seeds) {
-        for (let hole = 0; i < this.#nHoles * 2; hole++) {
+        for (let hole = 0; hole < this.#nHoles * 2; hole++) {
             if (this.getHoleSeedAmount(hole) !== seeds[hole]) {
                 return false;
             }
@@ -94,5 +94,31 @@ class Board {
         if (this.getStorageAmount(1) !== seeds[this.#nHoles * 2 + 1]) return false;
 
         return true;
+    }
+
+    regenerateBoard(seeds) {
+        const container = [];
+        let id = 0;
+
+        for (let h = 0; h < this.#nHoles * 2; h++) {
+            container.push([]);
+            for (let s = 0; s < seeds[h]; s++) {
+                container[h][s] = new Seed(id);
+
+                id++;
+            }
+        }
+
+        this.#seeds = container;
+        const storageStart = this.#nHoles * 2;
+
+        for(let playerID = 0; playerID <= 1; playerID++) {
+            let storageID = storageStart + playerID;
+            for(let s = 0; s < seeds[storageID]; s++) {
+                this.#storage[playerID].push(new Seed(id));
+
+                id++;
+            }
+        }
     }
 }

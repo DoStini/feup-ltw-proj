@@ -211,33 +211,3 @@ function setupMultiplayerGame(nHoles, seedsPerHole, turn, playerName, enemyName,
 
     game.renderAll();
 }
-
-
-function calculateTargetPosition(seed, hole) {
-    const copySeed = seed.cloneNode();
-    copySeed.style.transform = "";
-    copySeed.id = `copy-${seed.id}`;
-
-    hole.append(copySeed);
-    const { left, top } = copySeed.getBoundingClientRect();
-
-    copySeed.remove();
-
-    return {
-        left,
-        top,
-    }
-}
-
-function calculateInitialPosition(seed, hole) {
-    const copySeed = seed.cloneNode();
-    copySeed.style.transform = "";
-    copySeed.id = `copy-${seed.id}`;
-
-    hole.append(copySeed);
-    const rect = copySeed.getBoundingClientRect();
-
-    copySeed.remove();
-
-    return rect;
-}

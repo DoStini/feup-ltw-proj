@@ -291,6 +291,10 @@ class MPGameState extends GameState {
 
             let hole = data.pit + this.player.id * this.board.nHoles;
             await this.play(hole);
+
+            if(!this.board.compareBoards(parsed.board)) {
+                this.board.regenerateBoard(parsed.board);
+            }
         }
 
         this.changeStateOrEnd(data);
@@ -333,7 +337,7 @@ class PlayMPState extends MPGameState {
 
         let a = await postRequest(data, 'notify');
 
-        if (a.status === 404) {
+        if (a.status !== 200) {
             console.log("lol fail: ", a);
 
             return;
