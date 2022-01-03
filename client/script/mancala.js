@@ -35,7 +35,7 @@ class GameState {
      * @returns {Object.<number, Array.<number>>}
      */
     sowSeeds(hole) {
-        let seeds = this.board.seeds[hole].length;
+        let seeds = this.board.getHoleSeedAmount(hole);
         let lastHole = hole
         let curHole = lastHole;
         let destHoles = {};
@@ -44,16 +44,15 @@ class GameState {
 
         for (let i = 0; i < seeds; i++) {
             if (lastHole === this.player.id * this.board.nHoles + this.board.nHoles - 1) {
-                this.board.storage[this.player.id].push(this.board.seeds[hole].pop());
+                this.board.moveToStorage(hole, this.player.id);
 
                 lastHole = this.board.nHoles * 2 + this.player.id;
                 destHoles[hole].push(lastHole);
             } else {
                 curHole = (curHole + 1) % (this.board.nHoles * 2);
-                this.board.seeds[curHole].push(this.board.seeds[hole].pop());
+                this.board.moveToHole(hole, curHole);
 
                 destHoles[hole].push(curHole);
-
                 lastHole = curHole;
             }
         }
@@ -69,15 +68,15 @@ class GameState {
     captureSeeds(lastHole) {
         let holeToHoles = {};
 
-        if (this.game.holeBelongsToPlayer(lastHole, this.player) && this.board.seeds[lastHole].length === 1) {
+        if (this.game.holeBelongsToPlayer(lastHole, this.player) && this.board.getHoleSeedAmount(lastHole) === 1) {
             let storage = this.board.nHoles * 2 + this.player.id;
             let oppositeHole = this.board.nHoles * 2 - 1 - lastHole;
-            let oppositeSeeds = this.board.seeds[oppositeHole].length;
+            let oppositeSeeds = this.board.getHoleSeedAmount(oppositeHole);
 
             for (let i = 0; i < oppositeSeeds; i++) {
-                this.board.storage[this.player.id].push(this.board.seeds[oppositeHole].pop())
+                this.board.moveToStorage(oppositeHole, this.player.id);
             }
-            this.board.storage[this.player.id].push(this.board.seeds[lastHole].pop());
+            this.board.moveToStorage(lastHole, this.player.id);
 
             holeToHoles[lastHole] = [storage];
             holeToHoles[oppositeHole] = Array(oppositeSeeds).fill(storage);
@@ -164,7 +163,7 @@ class PlayerState extends GameState {
     }
 
     async clickHole(hole) {
-        if (this.board.seeds[hole].length === 0) return;
+        if (this.board.getHoleSeedAmount(hole) === 0) return;
         if (!(hole >= this.board.nHoles * this.player.id && hole < this.board.nHoles * (this.player.id + 1))) return;
         this.game.changePlayerState(new WaitState(this.game, this.player, this.otherPlayer));
         
@@ -256,7 +255,7 @@ class PlayMPState extends GameState {
     }
 
     async clickHole(hole) {
-        if (this.board.seeds[hole].length === 0) return;
+        if (this.board.getHoleSeedAmount(hole) === 0) return;
         if (!(hole >= this.board.nHoles * this.player.id && hole < this.board.nHoles * (this.player.id + 1))) return;
         this.game.changePlayerState( new WaitState(this.game, this.player, this.otherPlayer));
         this.playedHole = hole;
@@ -492,7 +491,7 @@ class Game {
         let avail = [];
 
         for (let i = this.board.nHoles * player.id; i < this.board.nHoles * (player.id + 1); i++) {
-            if (this.board.seeds[i].length > 0) {
+            if (this.board.getHoleSeedAmount(i) > 0) {
                 avail.push(i);
             }
         }
@@ -505,11 +504,11 @@ class Game {
         let destHoles = {};
         avail.forEach((hole) => {
             let storage = this.board.nHoles * 2 + player.id;
-            let seeds = this.board.seeds[hole].length;
+            let seeds = this.board.getHoleSeedAmount(hole);
             destHoles[hole] = Array(seeds).fill(storage);
 
             for(let i = 0; i < seeds; i++) {
-                this.board.storage[player.id].push(this.board.seeds[hole].pop());
+                this.board.moveToStorage(hole, player.id);
             }
         });
 
