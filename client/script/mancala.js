@@ -78,7 +78,7 @@ class GameState {
     captureSeeds(lastHole) {
         let holeToHoles = {};
 
-        if (this.game.holeBelongsToPlayer(lastHole, this.player) && this.board.getHoleSeedAmount(lastHole) === 1) {
+        if (this.board.holeBelongsToPlayer(lastHole, this.player.id) && this.board.getHoleSeedAmount(lastHole) === 1) {
             let storage = this.board.nHoles * 2 + this.player.id;
             let oppositeHole = this.board.nHoles * 2 - 1 - lastHole;
             let oppositeSeeds = this.board.getHoleSeedAmount(oppositeHole);
@@ -218,7 +218,7 @@ class PlayerState extends GameState {
 
     async clickHole(hole) {
         if (this.board.getHoleSeedAmount(hole) === 0) return;
-        if (!(hole >= this.board.nHoles * this.player.id && hole < this.board.nHoles * (this.player.id + 1))) return;
+        if (!this.board.holeBelongsToPlayer(hole, this.player.id)) return;
 
         this.game.changePlayerState(new WaitState(this.game, this.player, this.otherPlayer));
         this.game.changePlayerState(await this.play(hole));
@@ -342,7 +342,7 @@ class PlayMPState extends MPGameState {
 
     async clickHole(hole) {
         if (this.board.getHoleSeedAmount(hole) === 0) return;
-        if (!(hole >= this.board.nHoles * this.player.id && hole < this.board.nHoles * (this.player.id + 1))) return;
+        if (!this.board.holeBelongsToPlayer(hole, this.player.id)) return;
         this.game.changePlayerState( new WaitState(this.game, this.player, this.otherPlayer));
         this.playedHole = hole;
 
@@ -363,7 +363,7 @@ class PlayMPState extends MPGameState {
     }
 }
 
-class WaitMPState extends GameState {
+class WaitMPState extends MPGameState {
     constructor(game, player, otherPlayer, mInfo) {
         super(game, player, otherPlayer, mInfo);
     }
@@ -552,10 +552,6 @@ class Game {
         this.statusRenderer.render(this);
     }
 
-    holeBelongsToPlayer(hole, player) {
-        return hole >= this.board.nHoles * player.id && hole < this.board.nHoles * (player.id + 1);
-    }
-
     getAvailHoles(player) {
         let avail = [];
 
@@ -597,7 +593,7 @@ class Game {
             holes.forEach(hole => {
                 let curHole = parseInt(hole.id.split("-")[1]);
 
-                if (this.holeBelongsToPlayer(curHole, this.state.player)) {
+                if (this.board.holeBelongsToPlayer(curHole, this.state.player.id)) {
                     hole.classList.add("player-hole");
                 }
             })

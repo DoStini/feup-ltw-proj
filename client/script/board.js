@@ -60,4 +60,8 @@ class Board {
 
         this.#seeds = container;
     }
+
+    holeBelongsToPlayer(hole, playerID) {
+        return hole >= this.#nHoles * playerID && hole < this.#nHoles * (playerID + 1);
+    }
 }
