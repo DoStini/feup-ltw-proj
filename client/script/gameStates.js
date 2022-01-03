@@ -292,7 +292,7 @@ class MPGameState extends GameState {
             let hole = data.pit + this.player.id * this.board.nHoles;
             await this.play(hole);
 
-            if(!this.board.compareBoards(parsed.board)) {
+            if (!this.board.compareBoards(parsed.board)) {
                 this.board.regenerateBoard(parsed.board);
             }
         }
@@ -396,11 +396,11 @@ class EndState extends GameState {
         const score1 = this.board.getStorageAmount(this.player.id);
         const score2 = this.board.getStorageAmount(this.otherPlayer.id);
 
-        if(this.winner === null) {
+        if (this.winner === null) {
             launchTieGame(score1);
             return;
-        } 
-        
+        }
+
         if (this.winner != null) {
             launchEndGame(this.winner.id === 0, this.winner.name, this.winner.id === 0 ? score1 : score2);
             return;

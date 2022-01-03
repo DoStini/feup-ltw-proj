@@ -129,15 +129,15 @@ class Game {
     collectAllSeeds() {
         let destHoles = {};
 
-        for(let playerID = 0; playerID <= 1; playerID++) {
+        for (let playerID = 0; playerID <= 1; playerID++) {
             let avail = this.#board.getAvailHoles(playerID);
-    
+
             avail.forEach((hole) => {
                 let storage = this.#board.nHoles * 2 + playerID
                 let seeds = this.#board.getHoleSeedAmount(hole);
                 destHoles[hole] = Array(seeds).fill(storage);
-    
-                for(let i = 0; i < seeds; i++) {
+
+                for (let i = 0; i < seeds; i++) {
                     this.#board.moveToStorage(hole, playerID);
                 }
             });

@@ -2,9 +2,9 @@
 
 class Board {
     /** @property {Array.<Array.<Seed>>} storage */
-    #storage = [[],[]];
+    #storage = [[], []];
     /** @property {number} nHoles */
-    #nHoles; 
+    #nHoles;
     /** @property {number} nSeeds */
     #nSeeds;
     /** @property {Array.<Array.<Seed>>} seeds */
@@ -89,7 +89,7 @@ class Board {
                 return false;
             }
         }
-        
+
         if (this.getStorageAmount(0) !== seeds[this.#nHoles * 2]) return false;
         if (this.getStorageAmount(1) !== seeds[this.#nHoles * 2 + 1]) return false;
 
@@ -112,9 +112,9 @@ class Board {
         this.#seeds = container;
         const storageStart = this.#nHoles * 2;
 
-        for(let playerID = 0; playerID <= 1; playerID++) {
+        for (let playerID = 0; playerID <= 1; playerID++) {
             let storageID = storageStart + playerID;
-            for(let s = 0; s < seeds[storageID]; s++) {
+            for (let s = 0; s < seeds[storageID]; s++) {
                 this.#storage[playerID].push(new Seed(id));
 
                 id++;

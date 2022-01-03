@@ -28,9 +28,9 @@ function launchClipboardSnackbar(message, value, timeout) {
 
     document.body.append(elem)
 
-    elem.addEventListener("click", () =>  navigator.clipboard.writeText(value));
+    elem.addEventListener("click", () => navigator.clipboard.writeText(value));
     setTimeout(() => closeSnackbar(elem), timeout);
-    
+
     openSnackbar(elem);
 }
 
@@ -48,14 +48,14 @@ function openSnackbar(snackbar) {
     setTimeout(() => {
         snackbar.style.transform = "";
         snackbar.style.opacity = "1";
-    } , 100);
+    }, 100);
 }
 
 function closeSnackbar(snackbar) {
     setTimeout(() => {
         snackbar.style.transform = `translateX(${diffPosition})`
         snackbar.style.opacity = "0";
-    },10);
+    }, 10);
 
     setTimeout(() => snackbar.remove(), 1010);
 }

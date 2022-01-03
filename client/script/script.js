@@ -4,7 +4,7 @@ async function leaderboardHandler() {
     let leaderboard = await retrieveLeaderboard();
 
     const htmlEntry = (entry, position) => {
-        
+
         const elem = document.createElement('tr');
         elem.innerHTML = `
                 <td>${position}</td>
@@ -12,7 +12,7 @@ async function leaderboardHandler() {
                 <td>${entry.games}</td>
                 <td>${entry.victories}</td>
             `;
-        
+
         return elem;
     }
 
@@ -55,7 +55,7 @@ function setupPopupWindows() {
 
 
     document.addEventListener('keydown', (e) => {
-        if(e.key === "Escape") {
+        if (e.key === "Escape") {
             document.querySelectorAll(".popup-window").forEach((target) => {
                 target.style.opacity = null;
                 target.style.visibility = null;
@@ -72,7 +72,7 @@ function launchTieGame(points) {
     ["win-icon", "lose-icon"].forEach((id) => {
         const target = document.getElementById(id);
         target.style.opacity = "";
-        target.style.visibility = "";    
+        target.style.visibility = "";
     });
 
     const icon = document.getElementById("tie-icon");
@@ -112,14 +112,14 @@ function launchEndGame(isWinner, name, points) {
 }
 
 function toggleGameStatus() {
-    if( typeof toggleGameStatus.open === 'undefined') {
+    if (typeof toggleGameStatus.open === 'undefined') {
         toggleGameStatus.open = true;
     }
 
-    if(toggleGameStatus.open === true) {
+    if (toggleGameStatus.open === true) {
         document.getElementById("game-status").style.right = (-document.getElementById("game-status-info").offsetWidth).toString() + "px";
         document.getElementById("game-status-button").style.transform = "scaleX(-1)"
-    } else if(toggleGameStatus.open === false) {
+    } else if (toggleGameStatus.open === false) {
         document.getElementById("game-status").style.right = "0";
         document.getElementById("game-status-button").style.transform = ""
     }
@@ -139,7 +139,7 @@ function setupGameStatus() {
 function main() {
     setupPopupWindows();
     setupPages();
-    
+
     window.addEventListener('load', setupGameStatus);
 }
 

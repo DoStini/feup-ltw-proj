@@ -30,7 +30,7 @@ class BoardRenderer extends Renderer {
     constructor(seedRenderer) {
         super();
 
-        if(seedRenderer == null) {
+        if (seedRenderer == null) {
             this.#seedRenderer = new SeedRenderer();
         } else {
             this.#seedRenderer = seedRenderer;
@@ -100,11 +100,11 @@ class StatusRenderer extends Renderer {
 
         let seeds0 = 0;
         let seeds1 = 0;
-        for(let hole = 0; hole < game.board.nHoles; hole++) {
+        for (let hole = 0; hole < game.board.nHoles; hole++) {
             seeds0 += game.board.seeds[hole].length;
         }
 
-        for(let hole = game.board.nHoles; hole < game.board.nHoles * 2; hole++) {
+        for (let hole = game.board.nHoles; hole < game.board.nHoles * 2; hole++) {
             seeds1 += game.board.seeds[hole].length;
         }
 

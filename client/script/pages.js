@@ -40,7 +40,7 @@ function startGame(pageManager) {
     let seeds = document.getElementById("seeds").value;
     let turn = 0;
 
-    if(document.getElementById("ai-order-ai").checked) {
+    if (document.getElementById("ai-order-ai").checked) {
         turn = 1;
     }
 
@@ -52,11 +52,11 @@ function startGame(pageManager) {
 function cleanupGame(gameHash, evtSource) {
     document.getElementById("game-status").classList.add("hidden");
 
-    if(toggleGameStatus.open) {
+    if (toggleGameStatus.open) {
         toggleGameStatus();
     }
 
-    if(gameHash != null) {
+    if (gameHash != null) {
         console.log(gameHash);
         evtSource.onmessage = null;
         leaveGame(gameHash);
@@ -107,7 +107,7 @@ function setupInitMenu() {
     let setInitMenu = pageManager.setPage.bind(pageManager, "init-menu");
 
     document.getElementById("start-button-ai").addEventListener('click', setPageConfig);
-    
+
 
     document.getElementById("create-button").addEventListener('click', (e) => {
         if (isAuthenticated()) {
@@ -147,10 +147,10 @@ function setupInitMenu() {
         });
 
         target.addEventListener('mouseleave', (e) => {
-                const elem = e.target;
-                elem.style.cursor = "";
-                elem.style.backgroundColor = "";
-                elem.style.fontWeight = "";
+            const elem = e.target;
+            elem.style.cursor = "";
+            elem.style.backgroundColor = "";
+            elem.style.fontWeight = "";
         });
     })
 
@@ -164,7 +164,7 @@ function setupLocalGameConfig() {
     let startGameButton = document.getElementById("start-game-button");
 
     pageManager.pageCleanup["game-section"] = cleanupGame;
-    startGameButton.addEventListener('click',  () => startGame(pageManager));
+    startGameButton.addEventListener('click', () => startGame(pageManager));
 }
 
 function setupPages() {

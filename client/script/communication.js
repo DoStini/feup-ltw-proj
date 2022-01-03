@@ -2,15 +2,15 @@ console.log(getApiHost())
 
 function encodeForQuery(data) {
     if (data == null) return null;
-    return Object.keys(data).map(function(k){
-      return encodeURIComponent(k) + '=' + encodeURIComponent(data[k])
+    return Object.keys(data).map(function (k) {
+        return encodeURIComponent(k) + '=' + encodeURIComponent(data[k])
     }).join('&');
 }
 
 async function bodyRequest(method, body, path) {
     let options = {
-        method : method,
-        body : JSON.stringify(body)
+        method: method,
+        body: JSON.stringify(body)
     }
 
     let request = new Request(getApiHost() + path, options);
@@ -26,7 +26,7 @@ async function bodyRequest(method, body, path) {
 
 async function queryRequest(method, data, path) {
     let options = {
-        method : method,
+        method: method,
     }
 
     console.log(encodeForQuery(data))
@@ -50,22 +50,22 @@ function getRequest(body, path) {
     return queryRequest('GET', body, path);
 }
 
-function setCookie(name,value,minutes) {
+function setCookie(name, value, minutes) {
     let expires = "";
     if (minutes) {
         const date = new Date();
-        date.setTime(date.getTime() + (minutes*60*1000));
+        date.setTime(date.getTime() + (minutes * 60 * 1000));
         expires = "; expires=" + date.toUTCString();
     }
-    document.cookie = name + "=" + (value || "")  + expires + ";";
+    document.cookie = name + "=" + (value || "") + expires + ";";
 }
 
 function getCookie(name) {
     console.log("try my cookie cookie", document.cookie)
     return document.cookie
-    .split('; ')
-    ?.find(row => row.startsWith(`${name}=`))
-    ?.split('=')[1];
+        .split('; ')
+        ?.find(row => row.startsWith(`${name}=`))
+        ?.split('=')[1];
 }
 
 function serializeFormData(formData) {
