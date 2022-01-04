@@ -1,19 +1,8 @@
-const http = require('http');
+const config = require("./src/env");
+const Framework = require("./framework/framework");
+const app = new Framework();
 
-const server = http.createServer(function (request, response) {
-    switch (request.url) {
-        case "/home":
-            response.writeHead(200, {'Content-Type': 'text/plain'});
-            response.end('Olá mundo\n');
-        break;
-        case "/ok":
-            response.writeHead(200, {'Content-Type': 'text/plain'});
-            response.end('ok\n');
-        break;
-        default:
-            response.writeHead(200, {'Content-Type': 'text/plain'});
-            response.end('Not found\n');
-    }
+app.listen(config.PORT, () => {
+    console.log(`App listening at ${config.PORT}`);
+
 });
-
-server.listen(8008);
