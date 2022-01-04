@@ -1,8 +1,5 @@
 "use strict";
 
-const ANIM_EVENT_NAME = "animation-end";
-const ANIM_EVENT = new Event(ANIM_EVENT_NAME);
-
 function addMessage(messageText) {
     const message = document.createElement("span");
     const board = document.getElementById("message-board");
@@ -12,239 +9,22 @@ function addMessage(messageText) {
     board.insertBefore(message, board.firstChild);
 }
 
-class GameState {
-    /**
-    * 
-    * @param {Game} game
-    * @param {Player} player
-    * @param {Player} otherPlayer
-    */
-    constructor(game, player, otherPlayer) {
-        this.board = game.board; /** @property {Board} board */
-        this.game = game;
-        this.player = player;
-        this.otherPlayer = otherPlayer;
-    }
-    /**
-     *
-     * @param {Game} game
-     * @param {number} hole
-     */
-    sowSeeds(hole) {
-        let seeds = this.board.seeds[hole].length;
-        let lastHole = hole
-        let curHole = lastHole;
-        let destHoles = [];
-
-        for (let i = 0; i < seeds; i++) {
-            if (lastHole === this.player.id * this.board.nHoles + this.board.nHoles - 1) {
-                this.board.storage[this.player.id].push(this.board.seeds[hole].pop());
-
-                lastHole = this.board.nHoles * 2 + this.player.id;
-                destHoles.push(lastHole);
-            } else {
-                curHole = (curHole + 1) % (this.board.nHoles * 2);
-                this.board.seeds[curHole].push(this.board.seeds[hole].pop());
-
-                destHoles.push(curHole);
-
-                lastHole = curHole;
-            }
-        }
-
-        return destHoles;
-    }
-
-    async play(hole) {
-        let destHoles = this.sowSeeds(hole); /** @property {Array} destHoles */
-        let lastHole = destHoles[destHoles.length - 1];
-
-        await animateSeeds(hole, this.board.nHoles, destHoles);
-        if (lastHole == this.board.nHoles * 2 + this.player.id) {
-            this.game.nextPlayerState(this.getCurrentState.bind(this));
-        } else {
-            if (this.game.holeBelongsToPlayer(lastHole, this.player) && this.board.seeds[lastHole].length === 1) {
-                let storage = this.board.nHoles * 2 + this.player.id;
-                let oppositeHole = this.board.nHoles * 2 - 1 - lastHole;
-                let oppositeSeeds = this.board.seeds[oppositeHole].length;
-
-                for (let i = 0; i < oppositeSeeds; i++) {
-                    this.board.storage[this.player.id].push(this.board.seeds[oppositeHole].pop())
-                }
-                this.board.storage[this.player.id].push(this.board.seeds[lastHole].pop());
-
-                await Promise.all([
-                    animateSeeds(lastHole, this.board.nHoles, [storage]),
-                    animateSeeds(oppositeHole, this.board.nHoles, Array(oppositeSeeds).fill(storage)),
-                ]);
-            }
-
-            this.game.nextPlayerState(this.getNextState.bind(this));
-        }
-    }
-
-    clickHole(hole) { }
-    run() { }
-    getNextState() { };
-    getCurrentState() { };
-}
-
-
-class PlayerState extends GameState {
-    constructor(game, player, otherPlayer) {
-        super(game, player, otherPlayer);
-    }
-
-    getCurrentState() {
-        return new PlayerState(this.game, this.player, this.otherPlayer);
-    }
-
-    getNextState() {
-        return new PlayAIState(this.game, this.otherPlayer, this.player);
-    }
-
-    run() {
-        this.game.nextTurn();
-        this.game.renderAll();
-
-        document.getElementById(`name${this.player.id}`).classList.add("player-turn");
-        document.getElementById(`name${this.otherPlayer.id}`).classList.remove("player-turn");
-        addMessage(MESSAGE.otherTurn(this.player.name));
-
-        let avail = this.game.getAvailHoles(this.player);
-
-        if (avail.length === 0) {
-            this.game.endGame(this.player.id);
-
-            return;
-        }
-    }
-
-    async clickHole(hole) {
-        if (this.board.seeds[hole].length === 0) return;
-        if (!(hole >= this.board.nHoles * this.player.id && hole < this.board.nHoles * (this.player.id + 1))) return;
-        this.game.nextPlayerState(() => new WaitState(this.game, this.player, this.otherPlayer));
-
-        await this.play(hole);
-    }
-}
-/**
- * 
- * @param {Game} game
- * @param {Board} board 
- */
-class WaitState extends GameState {
-    constructor(game, player, otherPlayer) {
-        super(game, player, otherPlayer);
-    }
-
-    clickHole(hole) {
-
-    }
-
-    run() {
-        for (let i = 0; i < this.board.nHoles; i++) {
-            document.getElementById(`hole-${i}`).classList.remove("player-hole");
-        }
-    }
-}
-
-/**
- * 
- * @param {Game} game
- * @param {Board} board 
- */
- class EndState extends GameState {
-    constructor(game, player, otherPlayer, lastPlayerId) {
-        super(game, player, otherPlayer);
-        this.lastPlayerId = lastPlayerId;
-    }
-
-    clickHole(hole) {
-
-    }
-
-    calculateWinner() {
-    }
-    
-    showWinner() {
-        const score1 = this.game.player1Points();
-        const score2 = this.game.player2Points();
-
-
-        if (score1 === score2) {
-            launchTieGame(score1);
-        } else {
-            const winner = score1 > score2
-            ? {player: this.player, score: score1}
-            : {player: this.otherPlayer, score: score2}
-   
-            launchEndGame(winner.player.id === 0, winner.player.name, winner.score);
-        }
-    }
-
-    async run() {
-        for (let i = 0; i < this.board.nHoles; i++) {
-            document.getElementById(`hole-${i}`).classList.remove("player-hole");
-        }
-       console.log(this.playerId)
-        let destHoles = this.game.collectAllSeeds(
-            this.lastPlayerId === 0 
-                ? this.otherPlayer
-                : this.player);
-
-        console.log("destHoles", destHoles)
-
-        await Promise.all(Object.keys(destHoles).map(async function (origin) {
-            let destinations = destHoles[origin];
-            console.log("destination", destinations)
-            
-            await animateSeeds(origin, this.board.nHoles, destinations);
-        }.bind(this)));
-
-        this.game.renderAll();
-
-        this.showWinner();
-    }
-}
-
-class PlayAIState extends GameState {
-    constructor(game, player, otherPlayer) {
-        super(game, player, otherPlayer);
-    }
-
-    getCurrentState() {
-        return new PlayAIState(this.game, this.player, this.otherPlayer);
-    }
-
-    getNextState() {
-        return new PlayerState(this.game, this.otherPlayer, this.player);
-    }
-
-    async run() {
-        this.game.nextTurn();
-        this.game.renderAll();
-
-        addMessage(MESSAGE.otherTurn(this.player.name));
-        document.getElementById(`name${this.player.id}`).classList.add("player-turn");
-        document.getElementById(`name${this.otherPlayer.id}`).classList.remove("player-turn");
-
-        setTimeoutClearable(async function () {
-            let avail = this.game.getAvailHoles(this.player);
-
-            if (avail.length === 0) {
-                this.game.endGame(this.player.id);
-    
-                return;
-            }
-            let hole = avail[(Math.random() * avail.length) >> 0];
-
-            await this.play(hole);
-        }.bind(this), 2000);
-    }
-}
-
 class Game {
+    /** @property {GameState} state The current game state.*/
+    #state;
+    /** @property {Board} board The game board */
+    #board;
+    /** @property {Player} player1 The player with ID 0 */
+    #player1;
+    /** @property {Player} player2 The player with ID 1 */
+    #player2;
+    /** @property {number} turn The turn number which is incremented */
+    #turn;
+    /** @property {Renderer} boardRenderer */
+    #boardRenderer;
+    /** @property {Renderer} statusRenderer */
+    #statusRenderer
+
     /**
      * @param {Board} board
      * @param {Player} player1
@@ -253,98 +33,122 @@ class Game {
      * @param {Renderer} statusRenderer
      */
     constructor(board, player1, player2, boardRenderer, statusRenderer) {
-        this.state;
-        this.board = board;
-        this.player1 = player1;
-        this.player2 = player2;
-        this.turn = 0;
+        this.#state;
+        this.#board = board;
+        this.#player1 = player1;
+        this.#player2 = player2;
+        this.#turn = 0;
 
         if (boardRenderer == null) {
-            this.boardRenderer = new BoardRenderer();
+            this.#boardRenderer = new BoardRenderer();
         } else {
-            this.boardRenderer = boardRenderer;
+            this.#boardRenderer = boardRenderer;
         }
 
         if (statusRenderer == null) {
-            this.statusRenderer = new StatusRenderer();
+            this.#statusRenderer = new StatusRenderer();
         } else {
-            this.statusRenderer = statusRenderer;
+            this.#statusRenderer = statusRenderer;
         }
     }
+
+    get turn() {
+        return this.#turn;
+    }
+
+    get board() {
+        return this.#board;
+    }
+
+    get player1() {
+        return this.#player1;
+    }
+
+    get player2() {
+        return this.#player2;
+    }
+
     /**
-     *
-     * @param {Player} player
+     * @returns {Player}
      */
-
-    nextPlayerState(stateFunc) {
-        this.state = stateFunc();
-        this.state.run();
-    }
-
-    changePlayerState(state) {
-        this.state = state;
-        this.state.run();
-    }
-
-    endGame(playerId) {
-        this.state = new EndState(this, this.player1, this.player2, playerId);
-        this.state.run();
-    }
-
-    player1Points() {
-        return this.board.storage[0].length;
-    }
-
-    player2Points() {
-        return this.board.storage[1].length;
-    }
-
-    nextTurn() {
-        this.turn++;
+    get currentPlayer() {
+        return this.#state.player;
     }
 
     /**
+     * Changes the current game state and starts the state.
      * 
-     * @param {Board} board  
+     * @param {GameState} state 
+     */
+    changePlayerState(state) {
+        this.#state = state;
+        this.#state.run();
+    }
+
+    /**
+     * Ends the game.
+     * 
+     * @param {number} playerId The player without seeds.
+     */
+    endGame() {
+        this.changePlayerState(new EndState(this, this.#player1, this.#player2));
+    }
+
+    /**
+     * Ends the multiplayer game.
+     * 
+     * @param {Player} winner The player who won.
+     */
+    endMPGame(winner) {
+        pageManager.pageCleanup["game-section"] = cleanupGame;
+
+        this.changePlayerState(new EndState(this, this.#player1, this.#player2, winner));
+    }
+
+    /**
+     * Increments the turn value.
+     */
+    nextTurn() {
+        this.#turn++;
+    }
+
+    /**
+     * Renders the HTML elements.
      */
     renderAll() {
-        this.boardRenderer.render(this.board);
+        this.#boardRenderer.render(this.#board);
         this.setupHoles();
-        this.statusRenderer.render(this);
+        this.#statusRenderer.render(this);
     }
 
-    holeBelongsToPlayer(hole, player) {
-        return hole >= this.board.nHoles * player.id && hole < this.board.nHoles * (player.id + 1);
-    }
-
-    getAvailHoles(player) {
-        let avail = [];
-
-        for (let i = this.board.nHoles * player.id; i < this.board.nHoles * (player.id + 1); i++) {
-            if (this.board.seeds[i].length > 0) {
-                avail.push(i);
-            }
-        }
-
-        return avail;
-    }
-
-    collectAllSeeds(player) {
-        let avail = this.getAvailHoles(player);
+    /**
+     * Collects all remaining seeds in the board and stores them in the appropriate storage.
+     * 
+     * @returns {Object.<number, Array.<number>>}
+     */
+    collectAllSeeds() {
         let destHoles = {};
-        avail.forEach((hole) => {
-            let storage = this.board.nHoles * 2 + player.id;
-            let seeds = this.board.seeds[hole].length;
-            destHoles[hole] = Array(seeds).fill(storage);
 
-            for(let i = 0; i < seeds; i++) {
-                this.board.storage[player.id].push(this.board.seeds[hole].pop());
-            }
-        });
+        for (let playerID = 0; playerID <= 1; playerID++) {
+            let avail = this.#board.getAvailHoles(playerID);
+
+            avail.forEach((hole) => {
+                let storage = this.#board.nHoles * 2 + playerID
+                let seeds = this.#board.getHoleSeedAmount(hole);
+                destHoles[hole] = Array(seeds).fill(storage);
+
+                for (let i = 0; i < seeds; i++) {
+                    this.#board.moveToStorage(hole, playerID);
+                }
+            });
+        }
 
         return destHoles;
     }
 
+    /**
+     * Adds the click event and hover css style to the holes.
+     */
     setupHoles() {
         let holes = document.querySelectorAll(".hole")
 
@@ -353,24 +157,28 @@ class Game {
             hole.addEventListener('click', this.clickHole.bind(this, curHole))
         })
 
-        if (this.state instanceof PlayerState) {
+        if (this.#state instanceof PlayerState || (this.#state instanceof PlayMPState)) {
             holes.forEach(hole => {
                 let curHole = parseInt(hole.id.split("-")[1]);
 
-                if (this.holeBelongsToPlayer(curHole, this.state.player)) {
+                if (this.#board.holeBelongsToPlayer(curHole, this.#state.player.id)) {
                     hole.classList.add("player-hole");
                 }
             })
         }
     }
 
-    async clickHole(hole) {
-        console.log("click", hole)
-        await this.state.clickHole(hole);
+    /**
+     * Handles the click event on a hole.
+     * 
+     * @param {number} hole The clicked hole.
+     */
+    clickHole(hole) {
+        this.#state.clickHole(hole);
     }
 }
 
-function setupGame(nHoles, seedsPerHole, turn) {
+function setupLocalGame(nHoles, seedsPerHole, turn) {
     const board = new Board(parseInt(nHoles), seedsPerHole);
 
     const player1 = new Player(0, "Player 1");
@@ -387,97 +195,19 @@ function setupGame(nHoles, seedsPerHole, turn) {
     game.renderAll();
 }
 
+function setupMultiplayerGame(nHoles, seedsPerHole, turn, playerName, enemyName, mInfo) {
+    const board = new Board(nHoles, seedsPerHole);
 
-function calculateTargetPosition(seed, hole) {
-    const copySeed = seed.cloneNode();
-    copySeed.style.transform = "";
-    copySeed.id = `copy-${seed.id}`;
+    const player1 = new Player(0, playerName);
+    const player2 = new Player(1, enemyName);
 
-    hole.append(copySeed);
-    const { left, top } = copySeed.getBoundingClientRect();
+    const game = new Game(board, player1, player2);
 
-    copySeed.remove();
-
-    return {
-        left,
-        top,
+    if (turn === player1.name) {
+        game.changePlayerState(new PlayMPState(game, player1, player2, mInfo));
+    } else {
+        game.changePlayerState(new WaitMPState(game, player2, player1, mInfo));
     }
+
+    game.renderAll();
 }
-
-function calculateInitialPosition(seed, hole) {
-    const copySeed = seed.cloneNode();
-    copySeed.style.transform = "";
-    copySeed.id = `copy-${seed.id}`;
-
-    hole.append(copySeed);
-    const rect = copySeed.getBoundingClientRect();
-
-    copySeed.remove();
-
-    return rect;
-}
-
-async function animateSeeds(holeId, nHoles, idList) {
-
-    const animationDuration = 2;
-    const animationDelay = 0.1;
-    const positionDuration = animationDuration - animationDelay;
-    const dimensionDuration = (animationDuration - animationDelay) / 2;
-    const animationInterval = 0.2;
-
-    const boardOffset = nHoles * 2;
-    console.log("hole id",`hole-${holeId}`, holeId, document.getElementById(`hole-${holeId}`));
-    const hole = document.getElementById(`hole-${holeId}`);
-    const board = document.getElementById("board");
-
-    const numSeeds = hole.children.length;
-
-    Array.from(hole.children).reverse().forEach((seed, idx) => {
-        setTimeoutClearable(() => {
-            const currentHoleId = idList[idx];
-            const isHole = currentHoleId < boardOffset;
-            const nextHole = document.getElementById(isHole ? `hole-${currentHoleId}` : `storage-${currentHoleId - boardOffset}`);
-            const { left: targetLeft, top: targetTop } = calculateTargetPosition(seed, nextHole, board);
-
-            const { left, top, height, width } = calculateInitialPosition(seed, hole);
-
-            seed.remove();
-
-            const fakeSeed = seed.cloneNode();
-
-            board.appendChild(fakeSeed);
-            fakeSeed.style.position = "fixed";
-            fakeSeed.id = `fake-${seed.id}`;
-            fakeSeed.style.left = `${left}px`;
-            fakeSeed.style.top = `${top}px`;
-            fakeSeed.style.zIndex = "5";
-            fakeSeed.style.width = `${width}px`;
-            fakeSeed.style.height = `${height}px`;
-
-
-            setTimeoutClearable(() => {
-                fakeSeed.style.transition = `left ${positionDuration}s, top ${positionDuration}s, width ${dimensionDuration}s, height ${dimensionDuration}s`;
-                fakeSeed.style.left = `${targetLeft}px`;
-                fakeSeed.style.top = `${targetTop}px`;
-                fakeSeed.style.width = `${width + 30}px`;
-                fakeSeed.style.height = `${height + 30}px`;
-
-            }, animationDelay * 1000);
-
-            setTimeoutClearable(() => {
-                fakeSeed.style.width = `${width}px`;
-                fakeSeed.style.height = `${height}px`;
-            }, (animationDelay + dimensionDuration) * 1000);
-
-            setTimeoutClearable(() => {
-                fakeSeed.remove();
-                nextHole.append(seed);
-            }, animationDuration * 1000);
-
-        }, animationInterval * idx * 1000);
-    });
-
-
-    return new Promise(_ => setTimeoutClearable(_, (animationDuration + animationInterval * numSeeds) * 1000));
-}
-

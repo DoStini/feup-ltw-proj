@@ -14,7 +14,11 @@
     <link rel="stylesheet" href="css/styles.css" />
 
     <script src="https://kit.fontawesome.com/4616109396.js" crossorigin="anonymous"></script>
-
+    <script src="script/config.js" defer></script>
+    <script src="script/snackbar.js" defer></script>
+    <script src="script/status.js" defer></script>
+    <script src="script/animation.js" defer></script>
+    <script src="script/gameStates.js" defer></script>
     <script src="../common/constants/mancala.js"></script>
     <script src="script/common.js" defer></script>
     <script src="script/player.js" defer></script>
@@ -23,6 +27,9 @@
     <script src="script/board.js" defer></script>
     <script src="script/mancala.js" defer></script>
     <script src="script/pages.js" defer></script>
+    <script src="script/communication.js" defer></script>
+    <script src="script/auth.js" defer></script>
+    <script src="script/multiplayer.js" defer></script>
     <script src="script/script.js" defer></script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -41,7 +48,8 @@
             <a id="leaderboard-open-btn">Leaderboards</a>
         </nav>
         <div>
-            <button id="log-in-header">Log In</button>
+            <button id="log-in-header" class="auth-btn">Log In</button>
+            <button id="log-out-header" class="auth-btn">Log out</button>
         </div>
     </header>
 
@@ -95,12 +103,12 @@
                 </header>
                 <form id="login-form">
                     <label for="username-login">User Name</label>
-                    <input id="username-login" name="username" type="text" onkeypress="return event.charCode != 32" />
+                    <input id="username-login" name="nick" type="text" onkeypress="return event.charCode != 32">
 
                     <label for="password-login">Password</label>
                     <input id="password-login" name="password" type="password" />
 
-                    <button value="login">Login</button>
+                    <button type="submit" id="login-btn">Login</button>
                 </form>
             </section>
 
@@ -268,7 +276,7 @@
                         <tr>
                             <th>Position</th>
                             <th class="name-row">Name</th>
-                            <th>Score</th>
+                            <th>Games</th>
                             <th>Wins</th>
                         </tr>
                     </thead>
@@ -315,7 +323,7 @@
                         <tr>
                             <th>Position</th>
                             <th class="name-row">Name</th>
-                            <th>Score</th>
+                            <th>Games</th>
                             <th>Wins</th>
                         </tr>
                     </thead>
@@ -358,16 +366,15 @@
 
     <!--Init Menu Area-->
     <section id="init-menu" class="in-body">
-        <h2>Mancalada<br />Sow With Your Friends.</h2>
-        <button id="start-button-ai" value="play-alone">
-            Play Against the All Knowing AI
-        </button>
-        <button value="start-server">Play Against a Friend</button>
-        <button value="join-server">Join a Friend's Game</button>
+        <h2>Mancalada<br>Sow With Your Friends.</h2>
+        <button id="start-button-ai" value="play-alone">Play Against the All Knowing AI</button>
+        <button id="create-button" class="no-hover-btn" value="start-server">Create a game room</button>
+        <button id="join-button" class="no-hover-btn" value="start-server">Join a game room</button>
+        <button id="start-button" class="no-hover-btn" value="start-server">Matchmaking</button>
     </section>
 
     <!--Config Area-->
-    <section id="config" class="in-body">
+    <section id="config-local" class="in-body config">
         <fieldset class="config-layout">
             <h2>Choose Your Game Settings</h2>
             <div class="config-layout">
@@ -402,10 +409,71 @@
         </fieldset>
     </section>
 
+    <!--Config Area-->
+    <section id="config-multiplayer-create" class="in-body config">
+        <form>
+            <fieldset class="config-layout">
+                <h2>Choose Your Game Settings</h2>
+                <div class="config-layout">
+                    <label for="holes-create">Number of holes in each side</label>
+                    <input type="number" id="holes-create" name="holes" value="6" min="1" max="10" step="1">
+
+                    <label for="seeds-create">Number of seeds in each hole</label>
+                    <input type="number" id="seeds-create" name="seeds" value="4" min="1" max="12" step="1">
+
+                    <label for="code-create">Code of the game</label>
+                    <input id="code-create" name="code">
+
+                    <button id="create-multi-game-button" value="submit">Start Game</button>
+                </div>
+            </fieldset>
+        </form>
+    </section>
+
+    <!--Config Area-->
+    <section id="config-multiplayer-join" class="in-body config">
+        <form>
+            <fieldset class="config-layout">
+                <h2>Choose Your Game Settings</h2>
+                <div class="config-layout">
+                    <label for="code-join">Code of the game</label>
+                    <input id= "code-join" name="code">
+
+                    <button id="join-multi-game-button" value="submit">Start Game</button>
+                </div>
+            </fieldset>
+        </form>
+    </section>
+
+    <!--Config Area-->
+    <section id="config-multiplayer-matchmaking" class="in-body config">
+        <form>
+            <fieldset class="config-layout">
+                <h2>Choose Your Game Settings</h2>
+                <div class="config-layout">
+                    <label for="holes-match">Number of holes in each side</label>
+                    <input type="number" id="holes-match" name="holes" value="6" min="1" max="10" step="1">
+
+                    <label for="seeds-match">Number of seeds in each hole</label>
+                    <input id="seeds-match" name="seeds" value="4" min="1" max="12" step="1">
+
+                    <button id="start-multi-game-button" value="submit">Start Game</button>
+                </div>
+            </fieldset>
+        </form>
+    </section>
+
+    <!--Waiting Area-->
+    <section id="waiting-area" class="in-body">
+        <h1>Finding opponent</h1>
+        <h4>Trying to find an opponent, please wait</h4>
+        <img src="https://i.pinimg.com/originals/50/3c/28/503c28b8ef38166cebb176bb5772034d.gif">
+        <img src="https://i.makeagif.com/media/2-23-2017/V4qrdr.gif">
+    </section>
+
     <footer>
         <span>Mancalada. Sow With Your Friends.<br />Made With Love by André Moreira
             and Nuno Alves.</span>
     </footer>
 </body>
-
 </html>

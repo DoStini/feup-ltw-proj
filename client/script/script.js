@@ -1,5 +1,30 @@
 'use strict';
 
+async function leaderboardHandler() {
+    let leaderboard = await retrieveLeaderboard();
+
+    const htmlEntry = (entry, position) => {
+
+        const elem = document.createElement('tr');
+        elem.innerHTML = `
+                <td>${position}</td>
+                <td class="name-row">${entry.nick}</td>
+                <td>${entry.games}</td>
+                <td>${entry.victories}</td>
+            `;
+
+        return elem;
+    }
+
+    const tableBody = document.querySelectorAll(".server-leaderboard .leaderboard-table > tbody")[0];
+    tableBody.innerHTML = "";
+
+    for (let i = 0; i < Math.min(5, leaderboard.length - 1); i++) {
+        const entry = leaderboard.at(i);
+        tableBody.append(htmlEntry(entry, i + 1));
+    }
+}
+
 function setupPopupWindows() {
     ["rules", "leaderboard"].forEach((target) => {
         document.getElementById(`${target}-open-btn`).addEventListener('click', () => {
@@ -9,6 +34,8 @@ function setupPopupWindows() {
                 targetElement.style.opacity = "0";
             } else {
                 targetElement.style.opacity = "1";
+                if (target === "leaderboard")
+                    leaderboardHandler();
             }
 
             if (targetElement.style.visibility === "visible") {
@@ -28,7 +55,7 @@ function setupPopupWindows() {
 
 
     document.addEventListener('keydown', (e) => {
-        if(e.key === "Escape") {
+        if (e.key === "Escape") {
             document.querySelectorAll(".popup-window").forEach((target) => {
                 target.style.opacity = null;
                 target.style.visibility = null;
@@ -45,7 +72,7 @@ function launchTieGame(points) {
     ["win-icon", "lose-icon"].forEach((id) => {
         const target = document.getElementById(id);
         target.style.opacity = "";
-        target.style.visibility = "";    
+        target.style.visibility = "";
     });
 
     const icon = document.getElementById("tie-icon");
@@ -85,14 +112,14 @@ function launchEndGame(isWinner, name, points) {
 }
 
 function toggleGameStatus() {
-    if( typeof toggleGameStatus.open === 'undefined') {
+    if (typeof toggleGameStatus.open === 'undefined') {
         toggleGameStatus.open = true;
     }
 
-    if(toggleGameStatus.open === true) {
+    if (toggleGameStatus.open === true) {
         document.getElementById("game-status").style.right = (-document.getElementById("game-status-info").offsetWidth).toString() + "px";
         document.getElementById("game-status-button").style.transform = "scaleX(-1)"
-    } else if(toggleGameStatus.open === false) {
+    } else if (toggleGameStatus.open === false) {
         document.getElementById("game-status").style.right = "0";
         document.getElementById("game-status-button").style.transform = ""
     }
@@ -112,8 +139,13 @@ function setupGameStatus() {
 function main() {
     setupPopupWindows();
     setupPages();
-    
+
     window.addEventListener('load', setupGameStatus);
 }
 
-main();
+function setup() {
+    setupAuth();
+    main();
+}
+
+setup();
