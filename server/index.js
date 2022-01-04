@@ -3,20 +3,24 @@ const Framework = require("./framework/framework");
 const Router = require("./framework/router");
 
 
-const router = new Router((req, res) => {
-    res.writeHead(404, {'Content-Type': 'text/plain'});
-    res.end(`Cannot ${req.method} ${req.url}\n`);
-});
+const router = new Router();
 
 router.get("/thing", (req, res) => {
-    console.log("asdasdfasd")
-    res.writeHead(200, {'Content-Type': 'application/json'});
-    res.end(JSON.stringify({
+    return res.status(200).json({
         res: `Cool thing`
-    }));
-})
+    });
+});
 
-const app = new Framework(router);
+const router2 = new Router();
+router.get("/asd", (req, res) => {
+    return res.status(200).json({
+        res: `Cool asd`
+    });
+});
+
+const app = new Framework();
+app.addRouter(router);
+app.addRouter(router2);
 
 app.listen(config.PORT, () => {
     console.log(`App listening at ${config.PORT}`);
