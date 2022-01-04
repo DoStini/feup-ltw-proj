@@ -1,27 +1,28 @@
 const http = require('http');
 const FrameworkResponse = require('./response');
-const Router = require('./router');
+const Router = require('./router/router');
+const RouterGroup = require('./router/group');
+const RouterComponent = require('./router/routerComponent');
 
 class Framework {
-
-    #routers = [];
     #notFoundHandler = (req, res) => res.status(404).text(`Cannot ${req.method} ${req.url}\n`);
+    
+    /** @property {RouterGroup} router */
+    #router = new RouterGroup();
 
     constructor ({
         notFoundHandler
     } = {}) {
         if(notFoundHandler != null) this.#notFoundHandler = notFoundHandler;
+        // this.root = root;
     }
 
-
-
     /**
-     * Adds a router.
      * 
-     * @param {Router} router 
+     * @param {RouterComponent} router 
      */
-    addRouter (router) {
-        this.#routers.push(router);
+    addRouter(router) {
+        this.#router.addRouter(router);    
     }
 
     /**
@@ -32,16 +33,7 @@ class Framework {
      */ 
     listen(port, callback) {
         const server = http.createServer({ServerResponse: FrameworkResponse}, (request, response) => {
-            let handler;
-
-            for (const router of this.#routers) {
-                console.log(router)
-                const callback = router.handle(request.url, request.method);
-                if (callback) {
-                    handler = callback;
-                    break;
-                }
-            }
+            const handler = this.#router.handle(request.url, request.method);
 
             if (handler) {
                 handler(request, response);

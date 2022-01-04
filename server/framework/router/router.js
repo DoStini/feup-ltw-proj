@@ -1,10 +1,14 @@
 const http = require("http");
-const FrameworkResponse = require('./response.js')
+const FrameworkResponse = require('../response.js')
+const RouterComponent = require('./routerComponent');
 
-class Router {
+
+class Router extends RouterComponent {
+    /** @property {Map.<string, requestCallback>} */
     #routes = new Map();
 
     constructor () {
+        super();
     }
 
     parseRoute(obj) {
@@ -52,7 +56,7 @@ class Router {
                 path
             }
         ));
-    }
+   }
 }
 
 /**
