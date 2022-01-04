@@ -1,29 +1,16 @@
 const http = require('http');
 
 class Framework {
-    get(path, callback) {
 
-    }
+    #router;
 
-    post(path, callback) {
-
+    constructor (router) {
+        this.#router = router;
     }
 
     listen(port, callback) {
         const server = http.createServer((request, response) => {
-            switch (request.url) {
-                case "/home":
-                    response.writeHead(200, {'Content-Type': 'text/plain'});
-                    response.end('Olá mundo\n');
-                break;
-                case "/ok":
-                    response.writeHead(200, {'Content-Type': 'text/plain'});
-                    response.end('ok\n');
-                break;
-                default:
-                    response.writeHead(200, {'Content-Type': 'text/plain'});
-                    response.end('Not found\n');
-            }
+            this.#router.handle(request.url, request.method)(request, response);
         });
 
         callback && callback();
