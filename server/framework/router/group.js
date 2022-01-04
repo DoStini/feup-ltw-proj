@@ -18,7 +18,7 @@ class RouterGroup extends RouterComponent {
     /**
      * Adds a router.
      * 
-     * @param {RouterComponent
+     * @param {RouterComponent} router
      */
     addRouter (router) {
         this.#routerComponents.push(router);
@@ -35,7 +35,7 @@ class RouterGroup extends RouterComponent {
 
         for (const router of this.#routerComponents) {
             const callback = router.handle(path, method);
-            if (callback) {
+            if (callback != null) {
                 handler = callback;
                 break;
             }
