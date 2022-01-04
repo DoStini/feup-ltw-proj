@@ -1,6 +1,5 @@
 const http = require('http');
 const FrameworkResponse = require('./response');
-const Router = require('./router/router');
 const RouterGroup = require('./router/group');
 const RouterComponent = require('./router/routerComponent');
 
@@ -14,7 +13,6 @@ class Framework {
         notFoundHandler
     } = {}) {
         if(notFoundHandler != null) this.#notFoundHandler = notFoundHandler;
-        // this.root = root;
     }
 
     /**

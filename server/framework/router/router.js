@@ -1,7 +1,5 @@
 const http = require("http");
-const FrameworkResponse = require('../response.js')
 const RouterComponent = require('./routerComponent');
-
 
 class Router extends RouterComponent {
     /** @property {Map.<string, requestCallback>} */
@@ -11,7 +9,7 @@ class Router extends RouterComponent {
         super();
     }
 
-    parseRoute(obj) {
+    #parseRoute(obj) {
         return JSON.stringify(obj);
     }
 
@@ -22,12 +20,10 @@ class Router extends RouterComponent {
      * @param {requestCallback} callback
      */
     get(path, callback) {
-        this.#routes.set(this.parseRoute({
+        this.#routes.set(this.#parseRoute({
             method: "GET",
             path,
         }), callback);
-        console.log(this.#routes);
-
     }
     
     /**
@@ -37,7 +33,7 @@ class Router extends RouterComponent {
      * @param {requestCallback} callback
      */
     post(path, callback) {
-        this.#routes.set(this.parseRoute({
+        this.#routes.set(this.#parseRoute({
             method: "POST",
             path,
         }), callback);
@@ -51,7 +47,7 @@ class Router extends RouterComponent {
      */
     handle(path, method) {
         return this.#routes.get(
-            this.parseRoute({
+            this.#parseRoute({
                 method,
                 path
             }
