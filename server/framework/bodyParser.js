@@ -24,12 +24,12 @@ function bodyParser(request, response, next) {
                 request.body = body;
                 return next(request, response);
             } catch(err) {
-                console.err(err);
+                console.error(err);
                 return response.status(500).text("Invalid json data");  
             }
         })
         .on('error', (err) => {
-            console.err(err.message); 
+            console.error(err.message); 
             return response.status(500).text("Unexpected error");
         });
 }
