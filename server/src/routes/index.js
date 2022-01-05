@@ -1,6 +1,5 @@
 const Framework = require("../../framework/framework");
 const Router = require("../../framework/router/router");
-const UserHelper = require("../database/userHelper");
 const auth = require("./auth");
 const sanity = require("./sanity");
 

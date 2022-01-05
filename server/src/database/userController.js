@@ -1,6 +1,6 @@
 const DatabaseModel = require("./DatabaseModel");
 
-class UserHelper  {
+class UserController  {
     /** @property {DatabaseModel} model */
     #model;
 
@@ -12,6 +12,18 @@ class UserHelper  {
         this.#model = model;
     }
 
+    async addGame(nick) {
+        const user = await this.#model.find(nick);
+
+        if(user["games"] != null) {
+            user["games"] = user["games"] + 1;
+        } else {
+            user["games"] = 1;
+        }
+
+        return await this.#model.update(nick, user);
+    }
+
     async addWin(nick) {
         const user = await this.#model.find(nick);
 
@@ -21,8 +33,14 @@ class UserHelper  {
             user["wins"] = 1;
         }
 
+        if(user["games"] != null) {
+            user["games"] = user["games"] + 1;
+        } else {
+            user["games"] = 1;
+        }
+
         return await this.#model.update(nick, user);
     }
 }
 
-module.exports = UserHelper;
+module.exports = UserController;

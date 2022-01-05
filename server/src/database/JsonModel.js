@@ -49,6 +49,10 @@ class JsonModel extends DatabaseModel {
         await fs.writeFile(this.#path, JSON.stringify(data))
     }
 
+    async all() {
+        return JSON.parse((await fs.readFile(this.#path)).toString());
+    }
+
     delete(key) {
         
     }

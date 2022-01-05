@@ -34,6 +34,10 @@ class DatabaseModel {
 
     }
 
+    async all() {
+        
+    }
+
 }
 
 module.exports = DatabaseModel;
