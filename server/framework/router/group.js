@@ -25,7 +25,7 @@ class RouterGroup extends RouterComponent {
     }
 
     /** @inheritdoc */
-    handle(path, method) {
+    find(path, method) {
         if(!path.startsWith(this.#prefix)) {
             return null;
         }
@@ -34,7 +34,7 @@ class RouterGroup extends RouterComponent {
         let handler;
 
         for (const router of this.#routerComponents) {
-            const callback = router.handle(path, method);
+            const callback = router.find(path, method);
             if (callback != null) {
                 handler = callback;
                 break;

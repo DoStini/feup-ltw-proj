@@ -1,8 +1,10 @@
 const http = require("http");
 const RouterComponent = require('./routerComponent');
+const Route = require('./route');
+const Middleware = require('./middleware');
 
 class Router extends RouterComponent {
-    /** @property {Map.<string, requestCallback>} */
+    /** @property {Map.<string, Route>} routes */
     #routes = new Map();
 
     constructor () {
@@ -13,19 +15,33 @@ class Router extends RouterComponent {
         return JSON.stringify(obj);
     }
 
+    setupMiddleware(callbacks) {
+        let route = new Route(callbacks[callbacks.length - 1]);
+
+        let next = route.run;
+        for (let i = callbacks.length - 2; i >= 0; i--) {
+            const handler = callbacks[i];
+
+            route = new Middleware(next, handler);
+            next = route.run;
+        }
+
+        return route;
+    }
+
     /**
      * Registers a GET handler
      * 
      * @param {string} path
      * @param {requestCallback} callback
      */
-    get(path, callback) {
+    get(path, ...callbacks) {
         this.#routes.set(this.#parseRoute({
             method: "GET",
             path,
-        }), callback);
+        }), this.setupMiddleware(callbacks)); 
     }
-    
+
     /**
      * Registers a POST handler
      * 
@@ -36,7 +52,7 @@ class Router extends RouterComponent {
         this.#routes.set(this.#parseRoute({
             method: "POST",
             path,
-        }), callback);
+        }), this.setupMiddleware(callbacks));
     }
 
     /**
@@ -45,13 +61,13 @@ class Router extends RouterComponent {
      * @param {string} path
      * @param {string} method
      */
-    handle(path, method) {
+    find(path, method) {
         return this.#routes.get(
             this.#parseRoute({
                 method,
                 path
             }
-        ));
+        ))?.run;
    }
 }
 
