@@ -5,7 +5,7 @@ class RouterComponent {
      * @param {string} path
      * @param {string} method
      */
-    handle(path, method) {
+    find(path, method) {
     };
 }
 

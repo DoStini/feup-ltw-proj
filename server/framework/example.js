@@ -7,9 +7,29 @@ const subRouter = new RouterGroup("/example");
 
 const router = new Router();
 
-router.get("/thing", (req, res) => {
-    return res.status(200).json({
-        res: `Cool thing`
+router.get("/thing",
+    (req, res, next) => {
+        if (true) {
+            return next(req, res);
+        } else {
+            console.log("error")
+            return res.status(400).json({
+                res: `Error 1`
+            })
+        }
+    },
+    (req, res, next) => {
+        if (true) {
+            return next(req, res);
+        } else {
+            return res.status(400).json({
+                res: `Error 2`
+            })
+        }
+    },
+    (req, res) => {
+        return res.status(200).json({
+            res: `Cool thing`
     });
 });
 
