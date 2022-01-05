@@ -15,7 +15,7 @@ class Router extends RouterComponent {
         return JSON.stringify(obj);
     }
 
-    setupMiddleware(callbacks) {
+    #setupMiddleware(callbacks) {
         let route = new Route(callbacks[callbacks.length - 1]);
 
         let next = route.run;
@@ -39,7 +39,7 @@ class Router extends RouterComponent {
         this.#routes.set(this.#parseRoute({
             method: "GET",
             path,
-        }), this.setupMiddleware(callbacks)); 
+        }), this.#setupMiddleware(callbacks)); 
     }
 
     /**
@@ -52,7 +52,7 @@ class Router extends RouterComponent {
         this.#routes.set(this.#parseRoute({
             method: "POST",
             path,
-        }), this.setupMiddleware(callbacks));
+        }), this.#setupMiddleware(callbacks));
     }
 
     /**

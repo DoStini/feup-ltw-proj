@@ -1,6 +1,8 @@
+const bcrypt = require('bcrypt');
 const bodyParser = require("../../framework/bodyParser");
 const Router = require("../../framework/router/router");
 const { userRequired, passRequired } = require("../middleware/auth");
+const { requestError } = require("../utils");
 
 /**
  * 
@@ -15,13 +17,24 @@ module.exports = (router, database) => {
         userRequired,
         passRequired,
         async (req, res) => {
-            const password = await database.getModel(databaseName).find(req.body.nick);
+            const user = await database.getModel(databaseName).find(req.body.nick);
+            const password = req.body.pass;
 
-            console.log(password);
+            if (user == null) {
+                const newPassword = await bcrypt.hash(password, 12)
+                await database.getModel(databaseName).insert(req.body.nick, {
+                    nick: req.body.nick,
+                    pass: newPassword,
+                });
 
-            res.json({
-                body: req.body,
-            })
+                return res.json({})
+            }
+
+            if (!await bcrypt.compare(password, user.pass)) {
+                return requestError(res, 401, "User registered with a different password");
+            }
+
+            return res.json({})
         }
     );
 }

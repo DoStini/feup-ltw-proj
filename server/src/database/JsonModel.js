@@ -11,9 +11,9 @@ class JsonModel extends DatabaseModel {
         this.#path = `${env.DATA_PATH}/${name}.json`;
     }
 
-    async setup() {
+    setup() {
         return fs.access(this.#path, fs.F_OK, (err) => {
-                    fs.writeFile(this.#path, JSON.stringify({}),(err) => console.error(err));
+                fs.writeFile(this.#path, JSON.stringify({}),(err) => console.error(err));
         });
     }
 
@@ -22,12 +22,28 @@ class JsonModel extends DatabaseModel {
         return data[key];
     }
 
-    insert(key, val) {
+    async insert(key, val) {
+        const data = JSON.parse((await fs.readFile(this.#path)).toString());
         
+        if (data[key] != null) {
+            throw new DatabaseException("Already exists");
+        }
+       
+        data[key] = val;
+
+        fs.writeFile(this.#path, JSON.stringify(data));
     }
 
-    update(key, val) {
+    async update(key, val) {
+        const data = JSON.parse((await fs.readFile(this.#path)).toString());
 
+        if(data[key] == null) {
+            throw new DatabaseException("Key does not exist.");
+        }
+
+        data[key] = val;
+
+        await fs.writeFile(this.#path, JSON.stringify(data))
     }
 
     delete(key) {
