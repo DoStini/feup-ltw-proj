@@ -1,10 +1,16 @@
 const Framework = require("../../framework/framework");
-const sanity = require("./sanity")
+const Router = require("../../framework/router/router");
+const auth = require("./auth");
+const sanity = require("./sanity");
 
 /**
- * 
  * @param {Framework} app 
  */
 module.exports = (app) => {
-    sanity(app);
+    const router = new Router();
+
+    sanity(router);
+    auth(router);
+
+    app.addRouter(router);
 }
