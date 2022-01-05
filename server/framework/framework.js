@@ -5,7 +5,7 @@ const RouterComponent = require('./router/routerComponent');
 
 class Framework {
     #notFoundHandler = (req, res) => res.status(404).text(`Cannot ${req.method} ${req.url}\n`);
-    
+
     /** @property {RouterGroup} router */
     #router = new RouterGroup();
 

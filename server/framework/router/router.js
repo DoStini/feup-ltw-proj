@@ -48,7 +48,7 @@ class Router extends RouterComponent {
      * @param {string} path
      * @param {requestCallback} callback
      */
-    post(path, callback) {
+    post(path, ...callbacks) {
         this.#routes.set(this.#parseRoute({
             method: "POST",
             path,
