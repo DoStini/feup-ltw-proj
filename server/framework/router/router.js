@@ -33,7 +33,7 @@ class Router extends RouterComponent {
      * Registers a GET handler
      * 
      * @param {string} path
-     * @param {requestCallback} callback
+     * @param {Array.<requestCallback>} callbacks
      */
     get(path, ...callbacks) {
         this.#routes.set(this.#parseRoute({
@@ -46,7 +46,7 @@ class Router extends RouterComponent {
      * Registers a POST handler
      * 
      * @param {string} path
-     * @param {requestCallback} callback
+     * @param {Array.<requestCallback>} callbacks
      */
     post(path, ...callbacks) {
         this.#routes.set(this.#parseRoute({
@@ -60,6 +60,8 @@ class Router extends RouterComponent {
      * 
      * @param {string} path
      * @param {string} method
+     * 
+     * @returns {requestCallback}
      */
     find(path, method) {
         return this.#routes.get(

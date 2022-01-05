@@ -14,19 +14,23 @@ class DatabaseModel {
         return this.#name
     }
 
-    find(key) {
+    /**
+     * 
+     * @param {*} key 
+     */
+    async find(key) {
 
     }
 
-    insert(key, val) {
+    async insert(key, val) {
         
     }
 
-    update(key, val) {
+    async update(key, val) {
 
     }
 
-    delete(key) {
+    async delete(key) {
 
     }
 

@@ -10,7 +10,7 @@ const { requestError } = require("../utils");
  * @param {Database} database 
  */
 module.exports = (router, database) => {
-    const databaseName = "auth";
+    const databaseName = "user";
 
     router.post("/register",
         bodyParser,

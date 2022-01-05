@@ -6,4 +6,6 @@ const app = new Framework();
 
 loaders(app);
 
-app.listen(config.PORT);
+app.listen(config.PORT, () => {
+    console.log(`listening on ${config.PORT}`)
+});

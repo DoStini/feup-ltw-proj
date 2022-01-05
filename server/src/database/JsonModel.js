@@ -1,5 +1,6 @@
 const { promises: fs } = require('fs');
 const env = require('../env');
+const DatabaseError = require('./DatabaseError');
 const DatabaseModel = require('./DatabaseModel');
 
 class JsonModel extends DatabaseModel {
@@ -11,10 +12,12 @@ class JsonModel extends DatabaseModel {
         this.#path = `${env.DATA_PATH}/${name}.json`;
     }
 
-    setup() {
-        return fs.access(this.#path, fs.F_OK, (err) => {
-                fs.writeFile(this.#path, JSON.stringify({}),(err) => console.error(err));
-        });
+    async setup() {
+        try {
+            await fs.access(this.#path, fs.F_OK);
+        } catch {
+            fs.writeFile(this.#path, JSON.stringify({}));
+        }
     }
 
     async find(key) {
@@ -26,7 +29,7 @@ class JsonModel extends DatabaseModel {
         const data = JSON.parse((await fs.readFile(this.#path)).toString());
         
         if (data[key] != null) {
-            throw new DatabaseException("Already exists");
+            throw new DatabaseError("Already exists");
         }
        
         data[key] = val;
@@ -38,7 +41,7 @@ class JsonModel extends DatabaseModel {
         const data = JSON.parse((await fs.readFile(this.#path)).toString());
 
         if(data[key] == null) {
-            throw new DatabaseException("Key does not exist.");
+            throw new DatabaseError("Key does not exist.");
         }
 
         data[key] = val;

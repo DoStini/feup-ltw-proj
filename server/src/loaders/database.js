@@ -3,13 +3,13 @@ const JsonModel = require("../database/JsonModel");
 
 /**
  * 
- * @param {Framework} app 
+ * @param {Framework} app
  */
 module.exports = async () => {
     const database = new Database();
 
-    const auth = new JsonModel("auth");
-    await auth.setup()
+    const auth = new JsonModel("user");
+    await auth.setup();
 
     database.addModel(auth);
 
