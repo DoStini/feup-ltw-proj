@@ -4,9 +4,14 @@ class RouterComponent {
      * 
      * @param {string} path
      * @param {string} method
+     * 
      */
     find(path, method) {
     };
+
+    middleware() {
+
+    }
 }
 
 module.exports = RouterComponent;

@@ -1,4 +1,5 @@
 const http = require('http');
+const FrameworkRequest = require('./request');
 const FrameworkResponse = require('./response');
 const RouterGroup = require('./router/group');
 const RouterComponent = require('./router/routerComponent');
@@ -30,15 +31,17 @@ class Framework {
      * @param {Function} callback The callback that is executed after starting the app
      */ 
     listen(port, callback) {
-        const server = http.createServer({ServerResponse: FrameworkResponse}, (request, response) => {
-            const handler = this.#router.find(request.url, request.method);
+        const server = http.createServer({ServerResponse: FrameworkResponse, IncomingMessage: FrameworkRequest}, 
+            (request, response) => {
+                const handler = this.#router.find(request.url, request.method);
 
-            if (handler) {
-                handler(request, response);
-            } else {
-                this.#notFoundHandler(request, response);
+                if (handler) {
+                    handler(request, response);
+                } else {
+                    this.#notFoundHandler(request, response);
+                }
             }
-        });
+        );
 
         callback && callback();
         server.listen(port);

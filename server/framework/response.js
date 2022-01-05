@@ -1,6 +1,5 @@
 const http = require("http");
 
-
 class FrameworkResponse extends http.ServerResponse {
     status(code) {
         this.statusCode = code;

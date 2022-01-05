@@ -1,17 +1,12 @@
-const Framework = require("../../framework/framework");
 const Router = require("../../framework/router/router");
 
 /**
- * @param {Framework} app 
+ * @param {Router} app 
  */
-module.exports = (app) => {
-    const router = new Router();
-
+module.exports = (router) => {
     router.get("/", (req, res) => {
         res.json({
             online: true,
         })
     });
-
-    app.addRouter(router);
 }
