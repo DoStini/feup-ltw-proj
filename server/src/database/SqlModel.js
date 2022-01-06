@@ -1,0 +1,84 @@
+const { promises: fs } = require('fs');
+const env = require('../env');
+const DatabaseError = require('./DatabaseError');
+const DatabaseModel = require('./DatabaseModel');
+const SqlDatabase = require('./SqlDatabase');
+
+class SqlModel extends DatabaseModel {
+
+    #rows;
+    #database;
+
+    constructor (name, rows, database) {
+        super(name);
+        this.#rows = rows;
+        this.#database = database;
+    }
+
+    /**
+     * 
+     * @param {SqlDatabase} database 
+     */
+    async setup() {
+        let query = `CREATE TABLE IF NOT EXISTS ${this.name} (`;
+
+        for (let index = 0; index < this.#rows.length - 1; index++) {
+            const { name, type, constraint } = this.#rows[index];
+            query += `${name} ${type} ${constraint},`
+        }
+
+        const { name, type, constraint } = this.#rows[this.#rows.length - 1];
+        query += `${name} ${type} ${constraint});`;
+
+        console.log(query)
+
+        this.#database.runQuery(query);
+    }
+
+    async findByKey(key, value) {
+        const query = `SELECT * FROM ${this.name} WHERE ${key} = '${value}'`;
+
+        return this.#database.runQuery(query);
+    }
+
+    async insert(key, val) {
+        // await this.setup();
+
+        // const data = JSON.parse((await fs.readFile(this.#path)).toString());
+        
+        // if (data[key] != null) {
+        //     throw new DatabaseError("Already exists");
+        // }
+       
+        // data[key] = val;
+
+        // await fs.writeFile(this.#path, JSON.stringify(data));
+    }
+
+    async update(key, val) {
+        // await this.setup();
+
+        // const data = JSON.parse((await fs.readFile(this.#path)).toString());
+
+        // if(data[key] == null) {
+        //     throw new DatabaseError("Key does not exist.");
+        // }
+
+        // data[key] = val;
+
+        // await fs.writeFile(this.#path, JSON.stringify(data))
+    }
+
+    async all() {
+        // await this.setup();
+
+        // return JSON.parse((await fs.readFile(this.#path)).toString());
+    }
+
+    delete(key) {
+        
+    }
+
+}
+
+module.exports = SqlModel;

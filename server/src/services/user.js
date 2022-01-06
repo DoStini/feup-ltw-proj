@@ -14,7 +14,8 @@ class UserController  {
     }
 
     async find(user) {
-        return await this.#model.find(user);
+        const [data] = await this.#model.findByKey("nick", user); 
+        return data;
     }
 
     async create(user, password) {
