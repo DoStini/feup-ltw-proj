@@ -80,27 +80,35 @@ class Game {
 
     /**
      * Collects all remaining seeds in the board and stores them in the appropriate storage.
-     * 
-     * @returns {Object.<number, Array.<number>>}
      */
     collectAllSeeds() {
-        let destHoles = {};
-
         for (let playerID = 0; playerID <= 1; playerID++) {
             let avail = this.#board.getAvailHoles(playerID);
 
             avail.forEach((hole) => {
-                let storage = this.#board.nHoles * 2 + playerID
                 let seeds = this.#board.getHoleSeedAmount(hole);
-                destHoles[hole] = Array(seeds).fill(storage);
 
                 for (let i = 0; i < seeds; i++) {
                     this.#board.moveToStorage(hole, playerID);
                 }
             });
         }
+    }
 
-        return destHoles;
+    getEndStorage() {
+        const storage = this.#board.storage.slice();
+
+        for (let playerID = 0; playerID <= 1; playerID++) {
+            let avail = this.#board.getAvailHoles(playerID);
+
+            avail.forEach((hole) => {
+                let seeds = this.#board.getHoleSeedAmount(hole);
+
+                storage[playerID] += seeds;
+            });
+        }
+
+        return storage;
     }
 
     /**
@@ -112,7 +120,7 @@ class Game {
     clickHole(playerName, hole) {
         const player = playerName === this.#player1.name ? this.#player1 : this.#player2;
         let realHole = this.#board.getRealHole(hole, player.id);
-        
+
         return this.#state.clickHole(playerName, realHole);
     }
 }

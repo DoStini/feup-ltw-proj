@@ -31,44 +31,34 @@ class GameState {
     /**
      * @param {number} hole
      * 
-     * @returns {Object.<number, Array.<number>>}
+     * @returns {number}
      */
     sowSeeds(hole) {
         let seeds = this.board.getHoleSeedAmount(hole);
         let lastHole = hole
         let curHole = lastHole;
-        let destHoles = {};
-
-        destHoles[hole] = [];
 
         for (let i = 0; i < seeds; i++) {
             if (lastHole === this.player.id * this.board.nHoles + this.board.nHoles - 1) {
                 this.board.moveToStorage(hole, this.player.id);
 
                 lastHole = this.board.nHoles * 2 + this.player.id;
-                destHoles[hole].push(lastHole);
             } else {
                 curHole = (curHole + 1) % (this.board.nHoles * 2);
                 this.board.moveToHole(hole, curHole);
 
-                destHoles[hole].push(curHole);
                 lastHole = curHole;
             }
         }
 
-        return destHoles;
+        return lastHole;
     }
 
     /**
      * @param {number} lastHole
-     * 
-     * @returns {Object.<number, Array.<number>>}
      */
     captureSeeds(lastHole) {
-        let holeToHoles = {};
-
         if (this.board.holeBelongsToPlayer(lastHole, this.player.id) && this.board.getHoleSeedAmount(lastHole) === 1) {
-            let storage = this.board.nHoles * 2 + this.player.id;
             let oppositeHole = this.board.nHoles * 2 - 1 - lastHole;
             let oppositeSeeds = this.board.getHoleSeedAmount(oppositeHole);
 
@@ -76,12 +66,7 @@ class GameState {
                 this.board.moveToStorage(oppositeHole, this.player.id);
             }
             this.board.moveToStorage(lastHole, this.player.id);
-
-            holeToHoles[lastHole] = [storage];
-            holeToHoles[oppositeHole] = Array(oppositeSeeds).fill(storage);
         }
-
-        return holeToHoles;
     }
 
     /**
@@ -118,9 +103,8 @@ class GameState {
      * @returns {boolean}
      */
     sowAndCapture(hole) {
-        const holeToHoles = this.sowSeeds(hole);
-        const destHoles = holeToHoles[hole];
-        const lastHole = destHoles[destHoles.length - 1];
+        const lastHole = this.sowSeeds(hole);
+        this.captureSeeds(lastHole)
 
         return this.checkChain(lastHole);
     }
@@ -206,10 +190,10 @@ class EndState extends GameState {
      * @returns {Player}
      */
     getWinner() {
-        this.game.collectAllSeeds();
+        const storage = this.game.getEndStorage();
 
-        const score1 = this.board.getStorageAmount(this.player.id);
-        const score2 = this.board.getStorageAmount(this.otherPlayer.id);
+        const score1 = storage[this.player.id];
+        const score2 = storage[this.otherPlayer.id];
 
         const winner = score1 > score2 ? this.player : this.otherPlayer;
 
