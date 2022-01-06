@@ -39,12 +39,12 @@ class GameState {
         let curHole = lastHole;
 
         for (let i = 0; i < seeds; i++) {
-            if (lastHole === this.player.id * this.board.nHoles + this.board.nHoles - 1) {
+            if (lastHole === this.board.getLastHole(this.player.id)) {
                 this.board.moveToStorage(hole, this.player.id);
 
-                lastHole = this.board.nHoles * 2 + this.player.id;
+                lastHole = this.board.getStorageID(this.player.id);
             } else {
-                curHole = (curHole + 1) % (this.board.nHoles * 2);
+                curHole = this.board.getNextHole(curHole);
                 this.board.moveToHole(hole, curHole);
 
                 lastHole = curHole;
@@ -59,7 +59,7 @@ class GameState {
      */
     captureSeeds(lastHole) {
         if (this.board.holeBelongsToPlayer(lastHole, this.player.id) && this.board.getHoleSeedAmount(lastHole) === 1) {
-            let oppositeHole = this.board.nHoles * 2 - 1 - lastHole;
+            let oppositeHole = this.board.getOppositeHole(lastHole);
             let oppositeSeeds = this.board.getHoleSeedAmount(oppositeHole);
 
             for (let i = 0; i < oppositeSeeds; i++) {
@@ -76,7 +76,7 @@ class GameState {
      * @returns {boolean}
      */
     checkChain(lastHole) {
-        return lastHole == this.board.nHoles * 2 + this.player.id;
+        return lastHole === this.board.getStorageID(this.player.id);
     }
 
     /**
