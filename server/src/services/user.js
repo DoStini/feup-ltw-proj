@@ -21,10 +21,15 @@ class UserController  {
     async create(user, password) {
         const hashed = hash(password);
 
-        await this.#model.insert(user, {
-            nick: user,
-            pass: hashed,
-        });
+        try {
+            await this.#model.insert({
+                nick: user,
+                pass: hashed,
+            });   
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
     }
 
     async addGame(nick) {

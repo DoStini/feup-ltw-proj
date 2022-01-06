@@ -10,6 +10,8 @@ module.exports = async () => {
     const auth = new SqlModel("user", [
         {name: "nick", type: "TEXT", constraint: "PRIMARY KEY"},
         {name: "pass", type: "TEXT", constraint: ""},
+        {name: "games", type: "INTEGER", constraint: ""},
+        {name: "victories", type: "INTEGER", constraint: ""},
     ], database);
     database.addModel(auth);
 

@@ -41,32 +41,25 @@ class SqlModel extends DatabaseModel {
         return this.#database.runQuery(query);
     }
 
-    async insert(key, val) {
-        // await this.setup();
+    async insert(_key, obj) {
+        let query = `INSERT INTO "${this.name}" (`
+        Object.keys(obj).forEach(key => query += `${key},`);
+        query = query.slice(0, query.length - 1) + `) values (`;
+        Object.values(obj).forEach(val => query += `'${val}',`);
+        query = query.slice(0, query.length - 1) + ");"
 
-        // const data = JSON.parse((await fs.readFile(this.#path)).toString());
-        
-        // if (data[key] != null) {
-        //     throw new DatabaseError("Already exists");
-        // }
-       
-        // data[key] = val;
-
-        // await fs.writeFile(this.#path, JSON.stringify(data));
+        await this.#database.runQuery(query);
     }
 
-    async update(key, val) {
-        // await this.setup();
+    async update(key, val, obj) {
 
-        // const data = JSON.parse((await fs.readFile(this.#path)).toString());
+        console.log(JSON.stringify(obj));
 
-        // if(data[key] == null) {
-        //     throw new DatabaseError("Key does not exist.");
-        // }
-
-        // data[key] = val;
-
-        // await fs.writeFile(this.#path, JSON.stringify(data))
+        let query = `UPDATE "${this.name}" (`
+        Object.keys(obj).forEach(key => query += `${key},`);
+        query = query.slice(0, query.length - 1) + `) values (`;
+        Object.values(obj).forEach(val => query += `'${val}',`);
+        query = query.slice(0, query.length - 1) + ");"
     }
 
     async all() {
