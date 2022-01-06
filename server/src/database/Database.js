@@ -10,7 +10,7 @@ class Database {
      * @param {DatabaseModel} model 
      */
     addModel(model) {
-        this.#models[model.getName()] = model; 
+        this.#models[model.name] = model; 
     }
 
     /**
