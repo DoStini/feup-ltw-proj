@@ -1,36 +1,29 @@
-const bcrypt = require('bcrypt');
 const bodyParser = require("../../framework/bodyParser");
 const Router = require("../../framework/router/router");
 const { userRequired, passRequired } = require("../middleware/auth");
-const { requestError } = require("../utils");
+const UserController = require('../services/user');
+const { requestError, checkHash } = require("../utils");
 
 /**
  * 
  * @param {Router} router 
- * @param {Database} database 
+ * @param {UserController} userController 
  */
-module.exports = (router, database) => {
-    const databaseName = "auth";
-
+module.exports = (router, userController) => {
     router.post("/register",
         bodyParser,
         userRequired,
         passRequired,
         async (req, res) => {
-            const user = await database.getModel(databaseName).find(req.body.nick);
-            const password = req.body.pass;
+            const user = await userController.find(req.body.nick);
 
             if (user == null) {
-                const newPassword = await bcrypt.hash(password, 12)
-                await database.getModel(databaseName).insert(req.body.nick, {
-                    nick: req.body.nick,
-                    pass: newPassword,
-                });
+                userController.create(req.body.nick, req.body.pass)
 
                 return res.json({})
             }
 
-            if (!await bcrypt.compare(password, user.pass)) {
+            if (!checkHash(req.body.pass, user.pass)) {
                 return requestError(res, 401, "User registered with a different password");
             }
 

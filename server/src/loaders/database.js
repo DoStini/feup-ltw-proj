@@ -8,7 +8,7 @@ const JsonModel = require("../database/JsonModel");
 module.exports = async () => {
     const database = new Database();
 
-    const auth = new JsonModel("auth");
+    const auth = new JsonModel("user");
     await auth.setup()
 
     database.addModel(auth);
