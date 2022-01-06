@@ -6,8 +6,8 @@ class Middleware extends RequestHandler {
 
     /**
      * 
-     * @param {RequestHandler.requestCallback} next 
-     * @param {middlewareCallback} handle 
+     * @param {RequestHandler.RequestCallback} next 
+     * @param {MiddlewareCallback} handle 
      */
     constructor(next, handle) {
         super((req, res) => handle(req, res, next));
@@ -16,10 +16,12 @@ class Middleware extends RequestHandler {
 
 /**
  * This callback handles an HTTP request as a middleware
- * @callback middlewareCallback
+ * @callback MiddlewareCallback
  * @param {FrameworkRequest} request
  * @param {FrameworkResponse} response
- * @param {RequestHandler.requestCallback} next
+ * @param {RequestHandler.RequestCallback} next
+ * 
+ * @returns {void}
  */
 
 module.exports = Middleware;

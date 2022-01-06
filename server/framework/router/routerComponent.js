@@ -7,7 +7,7 @@ class RouterComponent {
      * @param {string} path
      * @param {string} method
      * 
-     * @returns {RequestHandler.requestCallback}
+     * @returns {RequestHandler.RequestCallback}
      */
     find(path, method) {
     };

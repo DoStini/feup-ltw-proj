@@ -18,7 +18,7 @@ class Router extends RouterComponent {
     /**
      * Creates middleware decorators for the callbacks given
      * 
-     * @param {Array.<RequestHandler.requestCallback|Middleware.middlewareCallback>} callbacks 
+     * @param {Array.<Middleware.MiddlewareCallback>} callbacks 
      * @returns {RequestHandler}
      */
     #setupMiddleware(callbacks) {
@@ -40,7 +40,7 @@ class Router extends RouterComponent {
      * Registers a GET handler
      * 
      * @param {string} path
-     * @param {Array.<RequestHandler.requestCallback|Middleware.middlewareCallback>} callbacks
+     * @param {Array.<Middleware.MiddlewareCallback>} callbacks
      */
     get(path, ...callbacks) {
         this.#routes.set(this.#parseRoute({
@@ -53,7 +53,7 @@ class Router extends RouterComponent {
      * Registers a POST handler
      * 
      * @param {string} path
-     * @param {Array.<RequestHandler.requestCallback|Middleware.middlewareCallback>} callbacks
+     * @param {Array.<Middleware.MiddlewareCallback>} callbacks
      */
     post(path, ...callbacks) {
         this.#routes.set(this.#parseRoute({

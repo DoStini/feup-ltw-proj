@@ -1,10 +1,10 @@
 class RequestHandler {
-    /** @type {requestCallback} */
+    /** @type {RequestCallback} */
     run;
 
     /**
      * 
-     * @param {requestCallback} run 
+     * @param {RequestCallback} run 
      */
     constructor(run) {
         this.run = run;
@@ -13,9 +13,11 @@ class RequestHandler {
 
 /**
  * This callback handles an HTTP request
- * @callback requestCallback
+ * @callback RequestCallback
  * @param {FrameworkRequest} request
  * @param {FrameworkResponse} response
+ * 
+ * @returns {void}
  */
 
 
