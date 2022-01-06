@@ -30,8 +30,6 @@ class SqlModel extends DatabaseModel {
         const { name, type, constraint } = this.#rows[this.#rows.length - 1];
         query += `${name} ${type} ${constraint});`;
 
-        console.log(query)
-
         this.#database.runQuery(query);
     }
 
@@ -63,7 +61,7 @@ class SqlModel extends DatabaseModel {
     }
 
     async all() {
-        await this.#database.runQuery(`SELECT * FROM ${this.name}`)
+        return this.#database.runQuery(`SELECT * FROM ${this.name}`)
     }
 
     delete(key) {

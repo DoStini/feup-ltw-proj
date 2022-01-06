@@ -13,7 +13,6 @@ const DatabaseInterface = require("../database/DatabaseInterface");
  */
 module.exports = (app, db) => {
     const router = new Router();
-    console.log(db)
     const userController = new UserController(db.getModel("user"));
 
     sanity(router);
