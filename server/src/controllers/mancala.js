@@ -1,6 +1,6 @@
 const Board = require("../models/board");
 const Player = require("../models/player");
-const { GameState, EndState } = require("./gameStates");
+const { GameState, EndState, PlayerState } = require("./gameStates");
 
 class Game {
     /** 
@@ -109,27 +109,8 @@ class Game {
      * @param {number} hole The clicked hole.
      */
     clickHole(hole) {
-        this.#state.clickHole(hole);
-
-        return true;
+        return this.#state.clickHole(hole);
     }
-}
-
-function setupMultiplayerGame(nHoles, seedsPerHole, turn, player1Name, player2Name, mInfo) {
-    const board = new Board(nHoles, seedsPerHole);
-
-    const player1 = new Player(0, player1Name);
-    const player2 = new Player(1, player2Name);
-
-    const game = new Game(board, player1, player2);
-
-    if (turn === player1.name) {
-        game.changePlayerState(new PlayMPState(game, player1, player2, mInfo));
-    } else {
-        game.changePlayerState(new WaitMPState(game, player2, player1, mInfo));
-    }
-
-    game.renderAll();
 }
 
 module.exports = Game;

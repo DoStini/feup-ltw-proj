@@ -2,7 +2,7 @@
 
 class Board {
     /** @property {Array.<number>} storage */
-    #storage = [];
+    #storage = [0, 0];
     /** @property {number} nHoles */
     #nHoles;
     /** @property {number} nSeeds */
@@ -34,7 +34,7 @@ class Board {
 
     moveToStorage(hole, playerID) {
         this.#storage[playerID] += 1;
-        this.#storage[hole] -= 1;
+        this.#seeds[hole] -= 1;
     }
 
     moveToHole(fromHole, toHole) {

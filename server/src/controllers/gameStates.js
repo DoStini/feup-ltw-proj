@@ -115,19 +115,14 @@ class GameState {
      * Sows and if possible captures given the played hole.
      * 
      * @param {number} hole 
-     * @returns {{chain: boolean, animation: SeedAnimation}}
+     * @returns {boolean}
      */
     sowAndCapture(hole) {
-        const seedAnimation = new SeedAnimation();
-
         const holeToHoles = this.sowSeeds(hole);
         const destHoles = holeToHoles[hole];
         const lastHole = destHoles[destHoles.length - 1];
 
-        seedAnimation.addStep(holeToHoles);
-        seedAnimation.addStep(this.captureSeeds(lastHole));
-
-        return { chain: this.checkChain(lastHole), animation: seedAnimation };
+        return this.checkChain(lastHole);
     }
 
     /**
@@ -137,9 +132,9 @@ class GameState {
      * @returns {Promise<GameState>} The next game state.
      */
     play(hole) {
-        const response = this.sowAndCapture(hole);
+        const chain = this.sowAndCapture(hole);
 
-        if (response.chain) {
+        if (chain) {
             return this.getCurrentState();
         }
         return this.getNextState();
@@ -180,12 +175,15 @@ class PlayerState extends GameState {
         if (this.board.getHoleSeedAmount(hole) === 0) return;
         if (!this.board.holeBelongsToPlayer(hole, this.player.id)) return;
 
+
         const newState = this.play(hole);
 
         if (this.checkEnd()) {
             return this.game.endGame();
         } else {
             this.game.changePlayerState(newState);
+
+            return 0;
         }
     }
 }
