@@ -58,6 +58,9 @@ class Board {
         return hole >= this.#nHoles * playerID && hole < this.#nHoles * (playerID + 1);
     }
 
+    getRealHole(hole, playerID) {
+        return hole + playerID * this.#nHoles;
+    }
 
     getAvailHoles(playerID) {
         let avail = [];

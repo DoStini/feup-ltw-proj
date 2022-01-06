@@ -106,10 +106,14 @@ class Game {
     /**
      * Handles the click event on a hole.
      * 
+     * @param {string} playerName The name of the player who clicked the hole.
      * @param {number} hole The clicked hole.
      */
-    clickHole(hole) {
-        return this.#state.clickHole(hole);
+    clickHole(playerName, hole) {
+        const player = playerName === this.#player1.name ? this.#player1 : this.#player2;
+        let realHole = this.#board.getRealHole(hole, player.id);
+        
+        return this.#state.clickHole(playerName, realHole);
     }
 }
 

@@ -143,9 +143,10 @@ class GameState {
     /**
      * Handles clicking a hole
      * 
+     * @param {string} playerName
      * @param {number} hole 
      */
-    clickHole(hole) { }
+    clickHole(playerName, hole) { }
 
     /**
      * Gets the next player turn state.
@@ -171,7 +172,8 @@ class PlayerState extends GameState {
         return new PlayerState(this.game, this.otherPlayer, this.player);
     }
 
-    clickHole(hole) {
+    clickHole(playerName, hole) {
+        if (this.player.name !== playerName) return;
         if (this.board.getHoleSeedAmount(hole) === 0) return;
         if (!this.board.holeBelongsToPlayer(hole, this.player.id)) return;
 

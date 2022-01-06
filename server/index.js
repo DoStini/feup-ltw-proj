@@ -10,10 +10,10 @@ loaders(app);
 app.listen(config.PORT, () => {
     console.log(`listening on ${config.PORT}`);
         
-    let game = GameController.setupMultiplayerGame(1, 1, "nuno", "nuno", "mafalda", "as31234");
-    console.log(game.board.seeds);
+    let game = GameController.setupMultiplayerGame(1, 4, "mafalda", "nuno", "mafalda", "as31234");
 
-    console.log(game.clickHole(0));
+    console.log(game.clickHole("nuno", 0));
+    console.log(game.clickHole("mafalda", 0));
 
 
     console.log(game.board.seeds);
