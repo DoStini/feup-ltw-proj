@@ -1,4 +1,4 @@
-const RequestHandler = require("./requestHandler");
+const RequestHandler = require("../middleware/requestHandler");
 
 class RouterComponent {
     /**

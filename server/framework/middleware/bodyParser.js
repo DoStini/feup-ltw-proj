@@ -1,4 +1,4 @@
-const Middleware = require("./router/middleware");
+const Middleware = require("./middleware");
 
 /**
  * Middleware that handles streaming a POST request JSON body

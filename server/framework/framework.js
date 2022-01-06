@@ -2,7 +2,7 @@ const http = require('http');
 const FrameworkRequest = require('./request');
 const FrameworkResponse = require('./response');
 const RouterGroup = require('./router/group');
-const RequestHandler = require('./router/requestHandler');
+const RequestHandler = require('./middleware/requestHandler');
 const RouterComponent = require('./router/routerComponent');
 
 class Framework {
@@ -31,7 +31,7 @@ class Framework {
     }
 
     /**
-     * Starts the server and 
+     * Starts the server and runs the callback.
      * 
      * @param {number} port The port the server is listening
      * @param {Function} callback The callback that is executed after starting the app

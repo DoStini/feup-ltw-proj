@@ -1,7 +1,7 @@
 const RouterComponent = require('./routerComponent');
-const Route = require('./route');
-const Middleware = require('./middleware');
-const RequestHandler = require('./requestHandler');
+const Route = require('../middleware/route');
+const Middleware = require('../middleware/middleware');
+const RequestHandler = require('../middleware/requestHandler');
 
 class Router extends RouterComponent {
     /** @type {Map.<string, RequestHandler>} */
