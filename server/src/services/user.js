@@ -29,11 +29,7 @@ class UserController  {
     async addGame(nick) {
         const user = await this.#model.find(nick);
 
-        if(user["games"] != null) {
-            user["games"] = user["games"] + 1;
-        } else {
-            user["games"] = 1;
-        }
+        user["games"] = (user["games"] ?? 0) + 1;
 
         await this.#model.update(nick, user);
     }
@@ -41,17 +37,8 @@ class UserController  {
     async addWin(nick) {
         const user = await this.#model.find(nick);
 
-        if(user["victories"] != null) {
-            user["victories"] = user["victories"] + 1;
-        } else {
-            user["victories"] = 1;
-        }
-
-        if(user["games"] != null) {
-            user["games"] = user["games"] + 1;
-        } else {
-            user["games"] = 1;
-        }
+        user["victories"] = (user["victories"] ?? 0) + 1;
+        user["games"] = (user["games"] ?? 0) + 1;
 
         await this.#model.update(nick, user);
     }
@@ -64,7 +51,7 @@ class UserController  {
             ranking.push({
                 nick: data[key].nick,
                 victories: data[key].victories ?? 0,
-                games: data[key].victories ?? 0
+                games: data[key].games ?? 0
             })
         }
 
