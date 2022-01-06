@@ -65,7 +65,7 @@ function launchSnackbar(icon, message) {
     elem.classList.add("snackbar");
 
     const p = document.createElement("p");
-    p.innerText = message || "Unexpected situation";
+    p.innerText = message ?? "Unexpected situation";
 
     elem.append(icon);
     elem.append(p);
