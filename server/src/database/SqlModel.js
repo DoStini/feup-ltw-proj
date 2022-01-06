@@ -6,12 +6,12 @@ const SqlDatabase = require('./SqlDatabase');
 
 class SqlModel extends DatabaseModel {
 
-    #rows;
+    #columns;
     #database;
 
-    constructor (name, rows, database) {
+    constructor (name, columns, database) {
         super(name);
-        this.#rows = rows;
+        this.#columns = columns;
         this.#database = database;
     }
 
@@ -22,13 +22,10 @@ class SqlModel extends DatabaseModel {
     async setup() {
         let query = `CREATE TABLE IF NOT EXISTS ${this.name} (`;
 
-        for (let index = 0; index < this.#rows.length - 1; index++) {
-            const { name, type, constraint } = this.#rows[index];
-            query += `${name} ${type} ${constraint},`
-        }
+        this.#columns.forEach(({name, type, constraint }) => 
+            query += `${name} ${type} ${constraint},`);
 
-        const { name, type, constraint } = this.#rows[this.#rows.length - 1];
-        query += `${name} ${type} ${constraint});`;
+        query = query.slice(0, query.length - 1) + ");";
 
         this.#database.runQuery(query);
     }
