@@ -52,20 +52,18 @@ class SqlModel extends DatabaseModel {
     }
 
     async update(key, val, obj) {
+        let query = `UPDATE "${this.name}" SET `
 
-        console.log(JSON.stringify(obj));
+        let parsed = JSON.stringify(obj);
+        parsed = parsed.slice(1, parsed.length - 1).replaceAll(":", "=");
 
-        let query = `UPDATE "${this.name}" (`
-        Object.keys(obj).forEach(key => query += `${key},`);
-        query = query.slice(0, query.length - 1) + `) values (`;
-        Object.values(obj).forEach(val => query += `'${val}',`);
-        query = query.slice(0, query.length - 1) + ");"
+        query += parsed + ` WHERE ${key}='${val}'`;
+
+        await this.#database.runQuery(query);
     }
 
     async all() {
-        // await this.setup();
-
-        // return JSON.parse((await fs.readFile(this.#path)).toString());
+        await this.#database.runQuery(`SELECT * FROM ${this.name}`)
     }
 
     delete(key) {

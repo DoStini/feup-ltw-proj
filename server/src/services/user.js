@@ -22,7 +22,7 @@ class UserController  {
         const hashed = hash(password);
 
         try {
-            await this.#model.insert({
+            await this.#model.insert("nick", {
                 nick: user,
                 pass: hashed,
             });   
@@ -36,8 +36,7 @@ class UserController  {
         const user = await this.#model.find(nick);
 
         user["games"] = (user["games"] ?? 0) + 1;
-
-        await this.#model.update(nick, user);
+        await this.#model.update("nick", user.nick, user);
     }
 
     async addWin(nick) {
@@ -46,7 +45,7 @@ class UserController  {
         user["victories"] = (user["victories"] ?? 0) + 1;
         user["games"] = (user["games"] ?? 0) + 1;
 
-        await this.#model.update(nick, user);
+        await this.#model.update("nick", user.nick, user);
     }
 
     async getRanking(size) {
