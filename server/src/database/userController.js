@@ -46,11 +46,7 @@ class UserController  {
         const data = await this.#model.all();
         const ranking = [];
 
-        let i = 0;
         for(let key in data) {
-            if (i >= size) break;
-            i++;
-
             ranking.push({
                 nick: data[key].nick,
                 victories: data[key].victories ?? 0,
@@ -58,9 +54,9 @@ class UserController  {
             })
         }
 
-        return {ranking: ranking.sort( (left, right) => {
+        return {ranking : ranking.sort((left, right) => {
             return right.victories - left.victories;
-        })};
+        }).slice(0, size)};
     }
 }
 
