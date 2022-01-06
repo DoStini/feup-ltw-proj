@@ -57,7 +57,7 @@ function setCookie(name, value, minutes) {
         date.setTime(date.getTime() + (minutes * 60 * 1000));
         expires = "; expires=" + date.toUTCString();
     }
-    document.cookie = name + "=" + (value || "") + expires + ";";
+    document.cookie = name + "=" + (value ?? "") + expires + ";";
 }
 
 function getCookie(name) {

@@ -1,7 +1,17 @@
 const crypto = require('crypto');
+const FrameworkResponse = require('../framework/response');
 
+/**
+ * Sends an error
+ * 
+ * @param {FrameworkResponse} res 
+ * @param {number} code 
+ * @param {*} message 
+ * 
+ * @returns {void}
+ */
 const requestError = (res, code, message) => {
-    return res.status(code).json({
+    res.status(code).json({
         error: message,
     });
 }

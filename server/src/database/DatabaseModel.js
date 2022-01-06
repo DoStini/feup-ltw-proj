@@ -1,7 +1,8 @@
 class DatabaseModel {
-
+    /** @property {string} name */
     #name;
 
+    /** @param {string} name */
     constructor (name) {
         this.#name = name;
     }
@@ -10,24 +11,32 @@ class DatabaseModel {
 
     }
 
-    getName() {
-        return this.#name
+    get name() {
+        return this.#name;
     }
 
-    find(key) {
+    /**
+     * 
+     * @param {*} key 
+     */
+    async find(key) {
 
     }
 
-    insert(key, val) {
+    async insert(key, val) {
         
     }
 
-    update(key, val) {
+    async update(key, val) {
 
     }
 
-    delete(key) {
+    async delete(key) {
 
+    }
+
+    async all() {
+        
     }
 
 }

@@ -1,10 +1,10 @@
-const http = require("http");
 const RouterComponent = require('./routerComponent');
-const Route = require('./route');
-const Middleware = require('./middleware');
+const Route = require('../middleware/route');
+const Middleware = require('../middleware/middleware');
+const RequestHandler = require('../middleware/requestHandler');
 
 class Router extends RouterComponent {
-    /** @property {Map.<string, Route>} routes */
+    /** @type {Map.<string, RequestHandler>} */
     #routes = new Map();
 
     constructor () {
@@ -15,7 +15,14 @@ class Router extends RouterComponent {
         return JSON.stringify(obj);
     }
 
+    /**
+     * Creates middleware decorators for the callbacks given
+     * 
+     * @param {Array.<Middleware.MiddlewareCallback>} callbacks 
+     * @returns {RequestHandler}
+     */
     #setupMiddleware(callbacks) {
+        /** @type {RequestHandler} */
         let route = new Route(callbacks[callbacks.length - 1]);
 
         let next = route.run;
@@ -33,7 +40,7 @@ class Router extends RouterComponent {
      * Registers a GET handler
      * 
      * @param {string} path
-     * @param {requestCallback} callback
+     * @param {Array.<Middleware.MiddlewareCallback>} callbacks
      */
     get(path, ...callbacks) {
         this.#routes.set(this.#parseRoute({
@@ -46,7 +53,7 @@ class Router extends RouterComponent {
      * Registers a POST handler
      * 
      * @param {string} path
-     * @param {requestCallback} callback
+     * @param {Array.<Middleware.MiddlewareCallback>} callbacks
      */
     post(path, ...callbacks) {
         this.#routes.set(this.#parseRoute({
@@ -55,12 +62,6 @@ class Router extends RouterComponent {
         }), this.#setupMiddleware(callbacks));
     }
 
-    /**
-     * Retrives the callback associated to a request
-     * 
-     * @param {string} path
-     * @param {string} method
-     */
     find(path, method) {
         return this.#routes.get(
             this.#parseRoute({
@@ -70,12 +71,5 @@ class Router extends RouterComponent {
         ))?.run;
    }
 }
-
-/**
- * This callback handles an HTTP request
- * @callback requestCallback
- * @param {http.IncomingMessage} request
- * @param {FrameworkResponse} response
- */
 
 module.exports = Router;
