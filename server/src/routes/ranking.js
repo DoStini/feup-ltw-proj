@@ -1,5 +1,5 @@
 const Router = require("../../framework/router/router");
-const UserController = require('../database/userController');
+const UserController = require('../services/user');
 
 /**
  * 

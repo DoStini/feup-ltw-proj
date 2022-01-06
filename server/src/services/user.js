@@ -1,4 +1,5 @@
-const DatabaseModel = require("./DatabaseModel");
+const { hash } = require("../utils");
+const DatabaseModel = require("../database/DatabaseModel");
 
 class UserController  {
     /** @property {DatabaseModel} model */
@@ -12,6 +13,19 @@ class UserController  {
         this.#model = model;
     }
 
+    async find(user) {
+        return await this.#model.find(user);
+    }
+
+    async create(user, password) {
+        const hashed = hash(password);
+
+        await this.#model.insert(user, {
+            nick: user,
+            pass: hashed,
+        });
+    }
+
     async addGame(nick) {
         const user = await this.#model.find(nick);
 
@@ -21,7 +35,7 @@ class UserController  {
             user["games"] = 1;
         }
 
-        return await this.#model.update(nick, user);
+        await this.#model.update(nick, user);
     }
 
     async addWin(nick) {
@@ -39,7 +53,7 @@ class UserController  {
             user["games"] = 1;
         }
 
-        return await this.#model.update(nick, user);
+        await this.#model.update(nick, user);
     }
 
     async getRanking(size) {
@@ -60,4 +74,4 @@ class UserController  {
     }
 }
 
-module.exports = UserController;
+module.exports = UserController; 

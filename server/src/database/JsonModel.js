@@ -16,16 +16,21 @@ class JsonModel extends DatabaseModel {
         try {
             await fs.access(this.#path, fs.F_OK);
         } catch {
+            console.log("hey");
             fs.writeFile(this.#path, JSON.stringify({}));
         }
     }
 
     async find(key) {
+        await this.setup();
+
         const data = JSON.parse((await fs.readFile(this.#path)).toString());
         return data[key];
     }
 
     async insert(key, val) {
+        await this.setup();
+
         const data = JSON.parse((await fs.readFile(this.#path)).toString());
         
         if (data[key] != null) {
@@ -34,10 +39,12 @@ class JsonModel extends DatabaseModel {
        
         data[key] = val;
 
-        fs.writeFile(this.#path, JSON.stringify(data));
+        await fs.writeFile(this.#path, JSON.stringify(data));
     }
 
     async update(key, val) {
+        await this.setup();
+
         const data = JSON.parse((await fs.readFile(this.#path)).toString());
 
         if(data[key] == null) {
@@ -50,6 +57,8 @@ class JsonModel extends DatabaseModel {
     }
 
     async all() {
+        await this.setup();
+
         return JSON.parse((await fs.readFile(this.#path)).toString());
     }
 
