@@ -41,7 +41,7 @@ class Framework {
             (/** @type {FrameworkRequest} */ request, /** @type {FrameworkResponse} */ response) => {
                 const handler = this.#router.find(request.url, request.method);
 
-                if (handler) {
+                if (handler != null) {
                     handler(request, response);
                 } else {
                     this.#notFoundHandler(request, response);

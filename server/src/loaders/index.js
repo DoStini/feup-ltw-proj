@@ -1,6 +1,5 @@
 const Framework = require("../../framework/framework");
 const routes = require("../routes");
-const UserController = require("../services/user");
 const database = require("./database");
 
 /**

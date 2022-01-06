@@ -1,5 +1,5 @@
-const { hash } = require("../utils");
 const DatabaseModel = require("../database/DatabaseModel");
+const { hash } = require("../utils");
 
 class UserController  {
     /** @property {DatabaseModel} model */

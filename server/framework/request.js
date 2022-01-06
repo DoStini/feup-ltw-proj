@@ -1,4 +1,5 @@
 const http = require("http");
+const RequestError = require("./error/requestError");
 
 class FrameworkRequest extends http.IncomingMessage {
     /** @type {Object} */

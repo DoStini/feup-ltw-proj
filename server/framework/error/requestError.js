@@ -3,3 +3,5 @@ class RequestError extends Error {
         super(message);
     }
 }
+
+module.exports = RequestError;

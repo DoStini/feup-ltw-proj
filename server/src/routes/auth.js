@@ -1,7 +1,7 @@
-const bodyParser = require("../../framework/middleware/bodyParser");
 const Router = require("../../framework/router/router");
-const { userRequired, passRequired } = require("../middleware/auth");
 const UserController = require('../services/user');
+const bodyParser = require("../../framework/middleware/bodyParser");
+const { userRequired, passRequired } = require("../middleware/auth");
 const { requestError, checkHash } = require("../utils");
 
 /**

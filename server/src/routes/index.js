@@ -1,10 +1,10 @@
 const Framework = require("../../framework/framework");
 const Router = require("../../framework/router/router");
 const UserController = require("../services/user");
+const Database = require("../database/Database");
 const auth = require("./auth");
 const sanity = require("./sanity");
 const ranking = require("./ranking");
-const Database = require("../database/Database");
 
 
 /**
