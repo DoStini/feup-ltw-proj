@@ -1,21 +1,15 @@
-const bcrypt = require('bcrypt');
-const bodyParser = require("../../framework/bodyParser");
 const Router = require("../../framework/router/router");
-const Database = require("../database/Database");
-const { userRequired, passRequired } = require("../middleware/auth");
-const { requestError } = require("../utils");
+const UserController = require('../database/userController');
 
 /**
  * 
  * @param {Router} router 
- * @param {Database} database 
+ * @param {UserController} userController 
  */
- module.exports = (router, database) => {
+ module.exports = (router, userController) => {
     const databaseName = "auth";
 
-    router.post("/ranking", (request, response) => {
-        let result = [];
-
-        const rankingModel = database.getModel("ranking");
+    router.post("/ranking", async (request, response) => {
+        return response.status(200).json(await userController.getRanking(10));
     });
 }
