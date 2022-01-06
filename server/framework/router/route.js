@@ -1,9 +1,12 @@
+const RequestHandler = require("./requestHandler");
 
-class Route {
-    run;
-
+class Route extends RequestHandler {
+    /**
+     * 
+     * @param {RequestHandler.requestCallback} run 
+     */
     constructor(run) {
-        this.run = run;
+        super(run);
     }
 }
 

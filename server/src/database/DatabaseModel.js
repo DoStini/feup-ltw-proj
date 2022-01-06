@@ -1,7 +1,8 @@
 class DatabaseModel {
-
+    /** @property {string} name */
     #name;
 
+    /** @param {string} name */
     constructor (name) {
         this.#name = name;
     }
@@ -10,8 +11,8 @@ class DatabaseModel {
 
     }
 
-    getName() {
-        return this.#name
+    get name() {
+        return this.#name;
     }
 
     /**

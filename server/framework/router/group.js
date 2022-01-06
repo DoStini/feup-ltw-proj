@@ -3,13 +3,15 @@ const RouterComponent = require('./routerComponent.js')
 /**
  * @class
  * @augments RouterComponent
+ * 
  */
 class RouterGroup extends RouterComponent {
-    /** @property {Array.<Router>} */
+    /** @type {Array.<RouterComponent>} */
     #routerComponents = [];
     /** @property {string} prefix */
     #prefix;
 
+    /** @param {string} prefix */
     constructor(prefix) {
         super();
         this.#prefix = prefix ?? '';
@@ -24,7 +26,6 @@ class RouterGroup extends RouterComponent {
         this.#routerComponents.push(router);
     }
 
-    /** @inheritdoc */
     find(path, method) {
         if(!path.startsWith(this.#prefix)) {
             return null;

@@ -9,8 +9,6 @@ module.exports = async () => {
     const database = new Database();
 
     const auth = new JsonModel("user");
-    await auth.setup();
-
     database.addModel(auth);
 
     return database;

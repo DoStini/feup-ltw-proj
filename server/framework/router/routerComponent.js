@@ -1,3 +1,5 @@
+const RequestHandler = require("./requestHandler");
+
 class RouterComponent {
     /**
      * Retrives the callback associated to a request
@@ -5,13 +7,10 @@ class RouterComponent {
      * @param {string} path
      * @param {string} method
      * 
+     * @returns {RequestHandler.requestCallback}
      */
     find(path, method) {
     };
-
-    middleware() {
-
-    }
 }
 
 module.exports = RouterComponent;
