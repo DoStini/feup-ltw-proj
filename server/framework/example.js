@@ -3,9 +3,40 @@ const Router = require("./router/router");
 const RouterGroup = require("./router/group");
 
 const routerGroup = new RouterGroup("/test");
+routerGroup.setMiddleware((req,res, next) => {
+    if(true) {
+        return next(req,res);
+    } else {
+        return res.status(400).json({
+            res: `Error group`
+        })
+    }
+})
 const subRouter = new RouterGroup("/example");
 
 const router = new Router();
+
+router.setMiddleware(
+    (req,res,next) => {
+        if(true) {
+            return next(req, res);
+        } else {
+            console.log("error")
+            return res.status(400).json({
+                res: `Error global 1`
+            })
+        }
+    }, (req, res, next) => {
+        if(true) {
+            return next(req, res);
+        } else {
+            console.log("error")
+            return res.status(400).json({
+                res: `Error global 2`
+            })
+        }
+    }
+)
 
 router.get("/thing",
     (req, res, next) => {

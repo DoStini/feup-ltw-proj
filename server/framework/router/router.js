@@ -16,6 +16,21 @@ class Router extends RouterComponent {
     }
 
     /**
+     * 
+     * @param  {Array.<Middleware.MiddlewareCallback>} callbacks 
+     */
+    setMiddleware(...callbacks) {
+        this.middlewares = callbacks.concat(this.middlewares);
+
+        let callbackCopy = callbacks.splice();
+        for(let [key, route] of this.#routes.entries()) {
+            callbackCopy.push(route.run);
+            this.#routes.set(key, this.#setupMiddleware(callbackCopy));
+            callbackCopy.pop();
+        }
+    }
+
+    /**
      * Creates middleware decorators for the callbacks given
      * 
      * @param {Array.<Middleware.MiddlewareCallback>} callbacks 
@@ -23,11 +38,12 @@ class Router extends RouterComponent {
      */
     #setupMiddleware(callbacks) {
         /** @type {RequestHandler} */
-        let route = new Route(callbacks[callbacks.length - 1]);
+        let totalCallbacks = this.middlewares.concat(callbacks);
+        let route = new Route(totalCallbacks[totalCallbacks.length - 1]);
 
-        let next = route.run;
-        for (let i = callbacks.length - 2; i >= 0; i--) {
-            const handler = callbacks[i];
+        let next = totalCallbacks[totalCallbacks.length - 1];
+        for (let i = totalCallbacks.length - 2; i >= 0; i--) {
+            const handler = totalCallbacks[i];
 
             route = new Middleware(next, handler);
             next = route.run;

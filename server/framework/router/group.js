@@ -1,3 +1,4 @@
+const Middleware = require('../middleware/middleware.js');
 const RouterComponent = require('./routerComponent.js')
 
 /**
@@ -22,7 +23,9 @@ class RouterGroup extends RouterComponent {
      * 
      * @param {RouterComponent} router
      */
-    addRouter (router) {
+    addRouter(router) {
+        router.setMiddleware(...this.middlewares);
+
         this.#routerComponents.push(router);
     }
 
@@ -43,6 +46,17 @@ class RouterGroup extends RouterComponent {
         }
     
         return handler;
+    }
+
+    /**
+     * @type {Array.<Middleware.MiddlewareCallback>}
+     */
+    setMiddleware(...callbacks) {
+        this.middlewares = callbacks.concat(this.middlewares);
+
+        this.#routerComponents.forEach((routerComponent) => {
+            routerComponent.setMiddleware(...callbacks);
+        })
     }
 }
 
