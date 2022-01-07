@@ -19,7 +19,6 @@ class GameController {
     constructor(model, userController) {
         this.#model = model;
         this.#userController = userController;
-        
     }
 
     /**
@@ -100,7 +99,14 @@ class GameController {
         if(result.status === GAME_END) {
             await this.#model.delete("hash", hash);
 
-
+            if(result.winner === null) {
+                this.#userController.addGame(game.player1.name);
+                this.#userController.addGame(game.player2.name)
+            } else {
+                const loserName = game.player1.name === result.winner.name ? game.player2.name : game.player1.name;
+                this.#userController.addWin(result.winner);
+                this.#userController.addGame(loserName);
+            }
         } else {
             await this.#model.update("hash", hash, obj);
         }
