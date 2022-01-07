@@ -1,5 +1,5 @@
 class GameState {
-    /** @property {Board} board */
+    /** @type {Board} board */
     board;
     /** @property {Game} game */
     game;
@@ -42,13 +42,13 @@ class GameState {
         destHoles[hole] = [];
 
         for (let i = 0; i < seeds; i++) {
-            if (lastHole === this.player.id * this.board.nHoles + this.board.nHoles - 1) {
+            if (lastHole === this.board.getLastHole(this.player.id)) {
                 this.board.moveToStorage(hole, this.player.id);
 
-                lastHole = this.board.nHoles * 2 + this.player.id;
+                lastHole = this.board.getStorageID(this.player.id);
                 destHoles[hole].push(lastHole);
             } else {
-                curHole = (curHole + 1) % (this.board.nHoles * 2);
+                curHole = this.board.getNextHole(curHole);
                 this.board.moveToHole(hole, curHole);
 
                 destHoles[hole].push(curHole);
@@ -68,8 +68,8 @@ class GameState {
         let holeToHoles = {};
 
         if (this.board.holeBelongsToPlayer(lastHole, this.player.id) && this.board.getHoleSeedAmount(lastHole) === 1) {
-            let storage = this.board.nHoles * 2 + this.player.id;
-            let oppositeHole = this.board.nHoles * 2 - 1 - lastHole;
+            let storage = this.board.getStorageID(this.player.id);
+            let oppositeHole = this.board.getOppositeHole(lastHole);
             let oppositeSeeds = this.board.getHoleSeedAmount(oppositeHole);
 
             for (let i = 0; i < oppositeSeeds; i++) {
@@ -91,7 +91,7 @@ class GameState {
      * @returns {boolean}
      */
     checkChain(lastHole) {
-        return lastHole == this.board.nHoles * 2 + this.player.id;
+        return lastHole === this.board.getStorageID(this.player.id);
     }
 
     /**
@@ -289,7 +289,7 @@ class MPGameState extends GameState {
         if (data.board) {
             let parsed = parseBoard(data);
 
-            let hole = data.pit + this.player.id * this.board.nHoles;
+            let hole = this.board.getRealHole(data.pit, this.player.id);
             await this.play(hole);
 
             if (!this.board.compareBoards(parsed.board)) {
