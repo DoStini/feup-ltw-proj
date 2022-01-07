@@ -1,0 +1,882 @@
+html {
+  max-height: fit-content;
+  min-height: 100vh;
+  height: 100vh;
+}
+
+body {
+  background-color: #f3f6fa;
+  max-height: fit-content;
+  width: 100%;
+  min-height: 100vh;
+  max-width: 100%;
+  margin: 0;
+  font-family: "Mulish", "sans-serif";
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: 70px 1fr 50px;
+  grid-template-areas:
+    "header"
+    "body"
+    "footer";
+  color: #373f41;
+}
+
+h1 {
+  color: #373f41;
+}
+
+a.selected {
+  color: #3c64b1;
+  font-weight: 600;
+}
+
+a {
+  color: #373f41;
+}
+
+header.main-header {
+  display: grid;
+  grid-template-rows: 1fr;
+  grid-template-columns: 1fr 20em 1fr;
+  grid-template-areas: "title nav log";
+  align-items: center;
+  margin-left: 50px;
+  margin-right: 50px;
+  grid-area: header;
+  min-width: 0;
+}
+
+header.main-header > nav {
+  width: 20em;
+  display: flex;
+  flex-direction: row;
+  justify-self: center;
+  justify-content: space-between;
+  grid-area: nav;
+}
+
+header.main-header > div {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  grid-area: log;
+  min-width: 0;
+}
+
+header.main-header > h1 {
+  grid-area: title;
+  cursor: pointer;
+}
+
+header.main-header > h1:hover {
+  color: #3c64b1;
+}
+
+button {
+  border-radius: 0;
+  background-color: #3c64b1;
+  color: white;
+  font-size: 18px;
+  font-weight: 400;
+  padding: 0.5em;
+  border-style: none;
+  padding-left: 1em;
+  padding-right: 1em;
+}
+
+button:hover {
+  background-color: #373f41;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.no-hover-btn:hover {
+  background-color: #3c64b1;
+  font-weight: 400;
+  cursor: default;
+}
+
+a:hover {
+  color: #3c64b1;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+section#init-menu {
+  min-height: 80%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+section#init-menu > h2 {
+  text-align: center;
+  font-size: 38px;
+}
+
+section#init-menu button {
+  width: 20em;
+  margin-bottom: 1em;
+}
+
+footer {
+  grid-area: footer;
+  background-color: #373f41;
+  color: white;
+  font-size: 12px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+/* Authentication Section */
+
+section#auth {
+  display: flex;
+  flex-direction: column;
+}
+
+section#auth input {
+  font-size: 18px;
+}
+
+section#auth > #auth-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(50%, 1fr));
+  grid-auto-flow: column;
+  width: 100vw;
+  flex: 1;
+  padding: 3em 0;
+}
+
+section#auth > #auth-form > section {
+  padding: 0 7em;
+  flex: 1;
+}
+
+section#auth > #auth-form > section > * {
+  max-width: 30em;
+  margin: 0 auto;
+}
+
+section#auth > #auth-form > section#login {
+  border-right: 1px solid black;
+}
+
+/* Login Grid Section */
+
+section#auth > #auth-form > section > #login-form {
+  display: grid;
+  grid-template-rows: 0.5fr 1fr 0.1fr 0.5fr 1fr 0.1fr 1fr;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas:
+    "label1"
+    "input1"
+    "."
+    "label2"
+    "input2"
+    "."
+    "submit";
+  row-gap: 0.4em;
+}
+
+form#login-form > label[for="username-login"] {
+  grid-area: label1;
+}
+
+form#login-form > input#username-login {
+  grid-area: input1;
+}
+
+section#login > #login-form > label[for="password-login"] {
+  grid-area: label2;
+}
+
+form#login-form > input#password-login {
+  grid-area: input2;
+}
+
+form#login-form > button {
+  grid-area: submit;
+  justify-self: right;
+}
+
+@media (max-width: 950px) {
+  section#auth > #auth-form > section {
+    margin: 0 auto;
+    padding: 0;
+  }
+  section#auth > #auth-form {
+    display: flex;
+    flex-direction: column;
+    width: 100vw;
+    flex-wrap: wrap;
+    justify-content: start;
+    flex: 1;
+  }
+  section#auth > #auth-form > section#login {
+    border-right: none;
+  }
+
+  section#auth > #auth-form > section {
+    min-width: 20em;
+  }
+}
+
+/* Register Grid Section */
+
+section#auth > #auth-form > section > #register-form {
+  display: grid;
+  grid-template-rows: 0.5fr 1fr 0.1fr 0.5fr 1fr 0.1fr 0.5fr 1fr 0.1fr 1fr;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas:
+    "label1"
+    "input1"
+    "."
+    "label2"
+    "input2"
+    "."
+    "label3"
+    "input3"
+    "."
+    "submit";
+  row-gap: 0.4em;
+}
+
+form#register-form > label[for="username-register"] {
+  grid-area: label1;
+}
+
+form#register-form > input#username-register {
+  grid-area: input1;
+}
+
+section#register > #register-form > label[for="password-register"] {
+  grid-area: label2;
+}
+
+form#register-form > input#password-register {
+  grid-area: input2;
+}
+
+section#register > #register-form > label[for="confirm-password"] {
+  grid-area: label3;
+}
+
+form#register-form > input#confirm-password {
+  grid-area: input3;
+}
+
+form#register-form > button {
+  grid-area: submit;
+  justify-self: right;
+}
+
+section.config {
+  padding: 6em;
+}
+
+section.config fieldset {
+  border: none;
+  display: block;
+  position: relative;
+  margin: 0;
+  padding: 0;
+}
+
+section.config label,
+section.config input,
+section.config select {
+  display: block;
+  position: relative;
+}
+
+section.config label {
+  font-size: 15px;
+}
+
+section.config h2,
+section.config legend {
+  font-size: 32px;
+  font-weight: 600;
+  display: block;
+  position: relative;
+  padding: 0;
+}
+
+input,
+select {
+  background-color: #f4f5f4;
+  border-color: #373f41;
+  border-radius: 0;
+  border-width: 1px;
+}
+
+section.config input,
+select {
+  border-style: dashed;
+}
+
+section.config div.config-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 0.5fr 1fr 1fr 3fr 1fr;
+  grid-template-areas:
+    "label1 label2 label3"
+    "input1 input2 input3"
+    ". . ."
+    "fields fields fields"
+    ". . submit";
+  row-gap: 0.4em;
+  column-gap: 2em;
+}
+
+section.config div.config-layout > button {
+  grid-area: submit;
+  justify-self: right;
+}
+
+section.config div.config-layout > legend {
+  grid-area: header;
+}
+
+section.config label[for^="holes"] {
+  grid-area: label1;
+}
+
+section.config input[id^="holes"] {
+  grid-area: input1;
+}
+
+section.config label[for^="seeds"] {
+  grid-area: label2;
+}
+
+section.config input[id^="seeds"] {
+  grid-area: input2;
+}
+
+section.config label[for="ai_difficulty"] {
+  grid-area: label3;
+}
+
+section.config select#ai_difficulty {
+  grid-area: input3;
+}
+
+section#config-multiplayer-join label {
+  grid-area: label1;
+}
+
+section#config-multiplayer-join input {
+  grid-area: input1;
+}
+
+section.config div.config-layout > fieldset {
+  grid-area: fields;
+}
+
+section.config div.order-layout {
+  display: grid;
+  grid-template-columns: 100px 140px;
+  grid-template-rows: 0.5fr 0.8fr;
+  grid-template-areas:
+    "label1 label2"
+    "input1 input2";
+  row-gap: 0.4em;
+  justify-items: start;
+  column-gap: 2em;
+  margin-top: 1em;
+}
+
+section.config div.order-layout > legend {
+  grid-area: header;
+}
+
+section.config label[for="ai-order-human"] {
+  grid-area: label1;
+}
+
+section.config input#ai-order-human {
+  grid-area: input1;
+}
+
+section.config label[for="ai-order-ai"] {
+  grid-area: label2;
+}
+
+section.config input#ai-order-ai {
+  grid-area: input2;
+}
+
+.game {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  /* padding-bottom: 5em; */
+  height: 90%;
+  min-width: 0;
+  min-height: 0;
+}
+
+.game-area {
+  width: 100%;
+}
+
+/* Game Status Section*/
+
+section#game-status {
+  z-index: 100;
+  position: fixed;
+  right: 0;
+  bottom: 10%;
+  top: 10%;
+  display: flex;
+  flex-direction: row;
+  overflow: visible;
+  transition: 0.5s right;
+}
+
+section#game-status > header {
+  background-color: #373f41;
+  padding: 2em 1.5em;
+  display: grid;
+  justify-items: center;
+  grid-template-rows: 3fr auto 3fr;
+  grid-template-areas:
+    "."
+    "."
+    ".";
+  border-radius: 2.5em 0 0 2.5em;
+  box-shadow: -0.2em 0.2em 0.2em 0 rgba(0, 0, 0, 0.2);
+}
+
+section#game-status > header > h2 {
+  color: white;
+  text-align: center;
+  vertical-align: middle;
+  writing-mode: vertical-lr;
+  align-self: center;
+  text-orientation: upright;
+  margin: 0;
+  border-radius: 2.5em 0 0 2.5em;
+}
+
+section#game-status > header > #game-status-button {
+  transition: transform 0.5s;
+}
+
+section#game-status > header > #game-status-button:hover > path {
+  stroke-width: 3;
+  cursor: pointer;
+}
+
+section#game-status > header > #game-status-button:hover {
+  cursor: pointer;
+}
+
+section#game-status > #game-status-info {
+  font-size: 1.1em;
+  width: 100%;
+  background-color: white;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  padding: 0.5em 1em;
+  padding-bottom: 0;
+  display: flex;
+  flex-direction: column;
+  box-shadow: -0.2em 0.2em 0.2em 0 rgba(0, 0, 0, 0.2);
+}
+
+section#game-status > #game-status-info > * {
+  text-align: center;
+  margin-bottom: 2em;
+}
+
+section#game-status > #game-status-info td,
+section#game-status > #game-status-info tr {
+  width: 50%;
+  padding: 1em;
+}
+
+section#game-status > #game-status-info td:first-child {
+  font-weight: bold;
+}
+
+section#game-status > #game-status-info > table tr:first-child > td {
+  background-color: orangered;
+  color: white;
+}
+
+.login-box {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
+.rules {
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  visibility: hidden;
+}
+
+i.button {
+  color: white;
+}
+
+.rules-content {
+  position: relative;
+  overflow-y: scroll;
+  bottom: 0;
+  text-align: justify;
+  text-justify: inter-word;
+  padding: 1.8em;
+  padding-right: 3.5em;
+  font-size: 16px;
+  padding-top: 0;
+  line-height: 1.8;
+}
+
+.rules-content h3 {
+  font-size: 18px;
+}
+
+.leaderboard {
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.leaderboard-content {
+  position: relative;
+  display: grid;
+  bottom: 0;
+  padding: 2em 0.5em 1em;
+  height: 100%;
+  grid-template-columns: repeat(2, 1fr);
+  overflow-y: scroll;
+}
+
+.leaderboard-content .leaderboard-table {
+  text-align: center;
+  left: 0;
+  right: 0;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.leaderboard-table th,
+.leaderboard-table td {
+  width: 15%;
+  border: 1px solid #ddd;
+  padding: 1em 0;
+}
+
+.leaderboard-table th,
+.leaderboard-table tr:nth-child(2n) {
+  background-color: #f8f8f8;
+}
+
+.leaderboard-table .name-row,
+.leaderboard-table .name-row {
+  width: 55%;
+}
+
+.local-leaderboard {
+  border-right: 1px solid;
+  padding: 0 1em;
+}
+
+.server-leaderboard {
+  padding: 0 1em;
+}
+
+.end-game {
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  visibility: collapse;
+}
+
+.end-game-content {
+  overflow-y: auto;
+  position: relative;
+  bottom: 0;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  padding: 1.8em;
+  padding-right: 3.5em;
+  font-size: 16px;
+  padding-top: 0;
+  line-height: 1.8;
+}
+
+.end-game-content > h1 {
+  font-size: 2.5em;
+}
+
+.win-icon {
+  font-size: 10em;
+  visibility: collapse;
+  color: green;
+}
+
+.lose-icon {
+  font-size: 10em;
+  visibility: collapse;
+  color: red;
+}
+
+.tie-icon {
+  font-size: 10em;
+  visibility: collapse;
+  color: yellow;
+}
+
+.popup-window {
+  position: absolute;
+  top: 15%;
+  bottom: 15%;
+  left: 10%;
+  right: 10%;
+  border-radius: 1em;
+  z-index: 1000;
+  overflow: hidden;
+  box-shadow: -0.1em 0.2em 0.1em rgba(0, 0, 0, 0.2),
+    0.1em 0.2em 0.1em rgba(0, 0, 0, 0.2);
+  transition: opacity 0.5s, visibility 0.6s;
+}
+
+.popup-window > header > h2 {
+  margin-top: 0;
+  font-size: 20px;
+  color: white;
+}
+
+.popup-window > header {
+  display: flex;
+  justify-content: space-between;
+  background-color: #373f41;
+  padding: 1em 1em 0;
+  align-items: baseline;
+}
+
+.popup-window > header > .popup-window-close {
+  color: white;
+  font-size: 1.5em;
+  height: 0; /* Height was doubled for some reason */
+}
+
+.popup-window > header > .popup-window-close:hover {
+  font-weight: 600;
+}
+
+@media (max-width: 900px) {
+  .leaderboard-content {
+    padding: 2em 0.5em 1em;
+    height: 100%;
+    grid-template-rows: repeat(2, 1fr);
+    grid-template-columns: 1fr;
+  }
+
+  .local-leaderboard {
+    border-right: none;
+  }
+
+  .popup-window {
+    left: 6%;
+    right: 6%;
+  }
+
+  .rules ul {
+    padding-left: 1em;
+  }
+}
+
+@media (max-width: 800px), (max-height: 475px) {
+  section#game-status > header {
+    padding: 0.5em;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    height: 4em;
+    border-radius: 1.5em 0 0 1.5em;
+  }
+
+  section#game-status > header > h2 {
+    display: none;
+  }
+
+  section#game-status > header > svg {
+    width: 2em;
+  }
+
+  section#game-status > #game-status-info {
+    border-radius: 0 0 0 1.5em;
+  }
+}
+
+@media (max-width: 800px) {
+  section.config div.config-layout {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: 0.5fr 1fr 0.5fr 1fr 1fr 3fr 1fr;
+    grid-template-areas:
+      "label1 label2"
+      "input1 input2"
+      "label3 label3"
+      "input3 input3"
+      ". . "
+      "fields fields"
+      ". submit";
+    row-gap: 0.4em;
+    column-gap: 2em;
+  }
+
+  section.config {
+    padding: 2em;
+  }
+
+  body {
+    grid-template-rows: auto 1fr 50px;
+  }
+
+  header.main-header {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: 1fr 2em;
+    grid-template-areas:
+      "title log"
+      "nav nav";
+    align-items: center;
+    margin-left: 50px;
+    margin-right: 50px;
+    grid-area: header;
+  }
+
+  header.main-header > nav {
+    max-height: 2em;
+  }
+
+  button {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 450px) {
+  section#init-menu > h2 {
+    font-size: 32px;
+  }
+
+  section#init-menu button {
+    width: 16em;
+    font-size: 16px;
+    padding: 1em 0;
+  }
+}
+
+@media (max-width: 350px) {
+  section.config div.config-layout {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: 0.5fr 1fr 0.5fr 1fr 0.5fr 1fr 1fr 3fr 1fr;
+    grid-template-areas:
+      "label1 label1"
+      "input1 input1"
+      "label2 label2"
+      "input2 input2"
+      "label3 label3"
+      "input3 input3"
+      ". . "
+      "fields fields"
+      "submit submit";
+    row-gap: 0.4em;
+    column-gap: 2em;
+  }
+
+  section.config {
+    padding: 1em;
+  }
+}
+
+.in-body {
+  grid-area: body;
+  transition: visibility 0s, opacity 0.3s linear;
+  opacity: 1;
+}
+
+.show {
+  animation: fade-in 0.3s;
+}
+
+.hidden {
+  visibility: hidden;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.auth-btn {
+  visibility: collapse;
+}
+
+section#waiting-area {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.snackbar {
+  transition: all 1s;
+  position: fixed;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  background-color: #2a2b2b;
+  border-radius: 0.5em;
+  padding: 0 2em;
+  width: 50vw;
+  bottom: 5vh;
+  right: 0;
+  left: 0;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.snackbar i {
+  font-size: 2em;
+}
+
+.snackbar i[success] {
+  color: green;
+}
+
+.snackbar i[error] {
+  color: red;
+}
+
+.snackbar > p {
+  font-size: 1.3em;
+  margin-left: 2em;
+  color: white;
+}

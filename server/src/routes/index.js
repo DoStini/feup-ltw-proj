@@ -7,6 +7,7 @@ const ranking = require("./ranking");
 const game = require("./game");
 const DatabaseInterface = require("../database/DatabaseInterface");
 const GameController = require("../services/gameController");
+const fs = require('fs');
 
 /**
  * @param {Framework} app 
@@ -19,10 +20,21 @@ module.exports = (app, db) => {
 
     // gameController.setupMultiplayerGame(2,2,"nuno","nuno","nuno2","abc");
 
-    sanity(router);
+    // sanity(router);
     auth(router, userController);
     ranking(router, userController);
     game(router, userController, gameController);
+    router.get("/", (req, res) => {
+        fs.readFile('public/index.html', null, function (error, data) {
+            if (error) {
+                res.status(404).text("404");
+            } else {
+                res.setHeader('Content-Type', 'text/html');
+                res.end(data);
+            }
+        });
+
+    })
 
     app.addRouter(router);
 }

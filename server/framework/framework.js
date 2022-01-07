@@ -4,10 +4,13 @@ const FrameworkResponse = require('./response');
 const RouterGroup = require('./router/group');
 const RequestHandler = require('./middleware/requestHandler');
 const RouterComponent = require('./router/routerComponent');
+const fs = require('fs');
 
 class Framework {
     /** @type {RequestHandler.RequestCallback} */
-    #notFoundHandler = (req, res) => res.status(404).text(`Cannot ${req.method} ${req.url}\n`);
+    #notFoundHandler = (req, res) => {
+        res.status(404).text(`Cannot ${req.method} ${req.url}\n`)
+    };
     /** @type {RouterGroup} */
     #router = new RouterGroup();
 
@@ -28,6 +31,10 @@ class Framework {
      */
     addRouter(router) {
         this.#router.addRouter(router);    
+    }
+
+    setMiddleware(...callbacks) {
+        this.#router.setMiddleware(...callbacks);
     }
 
     /**
