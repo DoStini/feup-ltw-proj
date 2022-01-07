@@ -26,14 +26,13 @@ module.exports = async (router, userController, gameController) => {
             let gameHash;
 
             if(foundGame === null) {
-                console.log(req.body.nick + Date.now() + req.body.size + req.body.initial);
                 gameHash = hash(req.body.nick + Date.now() + req.body.size + req.body.initial)
                 await gameController.setupMultiplayerGame(req.body.size, req.body.initial, req.body.nick, req.body.nick, gameHash);
             } else {
                 gameHash = foundGame.gameHash;
                 await gameController.addPlayer2(foundGame, req.body.nick);
             }
-
+            
             // setTimeout(() => {
             //     gameController.
             // })

@@ -41,6 +41,20 @@ const userInGame = (location, gameController) => async (req, res, next) => {
     next(req, res);
 }
 
+/**
+ * 
+ * @param {string} location 
+ * @param {GameController} gameController 
+ * @returns {Middleware.MiddlewareCallback}
+ */
+ const userNotInGame = (location, gameController) => async (req, res, next) => {
+    if (await gameController.playerInGame(req[location].nick)) {
+        return requestError(res, 400, "User already in game");
+    }
+
+    next(req, res);
+}
+
 class ValidationError extends Error {
     constructor(message, status) {
         super(message);
@@ -77,20 +91,6 @@ const joinAttributes = (req, res, next) => {
     } catch (e) {
         requestError(res, e.status, e.message);
     }
-}
-
-/**
- * 
- * @param {string} location 
- * @param {GameController} gameController 
- * @returns {Middleware.MiddlewareCallback}
- */
- const userNotInGame = (location, gameController) => async (req, res, next) => {
-    if (await gameController.playerInGame(req[location].nick)) {
-        return requestError(res, 400, "User already in game");
-    }
-
-    next(req, res);
 }
 
 module.exports = {
