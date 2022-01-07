@@ -65,10 +65,18 @@ class GameController {
     }
 
     async playerInGame(nick) {
-        const data = await this.#model.findByKey("player1", nick);
-        const data2 = await this.#model.findByKey("player2", nick);
+        const [data] = await this.#model.findByKey("player1", nick);
+        const [data2] = await this.#model.findByKey("player2", nick);
 
-        return data.length > 0 || data2.length > 0;
+        if(data != null) {
+            console.log(data.hash);
+            return data.hash;
+        } else if (data2 != null) {
+            console.log(data.hash);
+            return data2.hash;
+        } else {
+            return null;
+        }
     }
 
     /**

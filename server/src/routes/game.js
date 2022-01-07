@@ -3,7 +3,7 @@ const UserController = require('../services/user');
 const bodyParser = require("../../framework/middleware/bodyParser");
 const { userRequired, passRequired, auth, validCredentials } = require("../middleware/auth");
 const { requestError, checkHash, hash } = require("../utils");
-const { join, leave, notify, update, userInGame, userNotInGame, joinAttributes } = require("../middleware/game");
+const { join, leave, notify, update, userInGame, userNotInGame, joinAttributes, userInGameHash } = require("../middleware/game");
 const queryParser = require("../../framework/middleware/queryParser");
 const GameController = require("../services/gameController");
 
@@ -47,7 +47,7 @@ module.exports = async (router, userController, gameController) => {
         bodyParser,
         leave,
         validCredentials(userController),
-        userInGame("body", gameController),
+        userInGameHash("body", gameController),
         async (req, res) => {
             return res.json({
                 "message": "Success",
