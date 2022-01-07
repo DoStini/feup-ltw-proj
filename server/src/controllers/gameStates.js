@@ -1,4 +1,6 @@
+const { WRONG_TURN, INVALID_HOLE, GAME_END, OK } = require("../constants");
 const Board = require("../models/board");
+const GameResponse = require("../models/gameResponse");
 const Player = require("../models/player");
 const Game = require("./mancala");
 
@@ -157,19 +159,28 @@ class PlayerState extends GameState {
     }
 
     clickHole(playerName, hole) {
-        if (this.player.name !== playerName) return;
-        if (this.board.getHoleSeedAmount(hole) === 0) return;
-        if (!this.board.holeBelongsToPlayer(hole, this.player.id)) return;
-
+        if (this.player.name !== playerName) {
+            return new GameResponse(WRONG_TURN);
+        }
+        if (this.board.getHoleSeedAmount(hole) === 0) {
+            return new GameResponse(INVALID_HOLE);
+        }
+        if (!this.board.holeBelongsToPlayer(hole, this.player.id)) {
+            return new GameResponse(INVALID_HOLE);
+        }
 
         const newState = this.play(hole);
 
         if (this.checkEnd()) {
-            return this.game.endGame();
+            const winner = this.game.endGame();
+            const response = new GameResponse(GAME_END);
+            response.winner = winner;
+
+            return response;
         } else {
             this.game.changePlayerState(newState);
 
-            return 0;
+            return new GameResponse(OK);
         }
     }
 }

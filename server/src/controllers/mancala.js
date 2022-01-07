@@ -1,4 +1,6 @@
+const { WRONG_TURN } = require("../constants");
 const Board = require("../models/board");
+const GameResponse = require("../models/gameResponse");
 const Player = require("../models/player");
 const { GameState, EndState, PlayerState } = require("./gameStates");
 
@@ -115,12 +117,15 @@ class Game {
      * Handles the click event on a hole.
      * 
      * @param {string} playerName The name of the player who clicked the hole.
-     * @param {number} hole The clicked hole.
+     * @param {GameResponse} hole The clicked hole.
      */
     clickHole(playerName, hole) {
-        const player = playerName === this.#player1.name ? this.#player1 : this.#player2;
-        let realHole = this.#board.getRealHole(hole, player.id);
+        const player = playerName === this.#player1.name ? this.#player1 : playerName === this.#player2.name ? this.#player2 : null;
+        if(player == null) {
+            return new GameResponse(WRONG_TURN);
+        }
 
+        let realHole = this.#board.getRealHole(hole, player.id);
         return this.#state.clickHole(playerName, realHole);
     }
 }
