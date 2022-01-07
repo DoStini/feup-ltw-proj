@@ -1,34 +1,27 @@
 const Middleware = require("../../framework/middleware/middleware");
-const { requestError } = require("../utils")
+const { wrongCredentials, notExists } = require("../errors/auth");
+const { fieldsValidator, checkHash } = require("../utils")
 
-/**
- * Ensures the nick field in a JSON POST body exists
- * 
- * @type {Middleware.MiddlewareCallback}
- */
-const userRequired = (req, res, next) => {
-    if (!req?.body?.nick) {
-        return requestError(res, 400, "nick field is required");
+const auth = fieldsValidator([
+    "nick", 
+    "pass",
+], "body");
+
+const validCredentials = (userController) => async (req, res, next) => {
+    const user = await userController.find(req.body.nick);
+
+    if (!user) {
+        return notExists(res);
+    }
+
+    if (!checkHash(req.body.pass, user.pass)) {
+        return wrongCredentials(res);
     }
 
     next(req, res);
 }
-
-/**
- * Ensures the pass field in a JSON POST body exists
- * 
- * @type {Middleware.MiddlewareCallback} 
- */
-const passRequired = (req, res, next) => {
-    if (!req?.body?.pass) {
-        return requestError(res, 400, "pass field is required");
-    }
-    
-    next(req, res);
-}
-
 
 module.exports = {
-    userRequired,
-    passRequired,
+    auth,
+    validCredentials,
 }
