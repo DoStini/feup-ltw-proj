@@ -10,10 +10,14 @@ class Board {
     /** @property {Array.<number>} seeds */
     #seeds;
 
-    constructor(nHoles, nSeeds) {
+    constructor(nHoles, nSeeds, boardJSON) {
         this.#nHoles = nHoles;
         this.#nSeeds = nSeeds;
-        this.generateSeeds();
+        if(boardJSON == null) {
+            this.generateSeeds();
+        } else {
+            this.#JSONtoBoard(boardJSON);
+        }
     }
 
     get nHoles() {
@@ -88,6 +92,22 @@ class Board {
         }
 
         return avail;
+    }
+
+    toJSON() {
+        return JSON.stringify({
+            seeds: this.#seeds,
+            storage: this.#storage,
+            nHoles: this.#nHoles,
+            nSeeds: this.#nSeeds
+        })
+    }
+
+    #JSONtoBoard(json) {
+        const obj = JSON.parse(json);
+
+        this.#storage = obj.storage;
+        this.#seeds = obj.seeds;
     }
 }
 

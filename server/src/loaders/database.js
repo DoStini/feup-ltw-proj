@@ -15,6 +15,15 @@ module.exports = async () => {
     ], database);
     database.addModel(auth);
 
+    const game = new SqlModel("game", [
+        {name: "hash", type: "TEXT", constraint: "PRIMARY KEY"},
+        {name: "player1", type: "TEXT", constraint : ""},
+        {name: "player2", type: "TEXT", constraint: ""},
+        {name: "board", type: "TEXT", constraint: ""},
+        {name: "turn", type: "TEXT", constraint: ""},
+    ], database);
+    database.addModel(game);
+
     database.setup();
 
     return database;

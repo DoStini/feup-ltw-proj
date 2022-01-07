@@ -27,11 +27,11 @@ class DatabaseModel {
         
     }
 
-    async update(key, val) {
+    async update(key, val, obj) {
 
     }
 
-    async delete(key, val, obj) {
+    async delete(key, val) {
 
     }
 
