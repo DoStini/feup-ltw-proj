@@ -15,7 +15,7 @@ const GameController = require("../services/gameController");
 module.exports = (app, db) => {
     const router = new Router();
     const userController = new UserController(db.getModel("user"));
-    const gameController = new GameController(db.getModel("game"));
+    const gameController = new GameController(db.getModel("game"), userController);
 
     // gameController.setupMultiplayerGame(2,2,"nuno","nuno","nuno2","abc");
 

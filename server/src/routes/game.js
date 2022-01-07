@@ -27,7 +27,7 @@ module.exports = async (router, userController, gameController) => {
 
             if(foundGame === null) {
                 gameHash = hash(req.body.nick + Date.now() + req.body.size + req.body.initial)
-                await gameController.setupMultiplayerGame(req.body.size, req.body.initial, req.body.nick, req.body.nick, gameHash);
+                await gameController.setupMultiplayerGame(req.body.size, req.body.initial, req.body.nick, req.body.nick, null, gameHash);
             } else {
                 gameHash = foundGame.gameHash;
                 await gameController.addPlayer2(foundGame, req.body.nick);
@@ -49,9 +49,9 @@ module.exports = async (router, userController, gameController) => {
         validCredentials(userController),
         userInGameHash("body", gameController),
         async (req, res) => {
-            return res.json({
-                "message": "Success",
-            });
+            await gameController.leaveGame(req.body.nick, req.body.game);
+
+            return res.json({});
         }
     );
 
