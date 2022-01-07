@@ -33,6 +33,14 @@ class FrameworkResponse extends http.ServerResponse {
         this.setHeader('Content-Type', 'text/plain; charset=utf-8');
         this.end(body);
     }
+
+    /**
+     * 
+     * @param {string} text 
+     */
+    setupServerSentEvent() {
+        this.setHeader('Content-Type', 'text/event-stream');
+    }
 }
 
 

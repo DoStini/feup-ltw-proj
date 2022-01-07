@@ -53,7 +53,8 @@ module.exports = async (router, userController) => {
         update,
         userInGame("query"),
         async (req, res) => {
-            console.log(req.query)
+            res.setupServerSentEvent();
+            const gameHandler = (data) => res.write(data);
             return res.json({
                 "message": "Succes",
             });
