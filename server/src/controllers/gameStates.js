@@ -131,6 +131,8 @@ class GameState {
      * 
      * @param {string} playerName
      * @param {number} hole 
+     * 
+     * @returns {GameResponse}
      */
     clickHole(playerName, hole) { }
 

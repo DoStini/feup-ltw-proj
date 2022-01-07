@@ -3,16 +3,23 @@ const Player = require("../models/player");
 const Game = require("../controllers/mancala");
 const { PlayerState } = require("../controllers/gameStates");
 const DatabaseModel = require("../database/DatabaseModel");
+const { GAME_END } = require("../constants");
+const GameResponse = require("../models/gameResponse");
+const UserController = require("./user");
 
 class GameController {
     /** @type {DatabaseModel}  */
     #model;
+    /** @type {UserController} */
+    #userController;
 
     /**
      * @param {DatabaseModel} model
      */
-    constructor(model) {
+    constructor(model, userController) {
         this.#model = model;
+        this.#userController = userController;
+        
     }
 
     /**
@@ -30,6 +37,23 @@ class GameController {
         }
     }
 
+    createGame(nHoles, nSeeds, turn, player1Name, player2Name, hash, boardJSON) {
+        const board = new Board(nHoles, nSeeds, boardJSON);
+
+        const player1 = new Player(0, player1Name);
+        const player2 = new Player(1, player2Name);
+
+        const game = new Game(board, player1, player2, hash);
+
+        if(turn === player1.name) {
+            game.changePlayerState(new PlayerState(game, player1, player2));
+        } else {
+            game.changePlayerState(new PlayerState(game, player2, player1));
+        }
+        
+        return game;
+    }
+
     /**
      * @param {{board: string, hash: string, player1: string, player2: string, turn: string}} json 
      * 
@@ -37,20 +61,8 @@ class GameController {
      */
     objectToGame(json) {
         const boardObj = JSON.parse(json.board);
-        const board = new Board(boardObj.nHoles, boardObj.nSeeds, json.board);
-
-        const player1 = new Player(0, json.player1);
-        const player2 = new Player(1, json.player2);
-
-        const game = new Game(board, player1, player2, json.hash);
-
-        if(json.turn === player1.name) {
-            game.changePlayerState(new PlayerState(game, player1, player2));
-        } else {
-            game.changePlayerState(new PlayerState(game, player2, player1));
-        }
         
-        return game;
+        return this.createGame(boardObj.nHoles, boardObj.nSeeds, json.turn, json.player1, json.player2, json.hash, json.board);
     }
 
     /**
@@ -64,18 +76,7 @@ class GameController {
      * @returns {Game}
      */
     async setupMultiplayerGame(nHoles, seedsPerHole, turn, player1Name, player2Name, hash) {
-        const board = new Board(nHoles, seedsPerHole);
-    
-        const player1 = new Player(0, player1Name);
-        const player2 = new Player(1, player2Name);
-    
-        let game = new Game(board, player1, player2, hash);
-    
-        if (turn === player1.name) {
-            game.changePlayerState(new PlayerState(game, player1, player2));
-        } else {
-            game.changePlayerState(new PlayerState(game, player2, player1));
-        }
+        let game = this.createGame(nHoles, seedsPerHole, turn, player1Name, player2Name, hash);
 
         let obj = this.#gameToObject(game);
         await this.#model.insert(hash, obj);
@@ -83,14 +84,28 @@ class GameController {
         return game;
     }
 
+    /**
+     * 
+     * @param {string} player 
+     * @param {string} hash 
+     * @param {number} hole 
+     * @returns 
+     */
     async clickHole(player, hash, hole) {
-        let game = this.objectToGame(await this.#model.findByKey("hash", hash)[0]);
+        let game = this.objectToGame((await this.#model.findByKey("hash", hash))[0]);
 
         let result = game.clickHole(player, hole);
         let obj = this.#gameToObject(game);
-        await this.#model.update("hash", hash, obj);
-        
-        return result;
+
+        if(result.status === GAME_END) {
+            await this.#model.delete("hash", hash);
+
+
+        } else {
+            await this.#model.update("hash", hash, obj);
+        }
+
+        return {result, game};
     }
 }
 

@@ -31,7 +31,7 @@ class DatabaseModel {
 
     }
 
-    async delete(key, val, obj) {
+    async delete(key, val) {
 
     }
 

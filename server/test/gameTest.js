@@ -168,6 +168,61 @@ const gameTests = [
         assert.deepStrictEqual(game2.player2.name, game.player2.name);
         assert.deepStrictEqual(game2.currentPlayer.name, game.currentPlayer.name);
         assert.deepStrictEqual(game2.gameHash, game.gameHash);
+    },
+
+    async function testDBGame1() {
+        const database = new SqlDatabase(":memory:");
+        const gameModel = new SqlModel("game", [
+            {name: "hash", type: "TEXT", constraint: "PRIMARY KEY"},
+            {name: "player1", type: "TEXT", constraint : ""},
+            {name: "player2", type: "TEXT", constraint: ""},
+            {name: "board", type: "TEXT", constraint: ""},
+            {name: "turn", type: "TEXT", constraint: ""},
+        ], database);
+        database.addModel(gameModel);
+
+        await database.setup();
+        let controller =  new GameController(gameModel);
+
+        let game = await controller.setupMultiplayerGame(2, 1, "mafalda", "nuno", "mafalda", "as31234");
+        await controller.clickHole("mafalda", "as31234", 1);
+        let [gameObj] = await gameModel.findByKey("hash", "as31234");
+        let game2 = controller.objectToGame(gameObj);
+
+        assert.deepStrictEqual(game2.board.storage, [0, 1]);
+        assert.deepStrictEqual(game2.board.seeds, [1, 1, 1, 0]);
+        assert.deepStrictEqual(game2.player1.name, "nuno");
+        assert.deepStrictEqual(game2.player2.name, "mafalda" );
+        assert.deepStrictEqual(game2.currentPlayer.name, "mafalda");
+        assert.deepStrictEqual(game2.gameHash, game.gameHash);
+    },
+
+    async function testDBGameEnd() {
+        const database = new SqlDatabase(":memory:");
+        const gameModel = new SqlModel("game", [
+            {name: "hash", type: "TEXT", constraint: "PRIMARY KEY"},
+            {name: "player1", type: "TEXT", constraint : ""},
+            {name: "player2", type: "TEXT", constraint: ""},
+            {name: "board", type: "TEXT", constraint: ""},
+            {name: "turn", type: "TEXT", constraint: ""},
+        ], database);
+        database.addModel(gameModel);
+
+        await database.setup();
+        let controller =  new GameController(gameModel);
+
+        let game = await controller.setupMultiplayerGame(1, 1, "mafalda", "nuno", "mafalda", "as31234");
+        let {result, game: game2} = await controller.clickHole("mafalda", "as31234", 0);
+        let [gameObj] = await gameModel.findByKey("hash", "as31234");
+
+        assert.deepStrictEqual(gameObj, undefined)
+        assert.deepStrictEqual(result.status, GAME_END);
+        assert.deepStrictEqual(result.winner, null);
+        assert.deepStrictEqual(game2.board.storage, [0, 1]);
+        assert.deepStrictEqual(game2.board.seeds, [1, 0]);
+        assert.deepStrictEqual(game2.player1.name, "nuno");
+        assert.deepStrictEqual(game2.player2.name, "mafalda" );
+        assert.deepStrictEqual(game2.gameHash, game.gameHash);
     }
 ]
 
