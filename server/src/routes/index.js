@@ -1,15 +1,15 @@
 const Framework = require("../../framework/framework");
 const Router = require("../../framework/router/router");
 const UserController = require("../services/user");
-const Database = require("../database/Database");
 const auth = require("./auth");
 const sanity = require("./sanity");
 const ranking = require("./ranking");
+const DatabaseInterface = require("../database/DatabaseInterface");
 
 
 /**
  * @param {Framework} app 
- * @param {Database} db
+ * @param {DatabaseInterface} db
  */
 module.exports = (app, db) => {
     const router = new Router();
