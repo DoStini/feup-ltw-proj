@@ -25,7 +25,7 @@ const requestError = (res, code, message, extra) => {
  * @returns 
  */
 const fieldsValidator = (required, section, message) => (req, res, next) => {
-    const missing = required.filter(field => !req[section] || !req[section][field]);
+    const missing = required.filter(field => (req[section] == null || req[section][field] == null));
 
     if (missing.length > 0) {
         return requestError(res, 400, message ?? "Invalid parameters", {
