@@ -162,12 +162,13 @@ class PlayerState extends GameState {
         if (this.player.name !== playerName) {
             return new GameResponse(WRONG_TURN);
         }
-        if (this.board.getHoleSeedAmount(hole) === 0) {
-            return new GameResponse(INVALID_HOLE);
-        }
         if (!this.board.holeBelongsToPlayer(hole, this.player.id)) {
             return new GameResponse(INVALID_HOLE);
         }
+        if (this.board.getHoleSeedAmount(hole) === 0) {
+            return new GameResponse(INVALID_HOLE);
+        }
+
 
         const newState = this.play(hole);
 
