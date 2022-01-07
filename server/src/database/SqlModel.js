@@ -20,14 +20,14 @@ class SqlModel extends DatabaseModel {
      * @param {SqlDatabase} database 
      */
     async setup() {
-        let query = `CREATE TABLE IF NOT EXISTS ${this.name} (`;
+        let query = `CREATE TABLE IF NOT EXISTS "${this.name}" (`;
 
         this.#columns.forEach(({name, type, constraint }) => 
             query += `${name} ${type} ${constraint},`);
 
         query = query.slice(0, query.length - 1) + ");";
 
-        this.#database.runQuery(query);
+        return this.#database.runQuery(query);
     }
 
     async findByKey(key, value) {

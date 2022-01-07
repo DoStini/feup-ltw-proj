@@ -1,10 +1,19 @@
-const GameController = require("../src/controllers/gameController");
+const GameController = require("../src/services/gameController");
 const assert = require('assert/strict');
 const { WRONG_TURN, INVALID_HOLE, OK, GAME_END } = require("../src/constants");
+const DatabaseModel = require("../src/database/DatabaseModel");
+const SqlDatabase = require("../src/database/SqlDatabase");
+const SqlModel = require("../src/database/SqlModel");
+
+class FakeModel extends DatabaseModel {
+
+}
+
+const fakeModel = new FakeModel("fake");
 
 const gameTests = [
-    function testFailsTurn() {
-        let game = GameController.setupMultiplayerGame(2, 2, "mafalda", "nuno", "mafalda", "as31234");
+    async function testFailsTurn() {
+        let game = await new GameController(fakeModel).setupMultiplayerGame(2, 2, "mafalda", "nuno", "mafalda", "as31234");
 
         let response = game.clickHole("nuno", 1);
         assert.deepStrictEqual(response.status, WRONG_TURN);
@@ -13,8 +22,8 @@ const gameTests = [
         assert.deepStrictEqual(game.currentPlayer.name, "mafalda");
     },
 
-    function testFailsTurn2() {
-        let game = GameController.setupMultiplayerGame(2, 2, "mafalda", "nuno", "mafalda", "as31234");
+    async function testFailsTurn2() {
+        let game = await new GameController(fakeModel).setupMultiplayerGame(2, 2, "mafalda", "nuno", "mafalda", "as31234");
 
         let response = game.clickHole("nuno2", 1);
         assert.deepStrictEqual(response.status, WRONG_TURN);
@@ -23,8 +32,8 @@ const gameTests = [
         assert.deepStrictEqual(game.currentPlayer.name, "mafalda");
     },
 
-    function testFailsHole() {
-        let game = GameController.setupMultiplayerGame(2, 2, "mafalda", "nuno", "mafalda", "as31234");
+    async function testFailsHole() {
+        let game = await new GameController(fakeModel).setupMultiplayerGame(2, 2, "mafalda", "nuno", "mafalda", "as31234");
 
         let response = game.clickHole("mafalda", -1);
         assert.deepStrictEqual(response.status, INVALID_HOLE);
@@ -33,8 +42,8 @@ const gameTests = [
         assert.deepStrictEqual(game.currentPlayer.name, "mafalda");
     },
 
-    function testFailsHole2() {
-        let game = GameController.setupMultiplayerGame(2, 2, "mafalda", "nuno", "mafalda", "as31234");
+    async function testFailsHole2() {
+        let game = await new GameController(fakeModel).setupMultiplayerGame(2, 2, "mafalda", "nuno", "mafalda", "as31234");
 
         let response = game.clickHole("mafalda", 2);
         assert.deepStrictEqual(response.status, INVALID_HOLE);
@@ -43,8 +52,8 @@ const gameTests = [
         assert.deepStrictEqual(game.currentPlayer.name, "mafalda");
     },
 
-    function testFailsHole2() {
-        let game = GameController.setupMultiplayerGame(2, 2, "mafalda", "nuno", "mafalda", "as31234");
+    async function testFailsHole2() {
+        let game = await new GameController(fakeModel).setupMultiplayerGame(2, 2, "mafalda", "nuno", "mafalda", "as31234");
 
         let response = game.clickHole("mafalda", 7);
         assert.deepStrictEqual(response.status, INVALID_HOLE);
@@ -53,8 +62,8 @@ const gameTests = [
         assert.deepStrictEqual(game.currentPlayer.name, "mafalda");
     },
 
-    function testFailsBoth() {
-        let game = GameController.setupMultiplayerGame(2, 2, "mafalda", "nuno", "mafalda", "as31234");
+    async function testFailsBoth() {
+        let game = await new GameController(fakeModel).setupMultiplayerGame(2, 2, "mafalda", "nuno", "mafalda", "as31234");
 
         let response = game.clickHole("nuno", 7);
         assert.deepStrictEqual(response.status, WRONG_TURN);
@@ -63,8 +72,8 @@ const gameTests = [
         assert.deepStrictEqual(game.currentPlayer.name, "mafalda");
     },
 
-    function testFailsEmptyHole() {
-        let game = GameController.setupMultiplayerGame(2, 2, "mafalda", "nuno", "mafalda", "as31234");
+    async function testFailsEmptyHole() {
+        let game = await new GameController(fakeModel).setupMultiplayerGame(2, 2, "mafalda", "nuno", "mafalda", "as31234");
 
         let response = game.clickHole("mafalda", 0);
         assert.deepStrictEqual(response.status, OK);
@@ -79,8 +88,8 @@ const gameTests = [
         assert.deepStrictEqual(game.currentPlayer.name, "mafalda");
     },
 
-    function testGame() {
-        let game = GameController.setupMultiplayerGame(2, 2, "mafalda", "nuno", "mafalda", "as31234");
+    async function testGame() {
+        let game = await new GameController(fakeModel).setupMultiplayerGame(2, 2, "mafalda", "nuno", "mafalda", "as31234");
 
         let response = game.clickHole("mafalda", 1);
         assert.deepStrictEqual(response.status, OK);
@@ -126,14 +135,39 @@ const gameTests = [
         assert.deepStrictEqual(response.winner.name, "nuno");
     },
 
-    function testGame2() {
-        let game = GameController.setupMultiplayerGame(1, 1, "mafalda", "nuno", "mafalda", "as31234");
+    async function testGame2() {
+        let game = await new GameController(fakeModel).setupMultiplayerGame(1, 1, "mafalda", "nuno", "mafalda", "as31234");
 
         let response = game.clickHole("mafalda", 0);
         assert.deepStrictEqual(response.status, GAME_END);
         assert.deepStrictEqual(game.board.seeds, [1, 0]);
         assert.deepStrictEqual(game.board.storage, [0, 1]);
         assert.deepStrictEqual(response.winner, null);
+    },
+
+    async function testDBGame() {
+        const database = new SqlDatabase(":memory:");
+        const gameModel = new SqlModel("game", [
+            {name: "hash", type: "TEXT", constraint: "PRIMARY KEY"},
+            {name: "player1", type: "TEXT", constraint : ""},
+            {name: "player2", type: "TEXT", constraint: ""},
+            {name: "board", type: "TEXT", constraint: ""},
+            {name: "turn", type: "TEXT", constraint: ""},
+        ], database);
+        database.addModel(gameModel);
+
+        await database.setup();
+        let controller =  new GameController(gameModel);
+
+        let game = await controller.setupMultiplayerGame(1, 1, "mafalda", "nuno", "mafalda", "as31234");
+        let [game2Obj] = await gameModel.findByKey("hash", "as31234");
+        let game2 = controller.objectToGame(game2Obj);
+
+        assert.deepStrictEqual(game2.board.toJSON(), game.board.toJSON());
+        assert.deepStrictEqual(game2.player1.name, game.player1.name);
+        assert.deepStrictEqual(game2.player2.name, game.player2.name);
+        assert.deepStrictEqual(game2.currentPlayer.name, game.currentPlayer.name);
+        assert.deepStrictEqual(game2.gameHash, game.gameHash);
     }
 ]
 

@@ -4,7 +4,7 @@ const DatabaseInterface = require('./DatabaseInterface');
 const DatabaseModel = require("./DatabaseModel");
 
 class SqlDatabase extends DatabaseInterface {
-    /** @property {Object.<string, DatabaseModel>} models */
+    /** @type {Object.<string, DatabaseModel>} models */
     #models = {};
     #path;
     #db;
@@ -15,16 +15,22 @@ class SqlDatabase extends DatabaseInterface {
     }
 
     setup() {
-        this.#db = new sqlite3.Database(`${this.#path}/db.sql`, sqlite3.OPEN_CREATE | sqlite3.OPEN_READWRITE,
-            (err) => {
-                if (err) {
-                    console.error(err.message);
+        const name = this.#path === ":memory:" ? this.#path : `${this.#path}/db.sql`;
+        
+        return new Promise(async function(resolve,reject){
+            this.#db = new sqlite3.Database(name, sqlite3.OPEN_CREATE | sqlite3.OPEN_READWRITE,
+                async (err) => {
+                    if (err) {
+                        console.error(err.message);
+                        reject();
+                    }
+                    console.log('Connected to the database.');
+    
+                    await Promise.all(Object.values(this.#models).map((model) => model.setup()))
+                    resolve();
                 }
-                console.log('Connected to the database.');
-
-                Object.values(this.#models).forEach(model => model.setup());
-            }
-        );
+            );
+        }.bind(this));
     }
 
     /**

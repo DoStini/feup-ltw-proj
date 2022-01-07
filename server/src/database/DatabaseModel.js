@@ -27,7 +27,7 @@ class DatabaseModel {
         
     }
 
-    async update(key, val) {
+    async update(key, val, obj) {
 
     }
 
