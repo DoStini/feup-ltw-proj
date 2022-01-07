@@ -65,6 +65,25 @@ class Board {
         return hole >= this.#nHoles * playerID && hole < this.#nHoles * (playerID + 1);
     }
 
+    getRealHole(hole, playerID) {
+        return hole + playerID * this.#nHoles;
+    }
+
+    getLastHole(playerID) {
+        return playerID * this.#nHoles + this.#nHoles - 1;
+    }
+
+    getNextHole(hole) {
+        return (hole + 1) % (this.#nHoles * 2);
+    }
+
+    getOppositeHole(hole) {
+        return this.#nHoles * 2 - 1 - hole;
+    }
+
+    getStorageID(playerID) {
+        return this.#nHoles * 2 + playerID;
+    }
 
     getAvailHoles(playerID) {
         let avail = [];

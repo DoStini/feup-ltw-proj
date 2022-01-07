@@ -14,24 +14,29 @@ class UserController  {
     }
 
     async find(user) {
-        return await this.#model.find(user);
+        const [data] = await this.#model.findByKey("nick", user); 
+        return data;
     }
 
     async create(user, password) {
         const hashed = hash(password);
 
-        await this.#model.insert(user, {
-            nick: user,
-            pass: hashed,
-        });
+        try {
+            await this.#model.insert("nick", {
+                nick: user,
+                pass: hashed,
+            });   
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
     }
 
     async addGame(nick) {
         const user = await this.#model.find(nick);
 
         user["games"] = (user["games"] ?? 0) + 1;
-
-        await this.#model.update(nick, user);
+        await this.#model.update("nick", user.nick, user);
     }
 
     async addWin(nick) {
@@ -40,7 +45,7 @@ class UserController  {
         user["victories"] = (user["victories"] ?? 0) + 1;
         user["games"] = (user["games"] ?? 0) + 1;
 
-        await this.#model.update(nick, user);
+        await this.#model.update("nick", user.nick, user);
     }
 
     async getRanking(size) {

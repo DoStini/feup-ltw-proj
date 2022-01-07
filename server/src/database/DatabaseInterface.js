@@ -1,8 +1,10 @@
 const DatabaseModel = require("./DatabaseModel");
 
-class Database {
+class DatabaseInterface {
     /** @property {Object.<string, DatabaseModel>} models */
     #models = {};
+
+    constructor () {}
 
     /**
      * Adds a DatabaseModel to the database.
@@ -26,4 +28,4 @@ class Database {
 
 }
 
-module.exports = Database;
+module.exports = DatabaseInterface;
