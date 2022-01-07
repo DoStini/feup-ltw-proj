@@ -64,6 +64,13 @@ class GameController {
         return this.createGame(boardObj.nHoles, boardObj.nSeeds, json.turn, json.player1, json.player2, json.hash, json.board);
     }
 
+    async playerInGame(nick) {
+        const data = await this.#model.findByKey("player1", nick);
+        const data2 = await this.#model.findByKey("player2", nick);
+
+        return data.length > 0 || data2.length > 0;
+    }
+
     /**
      * 
      * @param {number} nHoles 

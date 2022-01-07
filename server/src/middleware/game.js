@@ -1,3 +1,5 @@
+const Middleware = require("../../framework/middleware/middleware");
+const GameController = require("../services/gameController");
 const { fieldsValidator, requestError } = require("../utils");
 
 const join = fieldsValidator([
@@ -25,9 +27,29 @@ const update = fieldsValidator([
     "game",
 ], "query");
 
-const userInGame = (location, gameController) => (req, res, next) => {
-    if (false/*!gameController.has(user)*/) {
+/**
+ * 
+ * @param {string} location 
+ * @param {GameController} gameController 
+ * @returns {Middleware.MiddlewareCallback}
+ */
+const userInGame = (location, gameController) => async (req, res, next) => {
+    if (!await gameController.playerInGame(req[location].nick)) {
         return requestError(res, 400, "User not in game");
+    }
+
+    next(req, res);
+}
+
+/**
+ * 
+ * @param {string} location 
+ * @param {GameController} gameController 
+ * @returns {Middleware.MiddlewareCallback}
+ */
+ const userNotInGame = (location, gameController) => async (req, res, next) => {
+    if (await gameController.playerInGame(req[location].nick)) {
+        return requestError(res, 400, "User already in game");
     }
 
     next(req, res);
@@ -39,4 +61,5 @@ module.exports = {
     notify,
     update,
     userInGame,
+    userNotInGame,
 }
