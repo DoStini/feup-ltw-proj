@@ -2,7 +2,7 @@
 const Middleware = require("./middleware");
 
 /**
- * Middleware that handles streaming a POST request JSON body
+ * Middleware that handles a url query in a request
  * 
  * @type {Middleware.MiddlewareCallback}
  */
