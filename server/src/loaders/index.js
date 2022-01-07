@@ -8,6 +8,5 @@ const database = require("./database");
  */
 module.exports = async (app) => {
     const db = await database();
-
     routes(app, db);
 }

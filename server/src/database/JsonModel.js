@@ -16,7 +16,6 @@ class JsonModel extends DatabaseModel {
         try {
             await fs.access(this.#path, fs.F_OK);
         } catch {
-            console.log("hey");
             fs.writeFile(this.#path, JSON.stringify({}));
         }
     }
