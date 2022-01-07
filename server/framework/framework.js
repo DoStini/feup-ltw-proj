@@ -39,7 +39,7 @@ class Framework {
     listen(port, callback) {
         const server = http.createServer({ServerResponse: FrameworkResponse, IncomingMessage: FrameworkRequest}, 
             (/** @type {FrameworkRequest} */ request, /** @type {FrameworkResponse} */ response) => {
-                const handler = this.#router.find(request.url, request.method);
+                const handler = this.#router.find(request.url.split("?")[0], request.method);
 
                 if (handler != null) {
                     handler(request, response);

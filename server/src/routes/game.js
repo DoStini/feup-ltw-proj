@@ -4,6 +4,7 @@ const bodyParser = require("../../framework/middleware/bodyParser");
 const { userRequired, passRequired, auth, validCredentials } = require("../middleware/auth");
 const { requestError, checkHash } = require("../utils");
 const { join, leave, notify, update } = require("../middleware/game");
+const queryParser = require("../../framework/middleware/queryParser");
 
 /**
  * 
@@ -46,9 +47,10 @@ module.exports = async (router, userController) => {
     );
 
     router.get("/update",
+        queryParser,
         update,
-        validCredentials(userController),
         async (req, res) => {
+            console.log(req.query)
             return res.json({
                 "message": "Succes",
             });

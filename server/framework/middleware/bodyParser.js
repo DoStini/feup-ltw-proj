@@ -7,7 +7,6 @@ const Middleware = require("./middleware");
  */
 function bodyParser(request, response, next) {
     let json = "";
-    let body;
 
     request
         .on('data', (chunk) => {
@@ -15,8 +14,12 @@ function bodyParser(request, response, next) {
         })
         .on('end', () => {
             try {
-                body = JSON.parse(json);
-                request.body = body;
+                if (json === "") {
+                    request.body = {};
+                } else {
+                    const body = JSON.parse(json);
+                    request.body = body;
+                }
                 next(request, response);
             } catch(err) {
                 console.error(err);

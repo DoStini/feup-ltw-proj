@@ -22,8 +22,7 @@ const notify = fieldsValidator([
 
 const update = fieldsValidator([
     "nick",
-    "pass",
-    "query",
+    "game",
 ], "query");
 
 module.exports = {
