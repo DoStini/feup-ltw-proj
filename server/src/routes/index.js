@@ -5,6 +5,7 @@ const Database = require("../database/Database");
 const auth = require("./auth");
 const sanity = require("./sanity");
 const ranking = require("./ranking");
+const game = require("./game");
 
 
 /**
@@ -18,6 +19,7 @@ module.exports = (app, db) => {
     sanity(router);
     auth(router, userController);
     ranking(router, userController);
+    game(router, userController);
 
     app.addRouter(router);
 }

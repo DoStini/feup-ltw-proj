@@ -1,18 +1,34 @@
-const Middleware = require("../../framework/middleware/middleware");
-const { requestError } = require("../utils")
+const { fieldsValidator } = require("../utils");
 
+const join = fieldsValidator([
+    "nick",
+    "pass",
+    "size",
+    "initial",
+], "body");
 
+const leave = fieldsValidator([
+    "nick",
+    "pass",
+    "game",
+], "body");
 
-const join = (req, res, next) => {
+const notify = fieldsValidator([
+    "nick",
+    "pass",
+    "game",
+    "move",
+], "body");
 
-
-    
-
-    next(req, res);
-}
+const update = fieldsValidator([
+    "nick",
+    "pass",
+    "query",
+], "query");
 
 module.exports = {
-    userRequired,
-    passRequired,
-    validCredentials,
+    join,
+    leave,
+    notify,
+    update,
 }

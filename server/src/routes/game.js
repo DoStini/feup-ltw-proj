@@ -1,8 +1,9 @@
 const Router = require("../../framework/router/router");
 const UserController = require('../services/user');
 const bodyParser = require("../../framework/middleware/bodyParser");
-const { userRequired, passRequired } = require("../middleware/auth");
+const { userRequired, passRequired, auth, validCredentials } = require("../middleware/auth");
 const { requestError, checkHash } = require("../utils");
+const { join, leave, notify, update } = require("../middleware/game");
 
 /**
  * 
@@ -10,25 +11,47 @@ const { requestError, checkHash } = require("../utils");
  * @param {UserController} userController 
  */
 module.exports = async (router, userController) => {
+
     router.post("/join",
         bodyParser,
-        userRequired,
-        passRequired,
-        
+        join,
+        validCredentials(userController),
         async (req, res) => {
-            const user = await userController.find(req.body.nick);
+            return res.json({
+                "message": "Succes",
+            });
+        }
+    );
 
-            if (user == null) {
-                await userController.create(req.body.nick, req.body.pass)
+    router.post("/leave",
+        bodyParser,
+        leave,
+        validCredentials(userController),
+        async (req, res) => {
+            return res.json({
+                "message": "Succes",
+            });
+        }
+    );
 
-                return res.status(200).json({})
-            }
+    router.post("/notify",
+        bodyParser,
+        notify,
+        validCredentials(userController),
+        async (req, res) => {
+            return res.json({
+                "message": "Succes",
+            });
+        }
+    );
 
-            if (!checkHash(req.body.pass, user.pass)) {
-                return requestError(res, 401, "User registered with a different password");
-            }
-
-            return res.status(200).json({})
+    router.get("/update",
+        update,
+        validCredentials(userController),
+        async (req, res) => {
+            return res.json({
+                "message": "Succes",
+            });
         }
     );
 }
