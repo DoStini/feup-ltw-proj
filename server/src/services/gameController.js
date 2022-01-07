@@ -81,8 +81,8 @@ class GameController {
      * @param {string} hash 
      * @returns {Game}
      */
-    async setupMultiplayerGame(nHoles, seedsPerHole, turn, player1Name, player2Name, hash) {
-        let game = this.createGame(nHoles, seedsPerHole, turn, player1Name, player2Name, hash);
+    async setupMultiplayerGame(nHoles, seedsPerHole, turn, player1Name, hash) {
+        let game = this.createGame(nHoles, seedsPerHole, turn, player1Name, null, hash);
 
         let obj = this.#gameToObject(game);
         await this.#model.insert(hash, obj);
@@ -119,6 +119,39 @@ class GameController {
         }
 
         return {result, game};
+    }
+
+    /**
+     * 
+     * @param {number} nHoles 
+     * @param {number} nSeeds 
+     * @returns {Game}
+     */
+    async findGame(nHoles, nSeeds) {
+        let games = await this.#model.findByKey("player2", "null");
+        
+        for(let game of games) {
+            let board = JSON.parse(game.board);
+            let initial = board.nSeeds;
+            let size = board.nHoles;
+
+            if(nHoles === size && nSeeds === initial) {
+                return this.objectToGame(game);
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * 
+     * @param {Game} game 
+     * @param {string} player2 
+     */
+    async addPlayer2(game, player2) {
+        game.player2 = new Player(1, player2);
+
+        await this.#model.update("hash", game.gameHash, this.#gameToObject(game));
     }
 }
 

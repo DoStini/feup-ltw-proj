@@ -52,6 +52,10 @@ class Game {
         return this.#player2;
     }
 
+    set player2(player2) {
+        this.#player2 = player2;
+    } 
+
     /**
      * @returns {Player}
      */
