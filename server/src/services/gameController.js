@@ -65,10 +65,20 @@ class GameController {
     }
 
     async playerInGame(nick) {
-        const data = await this.#model.findByKey("player1", nick);
-        const data2 = await this.#model.findByKey("player2", nick);
+        const [data] = await this.#model.findByKey("player1", nick);
+        const [data2] = await this.#model.findByKey("player2", nick);
 
-        return data.length > 0 || data2.length > 0;
+        if(data != null) {
+            return data.hash;
+        } else if (data2 != null) {
+            return data2.hash;
+        } else {
+            return null;
+        }
+    }
+
+    async getAllGames() {
+        return await this.#model.all();
     }
 
     /**
@@ -81,13 +91,64 @@ class GameController {
      * @param {string} hash 
      * @returns {Game}
      */
-    async setupMultiplayerGame(nHoles, seedsPerHole, turn, player1Name, hash) {
-        let game = this.createGame(nHoles, seedsPerHole, turn, player1Name, null, hash);
+    async setupMultiplayerGame(nHoles, seedsPerHole, turn, player1Name, player2Name, hash) {
+        let game = this.createGame(nHoles, seedsPerHole, turn, player1Name, player2Name, hash);
 
         let obj = this.#gameToObject(game);
         await this.#model.insert(hash, obj);
 
         return game;
+    }
+
+    /**
+     * 
+     * @param {number} nHoles 
+     * @param {number} nSeeds 
+     * @returns {Game}
+     */
+    async findGame(nHoles, nSeeds) {
+        let games = await this.#model.findByKey("player2", "null");
+        
+        for(let game of games) {
+            let board = JSON.parse(game.board);
+            let initial = board.nSeeds;
+            let size = board.nHoles;
+
+            if(nHoles === size && nSeeds === initial) {
+                return this.objectToGame(game);
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * 
+     * @param {string} player 
+     * @param {string} hash 
+     */
+    async leaveGame(player, hash) {
+        let [game] = await this.#model.findByKey("hash", hash);
+        if(game == null) return null;
+
+        const otherPlayer = game.player1 === player ? game.player2 : game.player1;
+        if(otherPlayer != "null") {
+            await this.#userController.addGame(player);
+            await this.#userController.addWin(otherPlayer);
+        }
+
+        this.#model.delete("hash", hash);
+    }
+
+    /**
+     * 
+     * @param {Game} game 
+     * @param {string} player2 
+     */
+    async addPlayer2(game, player2) {
+        game.player2 = new Player(1, player2);
+
+        await this.#model.update("hash", game.gameHash, this.#gameToObject(game));
     }
 
     /**
@@ -119,39 +180,6 @@ class GameController {
         }
 
         return {result, game};
-    }
-
-    /**
-     * 
-     * @param {number} nHoles 
-     * @param {number} nSeeds 
-     * @returns {Game}
-     */
-    async findGame(nHoles, nSeeds) {
-        let games = await this.#model.findByKey("player2", "null");
-        
-        for(let game of games) {
-            let board = JSON.parse(game.board);
-            let initial = board.nSeeds;
-            let size = board.nHoles;
-
-            if(nHoles === size && nSeeds === initial) {
-                return this.objectToGame(game);
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * 
-     * @param {Game} game 
-     * @param {string} player2 
-     */
-    async addPlayer2(game, player2) {
-        game.player2 = new Player(1, player2);
-
-        await this.#model.update("hash", game.gameHash, this.#gameToObject(game));
     }
 }
 

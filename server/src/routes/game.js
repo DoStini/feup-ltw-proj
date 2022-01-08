@@ -3,9 +3,10 @@ const UserController = require('../services/user');
 const bodyParser = require("../../framework/middleware/bodyParser");
 const { userRequired, passRequired, auth, validCredentials } = require("../middleware/auth");
 const { requestError, checkHash, hash } = require("../utils");
-const { join, leave, notify, update, userInGame, userNotInGame, joinAttributes } = require("../middleware/game");
+const { join, leave, notify, update, userInGame, userNotInGame, joinAttributes, userInGameHash } = require("../middleware/game");
 const queryParser = require("../../framework/middleware/queryParser");
 const GameController = require("../services/gameController");
+const { GAME_TIMEOUT } = require("../env");
 
 /**
  * 
@@ -27,15 +28,15 @@ module.exports = async (router, userController, gameController) => {
 
             if(foundGame === null) {
                 gameHash = hash(req.body.nick + Date.now() + req.body.size + req.body.initial)
-                await gameController.setupMultiplayerGame(req.body.size, req.body.initial, req.body.nick, req.body.nick, gameHash);
+                await gameController.setupMultiplayerGame(req.body.size, req.body.initial, req.body.nick, req.body.nick, null, gameHash);
             } else {
                 gameHash = foundGame.gameHash;
                 await gameController.addPlayer2(foundGame, req.body.nick);
             }
-            
-            // setTimeout(() => {
-            //     gameController.
-            // })
+
+            setTimeout((gameController, nick, hash) => {
+                gameController.leaveGame(nick, hash);
+            }, GAME_TIMEOUT, gameController, req.body.nick, gameHash);
 
             return res.json({
                 "game" : gameHash,
@@ -47,11 +48,11 @@ module.exports = async (router, userController, gameController) => {
         bodyParser,
         leave,
         validCredentials(userController),
-        userInGame("body", gameController),
+        userInGameHash("body", gameController),
         async (req, res) => {
-            return res.json({
-                "message": "Success",
-            });
+            await gameController.leaveGame(req.body.nick, req.body.game);
+
+            return res.json({});
         }
     );
 
@@ -70,13 +71,11 @@ module.exports = async (router, userController, gameController) => {
     router.get("/update",
         queryParser,
         update,
-        userInGame("query"),
+        userInGameHash("query", gameController),
         async (req, res) => {
             res.setupServerSentEvent();
-            const gameHandler = (data) => res.write(data);
-            return res.json({
-                "message": "Succes",
-            });
+
+            // send game data if exists, otherwise wait
         }
     );
 }
