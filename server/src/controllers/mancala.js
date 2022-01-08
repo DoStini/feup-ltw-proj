@@ -82,6 +82,7 @@ class Game {
         return obj;
     }
 
+
     /**
      * Changes the current game state and starts the state.
      * 

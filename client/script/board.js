@@ -130,6 +130,7 @@ class Board {
 
         this.#seeds = container;
         const storageStart = this.#nHoles * 2;
+        this.#storage = [[],[]];
 
         for (let playerID = 0; playerID <= 1; playerID++) {
             let storageID = storageStart + playerID;

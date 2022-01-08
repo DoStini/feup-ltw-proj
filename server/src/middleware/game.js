@@ -5,20 +5,20 @@ const { testNumber } = require("./validation");
 
 const join = fieldsValidator([
     "nick",
-    "pass",
+    "password",
     "size",
     "initial",
 ], "body");
 
 const leave = fieldsValidator([
     "nick",
-    "pass",
+    "password",
     "game",
 ], "body");
 
 const notify = fieldsValidator([
     "nick",
-    "pass",
+    "password",
     "game",
     "move",
 ], "body");

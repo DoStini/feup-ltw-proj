@@ -1,8 +1,8 @@
 const Router = require("../../framework/router/router");
 const UserController = require('../services/user');
 const bodyParser = require("../../framework/middleware/bodyParser");
-const { userRequired, passRequired, auth, validCredentials } = require("../middleware/auth");
-const { requestError, checkHash, hash } = require("../utils");
+const { validCredentials } = require("../middleware/auth");
+const { requestError, hash } = require("../utils");
 const { join, leave, notify, update, userInGame, userNotInGame, joinAttributes, userInGameHash, gameFull } = require("../middleware/game");
 const queryParser = require("../../framework/middleware/queryParser");
 const GameController = require("../services/gameController");
@@ -83,10 +83,15 @@ module.exports = async (router, userController, gameController) => {
             };
             
             if (result.status === GAME_END) {
-                obj.winner = result.winner.name;
+                obj.winner = result.winner;
+
+                gameController.notifyAll(req.body.game, obj);
+
+                gameController.endGame(req.body.game);
+            } else {
+                gameController.notifyAll(req.body.game, obj);
             }
 
-            gameController.notifyAll(req.body.game, obj);
 
             return res.json(obj); // This is not obj, jsut leave for debug for now
         }
@@ -98,9 +103,7 @@ module.exports = async (router, userController, gameController) => {
         userInGameHash("query", gameController),
         async (req, res) => {
             res.setupServerSentEvent();
-            const handler = res.write;
-
-            gameController.registerEvent(req.body.nick, handler);
+            gameController.registerEvent(req.query.nick, res);
             gameController.startGameNotify(req.query.game);
         }
     );

@@ -4,7 +4,7 @@ const { fieldsValidator, checkHash } = require("../utils")
 
 const auth = fieldsValidator([
     "nick", 
-    "pass",
+    "password",
 ], "body");
 
 const validCredentials = (userController) => async (req, res, next) => {
@@ -14,7 +14,7 @@ const validCredentials = (userController) => async (req, res, next) => {
         return notExists(res);
     }
 
-    if (!checkHash(req.body.pass, user.pass)) {
+    if (!checkHash(req.body.password, user.password)) {
         return wrongCredentials(res);
     }
 

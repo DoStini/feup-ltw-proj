@@ -18,12 +18,13 @@ module.exports = async (router, userController) => {
             const user = await userController.find(req.body.nick);
 
             if (user == null) {
-                await userController.create(req.body.nick, req.body.pass)
+                await userController.create(req.body.nick, req.body.password)
 
                 return res.status(200).json({})
             }
 
-            if (!checkHash(req.body.pass, user.pass)) {
+            if (!checkHash(req.body.password, user.password)) {
+                
                 return wrongCredentials(res);
             }
 

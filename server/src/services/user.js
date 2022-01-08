@@ -24,7 +24,7 @@ class UserController  {
         try {
             await this.#model.insert("nick", {
                 nick: user,
-                pass: hashed,
+                password: hashed,
             });   
         } catch (error) {
             console.error(error);
@@ -40,7 +40,6 @@ class UserController  {
     }
 
     async addWin(nick) {
-        console.log(nick)
         const [user] = await this.#model.findByKey("nick", nick);
 
         user["victories"] = (user["victories"] ?? 0) + 1;
