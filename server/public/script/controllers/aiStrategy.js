@@ -70,7 +70,7 @@ class NegaMaxAIStrategy {
      * 
      * @returns {{maxScore: number, maxHole: number}}
      */
-    negamax(gameState, depth, curPlayerID) {
+    negamax(gameState, depth, curPlayerID, alpha, beta) {
         if (depth <= 0 || gameState.checkEnd()) {
             return { maxScore: evaluateBoard(gameState), maxHole: -1 };
         }
@@ -93,14 +93,21 @@ class NegaMaxAIStrategy {
                 newGameState = gameState.getNextState();
             }
             
-            let { maxScore: score } = this.negamax(newGameState, depth - 1, newGameState.player.id);
+            let score;
             if(gameState.player.id !== newGameState.player.id) {
-                score = -score;
+                score = -this.negamax(newGameState, depth - 1, newGameState.player.id, -beta, -alpha).maxScore;
+            } else {
+                score = this.negamax(newGameState, depth - 1, newGameState.player.id, alpha, beta).maxScore;
             }
 
             if (score > maxScore) {
                 maxScore = score;
                 maxHole = hole;
+            }
+            alpha = Math.max(alpha, maxScore);
+
+            if(alpha >= beta) {
+                return { maxScore, maxHole };
             }
 
             gameState.board.seeds = JSON.parse(JSON.stringify(origSeeds));
