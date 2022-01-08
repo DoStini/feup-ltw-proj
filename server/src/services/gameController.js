@@ -174,7 +174,7 @@ class GameController {
             await this.notifyAll(hash, {winner: otherPlayer});
         }
 
-        this.#model.delete("hash", hash);
+        this.endGame(hash);
     }
 
     /**

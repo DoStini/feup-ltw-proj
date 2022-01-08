@@ -53,12 +53,14 @@ function isAuthenticated() {
 }
 
 function logout() {
-    startAuth();
+    pageManager.setPage("init-menu");
 
     setCookie("user", "", -1);
     setCookie("pass", "", -1);
 
     session = {};
+
+    updateAuthButtons();
 
     launchSuccessSnackbar("Logged out successfully");
 }
