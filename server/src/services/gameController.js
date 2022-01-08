@@ -43,6 +43,23 @@ class GameController {
         this.#handlers[user] = handler;
     }
 
+    startGameNotify(hash) {
+        const game = this.#model.findByKey("hash", hash);
+
+        if (game.player1.name != "null" && game.player2.name != "null" )
+
+        this.notifyAll({
+            board: game.parseBoard()
+        });
+    }
+
+    notifyAll(hash, data) {
+        const game = this.#model.findByKey("hash", hash);
+
+        this.notify(game.player1.name, data);
+        this.notify(game.player1.name, data);
+    }
+
     notify(user, data) {
         this.#handlers[user](JSON.stringify(data));
     }

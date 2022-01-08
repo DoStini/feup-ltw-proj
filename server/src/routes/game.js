@@ -33,6 +33,8 @@ module.exports = async (router, userController, gameController) => {
             } else {
                 gameHash = foundGame.gameHash;
                 await gameController.addPlayer2(foundGame, req.body.nick);
+
+                // send event to player 1
             }
 
             // setTimeout((gameController, nick, hash) => {
@@ -82,9 +84,11 @@ module.exports = async (router, userController, gameController) => {
             
             if (result.status === GAME_END) {
                 obj.winner = result.winner.name;
-            } 
+            }
 
-            return res.json(obj);
+            gameController.notifyAll(req.body.game, obj);
+
+            return res.json(obj); // This is not obj, jsut leave for debug for now
         }
     );
 
@@ -97,6 +101,7 @@ module.exports = async (router, userController, gameController) => {
             const handler = res.write;
 
             gameController.registerEvent(req.body.nick, handler);
+            gameController.startGameNotify(req.query.game);
         }
     );
 }
