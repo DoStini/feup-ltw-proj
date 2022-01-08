@@ -27,10 +27,6 @@ class Animator {
     async executeAnimation(nHoles, animation) {
 
     }
-
-    async waitForAnimation() {
-
-    }
 }
 
 class HTMLAnimator extends Animator {
@@ -84,11 +80,6 @@ class HTMLAnimator extends Animator {
             await Promise.all(animations);
             this.runningAnims = this.runningAnims.slice(0, -animations.length);
         }
-    }
-
-    async waitForAnimation() {
-        console.log(this.runningAnims);
-        await Promise.all(this.runningAnims);
     }
 
     async animateSeeds(holeId, nHoles, idList) {

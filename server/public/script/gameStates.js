@@ -243,7 +243,7 @@ class PlayAIState extends GameState {
 class MPGameState extends GameState {
     /** @property {MultiplayerInfo} mInfo */
     mInfo;
-    runningEvents = [];
+    runningEvent = new Promise((res, rej) => res());
 
     /**
      * 
@@ -281,6 +281,7 @@ class MPGameState extends GameState {
      * @param {MessageEvent<any>} e
      */
     async handleUpdate(e) {
+
         let data = JSON.parse(e.data);
 
         if (data.board) {
@@ -298,7 +299,15 @@ class MPGameState extends GameState {
     }
 
     run() {
-        this.mInfo.evtSource.onmessage = this.handleUpdate.bind(this);
+        this.mInfo.evtSource.onmessage = (async (e) => {
+            let run = this.runningEvent; // CURRENTLY RUNNING EVENT
+            let resolve;
+
+            this.runningEvent = new Promise((res, rej) => resolve = res); // SET RUNNING EVENT TO THIS EVENT
+            await run; // WAIT FOR CURRENT EVENT TO FINISH
+            await this.handleUpdate(e);
+            resolve(); // EVENT FINISHED
+        }).bind(this);
 
         this.startTurn();
     }
