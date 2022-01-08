@@ -63,6 +63,25 @@ class Game {
         return this.#state.player;
     }
 
+    parseBoard() {
+        const obj = {
+            sides: {},
+            turn: this.currentPlayer.name,
+        }
+
+        obj.sides[this.#player1.name] = {
+            store: this.#board.getStorageAmount(this.#player1.id),
+            pits: this.#board.seeds.slice(0, this.#board.nHoles),
+        } 
+
+        obj.sides[this.#player2.name] = {
+            store: this.#board.getStorageAmount(this.#player2.id),
+            pits: this.#board.seeds.slice(this.#board.nHoles, this.#board.nHoles * 2),
+        }
+
+        return obj;
+    }
+
     /**
      * Changes the current game state and starts the state.
      * 
@@ -131,7 +150,7 @@ class Game {
 
         let realHole = this.#board.getRealHole(hole, player.id);
         return this.#state.clickHole(playerName, realHole);
-    }
+    } 
 }
 
 module.exports = Game;

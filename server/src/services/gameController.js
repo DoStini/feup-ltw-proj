@@ -13,12 +13,15 @@ class GameController {
     /** @type {UserController} */
     #userController;
 
+    #handlers = [];
+
     /**
      * @param {DatabaseModel} model
      */
     constructor(model, userController) {
         this.#model = model;
         this.#userController = userController;
+        this.#handlers = {};
     }
 
     /**
@@ -34,6 +37,14 @@ class GameController {
             turn: game.currentPlayer.name,
             board: game.board.toJSON()
         }
+    }
+
+    registerEvent(user, handler) {
+        this.#handlers[user] = handler;
+    }
+
+    notify(user, data) {
+        this.#handlers[user](JSON.stringify(data));
     }
 
     createGame(nHoles, nSeeds, turn, player1Name, player2Name, hash, boardJSON) {
@@ -75,6 +86,12 @@ class GameController {
         } else {
             return null;
         }
+    }
+
+    async players(game) {
+        const [gameObj] = await this.#model.findByKey("hash", game);
+        
+        return [gameObj.player1, gameObj.player2];
     }
 
     async getAllGames() {
@@ -172,7 +189,7 @@ class GameController {
                 this.#userController.addGame(game.player2.name)
             } else {
                 const loserName = game.player1.name === result.winner.name ? game.player2.name : game.player1.name;
-                this.#userController.addWin(result.winner);
+                this.#userController.addWin(result.winner.name);
                 this.#userController.addGame(loserName);
             }
         } else {

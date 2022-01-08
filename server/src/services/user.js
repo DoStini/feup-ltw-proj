@@ -40,6 +40,7 @@ class UserController  {
     }
 
     async addWin(nick) {
+        console.log(nick)
         const [user] = await this.#model.findByKey("nick", nick);
 
         user["victories"] = (user["victories"] ?? 0) + 1;

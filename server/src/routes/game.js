@@ -3,11 +3,11 @@ const UserController = require('../services/user');
 const bodyParser = require("../../framework/middleware/bodyParser");
 const { userRequired, passRequired, auth, validCredentials } = require("../middleware/auth");
 const { requestError, checkHash, hash } = require("../utils");
-const { join, leave, notify, update, userInGame, userNotInGame, joinAttributes, userInGameHash } = require("../middleware/game");
+const { join, leave, notify, update, userInGame, userNotInGame, joinAttributes, userInGameHash, gameFull } = require("../middleware/game");
 const queryParser = require("../../framework/middleware/queryParser");
 const GameController = require("../services/gameController");
 const { GAME_TIMEOUT } = require("../env");
-const { WRONG_TURN, INVALID_HOLE } = require("../constants");
+const { WRONG_TURN, INVALID_HOLE, GAME_END } = require("../constants");
 
 /**
  * 
@@ -62,17 +62,29 @@ module.exports = async (router, userController, gameController) => {
         notify,
         validCredentials(userController),
         userInGameHash("body", gameController),
+        gameFull(gameController),
         async (req, res) => {
 
             const { result, game } = await gameController.clickHole(req.body.nick, req.body.game, req.body.move);
 
             if (result.status === WRONG_TURN) {
                 return requestError(res, 400, "Not your turn to play");
-            } else if (result.status === INVALID_HOLE) {
+            } 
+            
+            if (result.status === INVALID_HOLE) {
                 return requestError(res, 400, "Invalid hole");
-            }
+            } 
+            
+            const obj = {
+                board: game.parseBoard(),
+                pit: req.body.move
+            };
+            
+            if (result.status === GAME_END) {
+                obj.winner = result.winner.name;
+            } 
 
-            return res.json();
+            return res.json(obj);
         }
     );
 
@@ -82,8 +94,9 @@ module.exports = async (router, userController, gameController) => {
         userInGameHash("query", gameController),
         async (req, res) => {
             res.setupServerSentEvent();
+            const handler = res.write;
 
-            // send game data if exists, otherwise wait
+            gameController.registerEvent(req.body.nick, handler);
         }
     );
 }
