@@ -26,6 +26,7 @@
     <script src="script/view/animation.js" defer></script>
     <script src="script/view/renderer.js" defer></script>
     
+    <script src="script/controllers/aiStrategy.js" defer></script>
     <script src="script/controllers/gameStates.js" defer></script>
 
     <script src="script/network/communication.js" defer></script>
@@ -392,11 +393,14 @@
 
                 <label for="ai_difficulty">AI Difficulty</label>
                 <select name="ai_difficulty" id="ai_difficulty">
-                    <option value="easy">Lets You Win</option>
-                    <option value="hard">
-                        Loses on Purpose Sometimes (but will kick your ass)
+                    <option value="random" selected>Lets You Win (because it's random)</option>
+                    <option value="nega-1">
+                        Loses sometimes (but will kick your ass)
                     </option>
-                    <option value="impossible" selected>Impossible</option>
+                    <option value="nega-2">You should think about quitting I think</option>
+                    <option value="nega-3">Reaching Impossible Levels</option>
+                    <option value="nega-4">Has played this game before you were even born</option>
+                    <option value="nega-5">Impossible</option>
                 </select>
 
                 <fieldset>

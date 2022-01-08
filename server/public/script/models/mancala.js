@@ -24,6 +24,8 @@ class Game {
     #boardRenderer;
     /** @property {Renderer} statusRenderer */
     #statusRenderer
+    /** @type {AIStrategy} */
+    #aiStrategy;
 
     /**
      * @param {Board} board
@@ -31,13 +33,17 @@ class Game {
      * @param {Player} player2
      * @param {Renderer} board
      * @param {Renderer} statusRenderer
+     * @param {string} aiDifficulty
      */
-    constructor(board, player1, player2, boardRenderer, statusRenderer) {
+    constructor(board, player1, player2, aiDifficulty, boardRenderer, statusRenderer) {
         this.#state;
         this.#board = board;
         this.#player1 = player1;
         this.#player2 = player2;
         this.#turn = 0;
+        if(aiDifficulty != null) {
+            this.#aiStrategy = new AIStrategyFactory().createStrategy(aiDifficulty);
+        }
 
         if (boardRenderer == null) {
             this.#boardRenderer = new BoardRenderer();
@@ -66,6 +72,10 @@ class Game {
 
     get player2() {
         return this.#player2;
+    }
+
+    get aiStrategy() {
+        return this.#aiStrategy;
     }
 
     /**
@@ -178,13 +188,13 @@ class Game {
     }
 }
 
-function setupLocalGame(nHoles, seedsPerHole, turn) {
+function setupLocalGame(nHoles, seedsPerHole, turn, aiDifficulty) {
     const board = new Board(parseInt(nHoles), seedsPerHole);
 
     const player1 = new Player(0, "Player 1");
     const player2 = new Player(1, "AI");
 
-    const game = new Game(board, player1, player2);
+    const game = new Game(board, player1, player2,aiDifficulty);
 
     if (turn === 0) {
         game.changePlayerState(new PlayerState(game, player1, player2));

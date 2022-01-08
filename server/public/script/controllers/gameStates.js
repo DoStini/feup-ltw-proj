@@ -222,8 +222,6 @@ class PlayAIState extends GameState {
         return new PlayerState(this.game, this.otherPlayer, this.player);
     }
 
-    
-
     async run() {
         this.startTurn();
 
@@ -233,9 +231,7 @@ class PlayAIState extends GameState {
         }
 
         setTimeoutClearable(async function () {
-            let avail = this.board.getAvailHoles(this.player.id);
-
-            let hole = avail[(Math.random() * avail.length) >> 0];
+            let hole = this.game.aiStrategy.move(this.game, this.player.id);
 
             this.game.changePlayerState(await this.play(hole));
         }.bind(this), 2000);
