@@ -1,7 +1,7 @@
 const Router = require("../../framework/router/router");
 const UserController = require('../services/user');
 const bodyParser = require("../../framework/middleware/bodyParser");
-const { validCredentials } = require("../middleware/auth");
+const { validCredentials, validNick } = require("../middleware/auth");
 const { requestError, hash } = require("../utils");
 const { join, leave, notify, update, userInGame, userNotInGame, joinAttributes, userInGameHash, gameFull } = require("../middleware/game");
 const queryParser = require("../../framework/middleware/queryParser");
@@ -21,6 +21,7 @@ module.exports = async (router, userController, gameController) => {
         bodyParser,
         join,
         joinAttributes,
+        validNick("body"),
         validCredentials(userController),
         userNotInGame("body", gameController),
         async (req, res) => {
@@ -50,6 +51,7 @@ module.exports = async (router, userController, gameController) => {
     router.post("/leave",
         bodyParser,
         leave,
+        validNick("body"),
         validCredentials(userController),
         userInGameHash("body", gameController),
         async (req, res) => {
@@ -62,6 +64,7 @@ module.exports = async (router, userController, gameController) => {
     router.post("/notify",
         bodyParser,
         notify,
+        validNick("body"),
         validCredentials(userController),
         userInGameHash("body", gameController),
         gameFull(gameController),
@@ -100,6 +103,7 @@ module.exports = async (router, userController, gameController) => {
     router.get("/update",
         queryParser,
         update,
+        validNick("query"),
         userInGameHash("query", gameController),
         async (req, res) => {
             res.setupServerSentEvent();
