@@ -7,6 +7,7 @@ const { join, leave, notify, update, userInGame, userNotInGame, joinAttributes, 
 const queryParser = require("../../framework/middleware/queryParser");
 const GameController = require("../services/gameController");
 const { GAME_TIMEOUT } = require("../env");
+const { WRONG_TURN, INVALID_HOLE } = require("../constants");
 
 /**
  * 
@@ -34,9 +35,9 @@ module.exports = async (router, userController, gameController) => {
                 await gameController.addPlayer2(foundGame, req.body.nick);
             }
 
-            setTimeout((gameController, nick, hash) => {
-                gameController.leaveGame(nick, hash);
-            }, GAME_TIMEOUT, gameController, req.body.nick, gameHash);
+            // setTimeout((gameController, nick, hash) => {
+            //     gameController.leaveGame(nick, hash);
+            // }, GAME_TIMEOUT, gameController, req.body.nick, gameHash);
 
             return res.json({
                 "game" : gameHash,
@@ -60,11 +61,18 @@ module.exports = async (router, userController, gameController) => {
         bodyParser,
         notify,
         validCredentials(userController),
-        userInGame("body"),
+        userInGameHash("body", gameController),
         async (req, res) => {
-            return res.json({
-                "message": "Succes",
-            });
+
+            const { result, game } = await gameController.clickHole(req.body.nick, req.body.game, req.body.move);
+
+            if (result.status === WRONG_TURN) {
+                return requestError(res, 400, "Not your turn to play");
+            } else if (result.status === INVALID_HOLE) {
+                return requestError(res, 400, "Invalid hole");
+            }
+
+            return res.json();
         }
     );
 
