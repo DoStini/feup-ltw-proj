@@ -237,7 +237,7 @@ class PlayAIState extends GameState {
             let hole = this.game.aiStrategy.move(this);
 
             this.game.changePlayerState(await this.play(hole));
-        }.bind(this), 2000);
+        }.bind(this), 1500);
     }
 }
 

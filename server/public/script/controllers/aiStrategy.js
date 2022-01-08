@@ -8,7 +8,7 @@ class AIStrategyFactory {
     createStrategy(aiDifficulty) {
         const [name, depth] = aiDifficulty.split("-");
 
-        switch(name) {
+        switch (name) {
             case "nega":
                 return new NegaMaxAIStrategy(depth);
                 break;
@@ -16,7 +16,7 @@ class AIStrategyFactory {
             default:
                 return new RandomAIStrategy();
                 break;
-                
+
         }
     }
 }
@@ -45,7 +45,7 @@ class RandomAIStrategy {
         let avail = gameState.board.getAvailHoles(gameState.player.id);
 
         let hole = avail[(Math.random() * avail.length) >> 0];
-        
+
         return hole;
     }
 }
@@ -65,54 +65,53 @@ class NegaMaxAIStrategy {
     /**
      * 
      * @param {GameState} gameState 
+     * @param {number} depth
+     * @param {number} playerID
      * 
-     * @returns {number} The board score
+     * @returns {{maxScore: number, maxHole: number}}
      */
-    evaluateBoard(gameState) {
-        let score = 0;
-        let otherPlayer = (gameState.player.id + 1) % 2;
-        let curPlayer;
-
-        score += (gameState.board.getStorageAmount(gameState.player.id) - gameState.board.getStorageAmount(otherPlayer)) * 0.45;
-        const origSeeds = gameState.board.seeds;
-        const origStorage = gameState.board.storage;
-        gameState.board.seeds = JSON.parse(JSON.stringify(gameState.board.seeds));
-        gameState.board.storage = JSON.parse(JSON.stringify(gameState.board.storage));
-
-        for(let hole = 0; hole < gameState.board.nHoles * 2; hole++) {
-            if(gameState.board.holeBelongsToPlayer(hole, gameState.player.id)) {
-                curPlayer = gameState.player.id;
-            } else {
-                curPlayer = otherPlayer;
-            }
-                
-            const holeToHoles = gameState.sowSeeds(hole, curPlayer);
-            const destHoles = holeToHoles[hole];
-            const lastHole = destHoles[destHoles.length - 1];
-            const captured = gameState.captureSeeds(lastHole, curPlayer);
-
-            for(let key in captured) {
-                if(curPlayer === gameState.player.id) {
-                    score += captured[key].length * 0.05;
-                } else {
-                    score -= captured[key].length * 0.1;
-                }
-            }
-
-            if(curPlayer === gameState.player.id && gameState.checkChain(lastHole, curPlayer)) {
-                score += 0.1;
-            }
-            
-            gameState.board.seeds = JSON.parse(JSON.stringify(origSeeds));
-            gameState.board.storage = JSON.parse(JSON.stringify(origStorage));
-
+    negamax(gameState, depth, curPlayerID, playerID) {
+        let color;
+        if (curPlayerID === playerID) {
+            color = 1;
+        } else {
+            color = -1;
         }
 
-        gameState.board.seeds = origSeeds;
-        gameState.board.storage = origStorage;
+        if (depth <= 0 || gameState.checkEnd()) {
+            return { maxScore: color * evaluateBoard(gameState), maxHole: -1 };
+        }
 
+        const origSeeds = JSON.parse(JSON.stringify(gameState.board.seeds));
+        const origStorage = JSON.parse(JSON.stringify(gameState.board.storage));
 
-        return score;
+        let maxScore = Number.NEGATIVE_INFINITY;
+        let maxHole = 0;
+        const availHoles = gameState.board.getAvailHoles(curPlayerID);
+
+        for (let h = 0; h < availHoles.length; h++) {
+            const hole = availHoles[h];
+
+            const result = gameState.sowAndCapture(hole, curPlayerID);
+            let newGameState;
+            if (result.chain) {
+                newGameState = gameState;
+            } else {
+                newGameState = gameState.getNextState();
+            }
+
+            const { maxScore: score } = this.negamax(newGameState, depth - 1, newGameState.player.id, playerID);
+
+            if (score > maxScore) {
+                maxScore = score;
+                maxHole = hole;
+            }
+
+            gameState.board.seeds = JSON.parse(JSON.stringify(origSeeds));
+            gameState.board.storage = JSON.parse(JSON.stringify(origStorage));
+        }
+
+        return { maxScore, maxHole };
     }
 
     /**
@@ -121,12 +120,75 @@ class NegaMaxAIStrategy {
      * 
      * @returns {number} The hole chosen to play.
      */
-     move(gameState) {
-        console.log(this.evaluateBoard(gameState));
-        let avail = gameState.board.getAvailHoles(gameState.player.id);
+    move(gameState) {
 
-        let hole = avail[(Math.random() * avail.length) >> 0];
-        
-        return hole;
+        const origSeeds = gameState.board.seeds;
+        const origStorage = gameState.board.storage;
+        gameState.board.seeds = JSON.parse(JSON.stringify(gameState.board.seeds));
+        gameState.board.storage = JSON.parse(JSON.stringify(gameState.board.storage));
+
+        let { maxScore, maxHole } = this.negamax(gameState, this.#depth, gameState.player.id, gameState.player.id);
+        console.log(maxHole);
+        console.log(maxScore);
+
+        gameState.board.seeds = origSeeds;
+        gameState.board.storage = origStorage;
+
+        return maxHole;
     }
+}
+
+/**
+ * 
+ * @param {GameState} gameState 
+ * 
+ * @returns {number} The board score
+ */
+function evaluateBoard(gameState) {
+    let score = 0;
+    let otherPlayer = (gameState.player.id + 1) % 2;
+    let curPlayer;
+
+    score += (gameState.board.getStorageAmount(gameState.player.id) - gameState.board.getStorageAmount(otherPlayer)) * 0.45;
+    const origSeeds = gameState.board.seeds;
+    const origStorage = gameState.board.storage;
+
+    score += gameState.board.getSeedsInPlay(gameState.player.id) * (1 / (gameState.board.nHoles * gameState.board.nSeeds));
+    gameState.board.seeds = JSON.parse(JSON.stringify(gameState.board.seeds));
+    gameState.board.storage = JSON.parse(JSON.stringify(gameState.board.storage));
+
+    for (let hole = 0; hole < gameState.board.nHoles * 2; hole++) {
+        if (gameState.board.holeBelongsToPlayer(hole, gameState.player.id)) {
+            curPlayer = gameState.player.id;
+        } else {
+            curPlayer = otherPlayer;
+        }
+
+        const holeToHoles = gameState.sowSeeds(hole, curPlayer);
+        const destHoles = holeToHoles[hole];
+        const lastHole = destHoles[destHoles.length - 1];
+        const captured = gameState.captureSeeds(lastHole, curPlayer);
+
+        for (let key in captured) {
+            if (curPlayer === gameState.player.id) {
+                score += captured[key].length * 0.05;
+            } else {
+                score -= captured[key].length * 0.1;
+            }
+        }
+
+        if (curPlayer === gameState.player.id && gameState.checkChain(lastHole, curPlayer)) {
+            score += 0.1;
+        }
+
+        gameState.board.seeds = JSON.parse(JSON.stringify(origSeeds));
+        gameState.board.storage = JSON.parse(JSON.stringify(origStorage));
+
+    }
+
+    gameState.board.seeds = origSeeds;
+    gameState.board.storage = origStorage;
+
+
+    return score;
 }

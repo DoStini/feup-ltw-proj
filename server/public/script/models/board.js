@@ -57,6 +57,17 @@ class Board {
         return this.#storage[playerID].length;
     }
 
+    getSeedsInPlay(playerID) {
+        let start = playerID * this.#nHoles;
+        let total = 0;
+
+        for (let hole = start; hole < start + this.#nHoles; hole++) {
+            total += this.getHoleSeedAmount(hole);
+        }
+
+        return total;
+    }
+
     generateSeeds() {
         const container = [];
 

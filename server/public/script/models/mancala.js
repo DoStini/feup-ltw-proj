@@ -85,6 +85,10 @@ class Game {
         return this.#state.player;
     }
 
+    get state() {
+        return this.#state;
+    }
+
     /**
      * Changes the current game state and starts the state.
      * 
