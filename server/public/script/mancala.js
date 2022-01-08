@@ -100,7 +100,6 @@ class Game {
      * @param {Player} winner The player who won.
      */
     endMPGame(winner) {
-        console.log("game end");
         pageManager.pageCleanup["game-section"] = cleanupGame;
 
         this.changePlayerState(new EndState(this, this.#player1, this.#player2, winner, this.#state.animator));
