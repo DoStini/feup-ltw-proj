@@ -4,7 +4,6 @@ const FrameworkResponse = require('./response');
 const RouterGroup = require('./router/group');
 const RequestHandler = require('./middleware/requestHandler');
 const RouterComponent = require('./router/routerComponent');
-const fs = require('fs');
 
 class Framework {
     /** @type {RequestHandler.RequestCallback} */
