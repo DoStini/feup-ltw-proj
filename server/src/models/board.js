@@ -106,8 +106,8 @@ class Board {
     #JSONtoBoard(json) {
         const obj = JSON.parse(json);
 
-        this.#storage = obj.storage;
-        this.#seeds = obj.seeds;
+        this.#storage = obj.storage.map((val) => parseInt(val))
+        this.#seeds = obj.seeds.map((val) => parseInt(val));
     }
 }
 

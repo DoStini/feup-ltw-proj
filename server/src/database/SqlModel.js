@@ -8,11 +8,13 @@ class SqlModel extends DatabaseModel {
 
     #columns;
     #database;
+    #reset;
 
-    constructor (name, columns, database) {
+    constructor (name, columns, database, reset) {
         super(name);
         this.#columns = columns;
         this.#database = database;
+        this.#reset = reset;
     }
 
     /**
@@ -27,7 +29,15 @@ class SqlModel extends DatabaseModel {
 
         query = query.slice(0, query.length - 1) + ");";
 
-        return this.#database.runQuery(query);
+        const promise = await this.#database.runQuery(query);
+
+        if (this.#reset) {
+            query = `DELETE FROM ${this.name};`;
+
+            return this.#database.runQuery(query);
+        }
+        
+        return promise;
     }
 
     async findByKey(key, value) {

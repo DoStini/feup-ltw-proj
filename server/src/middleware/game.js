@@ -5,20 +5,20 @@ const { testNumber } = require("./validation");
 
 const join = fieldsValidator([
     "nick",
-    "pass",
+    "password",
     "size",
     "initial",
 ], "body");
 
 const leave = fieldsValidator([
     "nick",
-    "pass",
+    "password",
     "game",
 ], "body");
 
 const notify = fieldsValidator([
     "nick",
-    "pass",
+    "password",
     "game",
     "move",
 ], "body");
@@ -67,6 +67,22 @@ const userInGame = (location, gameController) => async (req, res, next) => {
  * @param {GameController} gameController 
  * @returns {Middleware.MiddlewareCallback}
  */
+ const gameFull = (gameController) => async (req, res, next) => {
+    const players = await gameController.players(req.body.game);
+    
+    if (players[0] == "null" || players[1] == "null") {
+        return requestError(res, 400, "Game not full");
+    }
+
+    next(req, res);
+}
+
+/**
+ * 
+ * @param {string} location 
+ * @param {GameController} gameController 
+ * @returns {Middleware.MiddlewareCallback}
+ */
  const userNotInGame = (location, gameController) => async (req, res, next) => {
     if (await gameController.playerInGame(req[location].nick) != null) {
         return requestError(res, 400, "User already in a game");
@@ -99,4 +115,5 @@ module.exports = {
     userInGame,
     userNotInGame,
     userInGameHash,
+    gameFull,
 }

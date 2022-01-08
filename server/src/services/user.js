@@ -24,7 +24,7 @@ class UserController  {
         try {
             await this.#model.insert("nick", {
                 nick: user,
-                pass: hashed,
+                password: hashed,
             });   
         } catch (error) {
             console.error(error);

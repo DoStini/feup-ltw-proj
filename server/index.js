@@ -1,9 +1,10 @@
 const config = require("./src/env");
 const Framework = require("./framework/framework");
 const loaders = require("./src/loaders");
-const GameController = require("./src/services/gameController");
+const cors = require("./framework/middleware/cors");
 
 const app = new Framework();
+app.use(cors);
 
 loaders(app);
 

@@ -41,6 +41,7 @@ class FrameworkResponse extends http.ServerResponse {
     setupServerSentEvent() {
         this.setHeader('Content-Type', 'text/event-stream');
         this.setHeader('Connection', 'keep-alive');
+        this.setHeader('Cache-Control', 'no-cache');
     }
 }
 

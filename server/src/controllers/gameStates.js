@@ -177,7 +177,7 @@ class PlayerState extends GameState {
         if (this.checkEnd()) {
             const winner = this.game.endGame();
             const response = new GameResponse(GAME_END);
-            response.winner = winner;
+            response.winner = winner === null ? null : winner.name;
 
             return response;
         } else {
