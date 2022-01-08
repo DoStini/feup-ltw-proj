@@ -130,7 +130,7 @@ class NegaMaxAIStrategy {
         gameState.board.seeds = JSON.parse(JSON.stringify(gameState.board.seeds));
         gameState.board.storage = JSON.parse(JSON.stringify(gameState.board.storage));
 
-        let { maxScore, maxHole } = this.negamax(gameState, this.#depth, gameState.player.id);
+        let { maxScore, maxHole } = this.negamax(gameState, this.#depth, gameState.player.id, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY);
         console.log(maxHole);
         console.log(maxScore);
 
