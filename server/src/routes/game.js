@@ -23,8 +23,16 @@ module.exports = async (router, userController, gameController) => {
         joinAttributes,
         validNick("body"),
         validCredentials(userController),
-        userNotInGame("body", gameController),
         async (req, res) => {
+            let existingGame = await gameController.playerInGame(req.body.nick);
+            if (existingGame != null) {
+                if( existingGame.player2 !== "null") {
+                    return requestError(res, 400, "User already in a game");
+                } else {
+                    await gameController.endGame(existingGame.hash);
+                }
+            }
+
             let foundGame = await gameController.findGame(req.body.size, req.body.initial);
             let gameHash;
 
@@ -34,13 +42,7 @@ module.exports = async (router, userController, gameController) => {
             } else {
                 gameHash = foundGame.gameHash;
                 await gameController.addPlayer2(foundGame, req.body.nick);
-
-                // send event to player 1
             }
-
-            // setTimeout((gameController, nick, hash) => {
-            //     gameController.leaveGame(nick, hash);
-            // }, GAME_TIMEOUT, gameController, req.body.nick, gameHash);
 
             return res.json({
                 "game" : gameHash,
@@ -95,8 +97,7 @@ module.exports = async (router, userController, gameController) => {
                 gameController.notifyAll(req.body.game, obj);
             }
 
-
-            return res.json(obj); // This is not obj, jsut leave for debug for now
+            return res.json({});
         }
     );
 

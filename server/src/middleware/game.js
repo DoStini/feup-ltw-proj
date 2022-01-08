@@ -49,12 +49,12 @@ const userInGame = (location, gameController) => async (req, res, next) => {
  * @returns {Middleware.MiddlewareCallback}
  */
  const userInGameHash = (location, gameController) => async (req, res, next) => {
-    const foundHash = await gameController.playerInGame(req[location].nick);
-    if (foundHash == null) {
+    const foundGame = await gameController.playerInGame(req[location].nick);
+    if (foundGame == null) {
         return requestError(res, 400, "User not in a game");
     }
 
-    if(foundHash !== req[location].game) {
+    if(foundGame.hash !== req[location].game) {
         return requestError(res, 400, `User not in game ${req[location].game}`);
     }
 
