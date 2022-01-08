@@ -15,7 +15,6 @@ function setupClickListeners() {
 
 async function loginHandler(data) {
     const resp = await login(data);
-    console.log(resp)
 
     if (resp.status === STATUS_CODES.OK) {
         // Use cookies to persist session in broswer
@@ -48,7 +47,6 @@ function getPass() {
 }
 
 function isAuthenticated() {
-    console.log(session?.user,)
     return session?.user && session?.pass;
 }
 
@@ -94,7 +92,6 @@ function updateAuthButtons() {
 function restoreSession() {
     const userCookie = getCookie("user");
     const passCookie = getCookie("pass");
-    console.log("cookies:", userCookie, passCookie)
     if (userCookie && passCookie) {
         session = {
             user: userCookie,

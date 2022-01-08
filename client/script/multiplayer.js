@@ -45,7 +45,6 @@ function setupMultiplayer() {
         };
 
         const req = await join(data);
-        console.log("join", formData, req)
     });
 
     document.querySelector("#config-multiplayer-matchmaking > form").addEventListener('submit', async (e) => {
@@ -77,7 +76,6 @@ function setupMultiplayer() {
 }
 
 function parseBoard(data) {
-    console.log(data);
     const user = getUser();
     const enemy = Object.keys(data.board.sides).find(el => el !== user);
     const turn = data.board.turn;

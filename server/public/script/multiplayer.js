@@ -45,7 +45,6 @@ function setupMultiplayer() {
         };
 
         const req = await join(data);
-        console.log("join", formData, req)
     });
 
     document.querySelector("#config-multiplayer-matchmaking > form").addEventListener('submit', async (e) => {

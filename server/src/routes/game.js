@@ -6,7 +6,6 @@ const { requestError, hash } = require("../utils");
 const { join, leave, notify, update, userInGame, userNotInGame, joinAttributes, userInGameHash, gameFull } = require("../middleware/game");
 const queryParser = require("../../framework/middleware/queryParser");
 const GameController = require("../services/gameController");
-const { GAME_TIMEOUT } = require("../env");
 const { WRONG_TURN, INVALID_HOLE, GAME_END } = require("../constants");
 
 /**
@@ -42,6 +41,7 @@ module.exports = async (router, userController, gameController) => {
             } else {
                 gameHash = foundGame.gameHash;
                 await gameController.addPlayer2(foundGame, req.body.nick);
+                gameController.registerTimeout(foundGame.player1.name, gameHash);
             }
 
             return res.json({
@@ -71,8 +71,9 @@ module.exports = async (router, userController, gameController) => {
         userInGameHash("body", gameController),
         gameFull(gameController),
         async (req, res) => {
+            const hash = req.body.game;
 
-            const { result, game } = await gameController.clickHole(req.body.nick, req.body.game, req.body.move);
+            const { result, game } = await gameController.clickHole(req.body.nick, hash, req.body.move);
 
             if (result.status === WRONG_TURN) {
                 return requestError(res, 400, "Not your turn to play");
@@ -80,7 +81,10 @@ module.exports = async (router, userController, gameController) => {
             
             if (result.status === INVALID_HOLE) {
                 return requestError(res, 400, "Invalid hole");
-            } 
+            }
+
+            gameController.cancelTimeout(game.player1.name);
+            gameController.cancelTimeout(game.player2.name);
             
             const obj = {
                 board: game.parseBoard(),
@@ -90,11 +94,12 @@ module.exports = async (router, userController, gameController) => {
             if (result.status === GAME_END) {
                 obj.winner = result.winner;
 
-                gameController.notifyAll(req.body.game, obj);
-
-                gameController.endGame(req.body.game);
+                gameController.notifyAll(hash, obj);
+                gameController.endGame(hash);
             } else {
-                gameController.notifyAll(req.body.game, obj);
+                gameController.registerTimeout(game.currentPlayer.name, hash);
+
+                gameController.notifyAll(hash, obj);
             }
 
             return res.json({});
