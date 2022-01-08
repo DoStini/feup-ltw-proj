@@ -14,6 +14,10 @@ const validNick = (location) => (req, res, next) => {
         return requestError(res, 400, "Nick can only contain letters, numbers, '.' and '_' and must be between 3 and 30 characters");
     }
 
+    if(req[location].nick === "null") {
+        return requestError(res, 400, "Nick can't be null");
+    }
+
     return next(req, res);
 }
 
