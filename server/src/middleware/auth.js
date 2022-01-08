@@ -13,6 +13,8 @@ const validNick = (location) => (req, res, next) => {
     if (re.exec(req[location].nick)?.length !== 1) {
         return requestError(res, 400, "Nick can only contain letters, numbers, '.' and '_' and must be between 3 and 30 characters");
     }
+
+    return next(req, res);
 }
 
 const validCredentials = (userController) => async (req, res, next) => {
