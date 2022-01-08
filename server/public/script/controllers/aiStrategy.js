@@ -70,16 +70,9 @@ class NegaMaxAIStrategy {
      * 
      * @returns {{maxScore: number, maxHole: number}}
      */
-    negamax(gameState, depth, curPlayerID, playerID) {
-        let color;
-        if (curPlayerID === playerID) {
-            color = 1;
-        } else {
-            color = -1;
-        }
-
+    negamax(gameState, depth, curPlayerID) {
         if (depth <= 0 || gameState.checkEnd()) {
-            return { maxScore: color * evaluateBoard(gameState), maxHole: -1 };
+            return { maxScore: evaluateBoard(gameState), maxHole: -1 };
         }
 
         const origSeeds = JSON.parse(JSON.stringify(gameState.board.seeds));
@@ -99,8 +92,11 @@ class NegaMaxAIStrategy {
             } else {
                 newGameState = gameState.getNextState();
             }
-
-            const { maxScore: score } = this.negamax(newGameState, depth - 1, newGameState.player.id, playerID);
+            
+            let { maxScore: score } = this.negamax(newGameState, depth - 1, newGameState.player.id);
+            if(gameState.player.id !== newGameState.player.id) {
+                score = -score;
+            }
 
             if (score > maxScore) {
                 maxScore = score;
@@ -127,7 +123,7 @@ class NegaMaxAIStrategy {
         gameState.board.seeds = JSON.parse(JSON.stringify(gameState.board.seeds));
         gameState.board.storage = JSON.parse(JSON.stringify(gameState.board.storage));
 
-        let { maxScore, maxHole } = this.negamax(gameState, this.#depth, gameState.player.id, gameState.player.id);
+        let { maxScore, maxHole } = this.negamax(gameState, this.#depth, gameState.player.id);
         console.log(maxHole);
         console.log(maxScore);
 
@@ -153,7 +149,7 @@ function evaluateBoard(gameState) {
     const origSeeds = gameState.board.seeds;
     const origStorage = gameState.board.storage;
 
-    score += gameState.board.getSeedsInPlay(gameState.player.id) * (1 / (gameState.board.nHoles * gameState.board.nSeeds));
+    score += gameState.board.getSeedsInPlay(gameState.player.id) * (0.55 / (gameState.board.nHoles * gameState.board.nSeeds));
     gameState.board.seeds = JSON.parse(JSON.stringify(gameState.board.seeds));
     gameState.board.storage = JSON.parse(JSON.stringify(gameState.board.storage));
 
