@@ -7,7 +7,9 @@ const RouterComponent = require('./router/routerComponent');
 
 class Framework {
     /** @type {RequestHandler.RequestCallback} */
-    #notFoundHandler = (req, res) => res.status(404).text(`Cannot ${req.method} ${req.url}\n`);
+    #notFoundHandler = (req, res) => {
+        res.status(404).text(`Cannot ${req.method} ${req.url}\n`)
+    };
     /** @type {RouterGroup} */
     #router = new RouterGroup();
     #extensions = [];
@@ -31,6 +33,10 @@ class Framework {
         this.#router.addRouter(router);    
     }
 
+    setMiddleware(...callbacks) {
+        this.#router.setMiddleware(...callbacks);
+    }
+    
     use(callback) {
         this.#extensions.push(callback);
     }

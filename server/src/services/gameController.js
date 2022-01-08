@@ -170,9 +170,11 @@ class GameController {
         if(otherPlayer != "null") {
             await this.#userController.addGame(player);
             await this.#userController.addWin(otherPlayer);
+
+            await this.notifyAll(hash, {winner: otherPlayer});
         }
 
-        this.#model.delete("hash", hash);
+        this.endGame(hash);
     }
 
     /**
