@@ -13,6 +13,7 @@ class Framework {
     };
     /** @type {RouterGroup} */
     #router = new RouterGroup();
+    #extensions = [];
 
     /**
      * 
@@ -36,6 +37,14 @@ class Framework {
     setMiddleware(...callbacks) {
         this.#router.setMiddleware(...callbacks);
     }
+    
+    use(callback) {
+        this.#extensions.push(callback);
+    }
+
+    #runExtensions(req, res) {
+        this.#extensions.forEach(callback => callback(req, res));
+    }
 
     /**
      * Starts the server and runs the callback.
@@ -47,6 +56,8 @@ class Framework {
         const server = http.createServer({ServerResponse: FrameworkResponse, IncomingMessage: FrameworkRequest}, 
             (/** @type {FrameworkRequest} */ request, /** @type {FrameworkResponse} */ response) => {
                 const handler = this.#router.find(request.url.split("?")[0], request.method);
+
+                this.#runExtensions(request, response);
 
                 if (handler != null) {
                     handler(request, response);

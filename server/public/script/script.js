@@ -19,7 +19,7 @@ async function leaderboardHandler() {
     const tableBody = document.querySelectorAll(".server-leaderboard .leaderboard-table > tbody")[0];
     tableBody.innerHTML = "";
 
-    for (let i = 0; i < Math.min(5, leaderboard.length - 1); i++) {
+    for (let i = 0; i < Math.min(10, leaderboard.length); i++) {
         const entry = leaderboard.at(i);
         tableBody.append(htmlEntry(entry, i + 1));
     }

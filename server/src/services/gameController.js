@@ -13,12 +13,15 @@ class GameController {
     /** @type {UserController} */
     #userController;
 
+    #handlers;
+
     /**
      * @param {DatabaseModel} model
      */
     constructor(model, userController) {
         this.#model = model;
         this.#userController = userController;
+        this.#handlers = {};
     }
 
     /**
@@ -34,6 +37,32 @@ class GameController {
             turn: game.currentPlayer.name,
             board: game.board.toJSON()
         }
+    }
+
+    registerEvent(user, handler) {
+        this.#handlers[user] = handler;
+    }
+
+    async startGameNotify(hash) {
+        const [game] = await this.#model.findByKey("hash", hash);
+        if (game.player1 === "null" || game.player2 === "null") {
+            return;
+        }
+
+        await this.notifyAll(hash, {
+            board: this.objectToGame(game).parseBoard()
+        });
+    }
+
+    async notifyAll(hash, data) {
+        const [game] = await this.#model.findByKey("hash", hash);
+
+        this.notify(game.player1, data);
+        this.notify(game.player2, data);
+    }
+
+    notify(user, data) {
+        this.#handlers[user].write(`data: ${JSON.stringify(data)}\n\n`);
     }
 
     createGame(nHoles, nSeeds, turn, player1Name, player2Name, hash, boardJSON) {
@@ -61,14 +90,30 @@ class GameController {
     objectToGame(json) {
         const boardObj = JSON.parse(json.board);
         
-        return this.createGame(boardObj.nHoles, boardObj.nSeeds, json.turn, json.player1, json.player2, json.hash, json.board);
+        return this.createGame(parseInt(boardObj.nHoles), parseInt(boardObj.nSeeds), json.turn, json.player1, json.player2, json.hash, json.board);
     }
 
     async playerInGame(nick) {
-        const data = await this.#model.findByKey("player1", nick);
-        const data2 = await this.#model.findByKey("player2", nick);
+        const [data] = await this.#model.findByKey("player1", nick);
+        const [data2] = await this.#model.findByKey("player2", nick);
 
-        return data.length > 0 || data2.length > 0;
+        if(data != null) {
+            return data.hash;
+        } else if (data2 != null) {
+            return data2.hash;
+        } else {
+            return null;
+        }
+    }
+
+    async players(game) {
+        const [gameObj] = await this.#model.findByKey("hash", game);
+        
+        return [gameObj.player1, gameObj.player2];
+    }
+
+    async getAllGames() {
+        return await this.#model.all();
     }
 
     /**
@@ -81,44 +126,13 @@ class GameController {
      * @param {string} hash 
      * @returns {Game}
      */
-    async setupMultiplayerGame(nHoles, seedsPerHole, turn, player1Name, hash) {
-        let game = this.createGame(nHoles, seedsPerHole, turn, player1Name, null, hash);
+    async setupMultiplayerGame(nHoles, seedsPerHole, turn, player1Name, player2Name, hash) {
+        let game = this.createGame(nHoles, seedsPerHole, turn, player1Name, player2Name, hash);
 
         let obj = this.#gameToObject(game);
         await this.#model.insert(hash, obj);
 
         return game;
-    }
-
-    /**
-     * 
-     * @param {string} player 
-     * @param {string} hash 
-     * @param {number} hole 
-     * @returns 
-     */
-    async clickHole(player, hash, hole) {
-        let game = this.objectToGame((await this.#model.findByKey("hash", hash))[0]);
-
-        let result = game.clickHole(player, hole);
-        let obj = this.#gameToObject(game);
-
-        if(result.status === GAME_END) {
-            await this.#model.delete("hash", hash);
-
-            if(result.winner === null) {
-                this.#userController.addGame(game.player1.name);
-                this.#userController.addGame(game.player2.name)
-            } else {
-                const loserName = game.player1.name === result.winner.name ? game.player2.name : game.player1.name;
-                this.#userController.addWin(result.winner);
-                this.#userController.addGame(loserName);
-            }
-        } else {
-            await this.#model.update("hash", hash, obj);
-        }
-
-        return {result, game};
     }
 
     /**
@@ -145,6 +159,26 @@ class GameController {
 
     /**
      * 
+     * @param {string} player 
+     * @param {string} hash 
+     */
+    async leaveGame(player, hash) {
+        let [game] = await this.#model.findByKey("hash", hash);
+        if(game == null) return null;
+
+        const otherPlayer = game.player1 === player ? game.player2 : game.player1;
+        if(otherPlayer != "null") {
+            await this.#userController.addGame(player);
+            await this.#userController.addWin(otherPlayer);
+
+            await this.notifyAll(hash, {winner: otherPlayer});
+        }
+
+        this.#model.delete("hash", hash);
+    }
+
+    /**
+     * 
      * @param {Game} game 
      * @param {string} player2 
      */
@@ -152,6 +186,44 @@ class GameController {
         game.player2 = new Player(1, player2);
 
         await this.#model.update("hash", game.gameHash, this.#gameToObject(game));
+    }
+
+    /**
+     * 
+     * @param {string} player 
+     * @param {string} hash 
+     * @param {number} hole 
+     * @returns 
+     */
+    async clickHole(player, hash, hole) {
+        let game = this.objectToGame((await this.#model.findByKey("hash", hash))[0]);
+
+        let result = game.clickHole(player, hole);
+        let obj = this.#gameToObject(game);
+
+        if(result.status === GAME_END) {
+            if(result.winner === null) {
+                this.#userController.addGame(game.player1.name);
+                this.#userController.addGame(game.player2.name)
+            } else {
+                const loserName = game.player1.name === result.winner ? game.player2.name : game.player1.name;
+                this.#userController.addWin(result.winner);
+                this.#userController.addGame(loserName);
+            }
+        }
+
+        await this.#model.update("hash", hash, obj);
+
+        return {result, game};
+    }
+
+    async endGame(hash) {
+        let [game] = await this.#model.findByKey("hash", hash);
+
+        delete this.#handlers[game.player1];
+        delete this.#handlers[game.player2];
+
+        await this.#model.delete("hash", hash);
     }
 }
 

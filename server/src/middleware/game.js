@@ -5,20 +5,20 @@ const { testNumber } = require("./validation");
 
 const join = fieldsValidator([
     "nick",
-    "pass",
+    "password",
     "size",
     "initial",
 ], "body");
 
 const leave = fieldsValidator([
     "nick",
-    "pass",
+    "password",
     "game",
 ], "body");
 
 const notify = fieldsValidator([
     "nick",
-    "pass",
+    "password",
     "game",
     "move",
 ], "body");
@@ -35,8 +35,43 @@ const update = fieldsValidator([
  * @returns {Middleware.MiddlewareCallback}
  */
 const userInGame = (location, gameController) => async (req, res, next) => {
-    if (!await gameController.playerInGame(req[location].nick)) {
-        return requestError(res, 400, "User not in game");
+    if (await gameController.playerInGame(req[location].nick) == null) {
+        return requestError(res, 400, "User not in a game");
+    }
+
+    next(req, res);
+}
+
+/**
+ * 
+ * @param {string} location 
+ * @param {GameController} gameController 
+ * @returns {Middleware.MiddlewareCallback}
+ */
+ const userInGameHash = (location, gameController) => async (req, res, next) => {
+    const foundHash = await gameController.playerInGame(req[location].nick);
+    if (foundHash == null) {
+        return requestError(res, 400, "User not in a game");
+    }
+
+    if(foundHash !== req[location].game) {
+        return requestError(res, 400, `User not in game ${req[location].game}`);
+    }
+
+    next(req, res);
+}
+
+/**
+ * 
+ * @param {string} location 
+ * @param {GameController} gameController 
+ * @returns {Middleware.MiddlewareCallback}
+ */
+ const gameFull = (gameController) => async (req, res, next) => {
+    const players = await gameController.players(req.body.game);
+    
+    if (players[0] == "null" || players[1] == "null") {
+        return requestError(res, 400, "Game not full");
     }
 
     next(req, res);
@@ -49,8 +84,8 @@ const userInGame = (location, gameController) => async (req, res, next) => {
  * @returns {Middleware.MiddlewareCallback}
  */
  const userNotInGame = (location, gameController) => async (req, res, next) => {
-    if (await gameController.playerInGame(req[location].nick)) {
-        return requestError(res, 400, "User already in game");
+    if (await gameController.playerInGame(req[location].nick) != null) {
+        return requestError(res, 400, "User already in a game");
     }
 
     next(req, res);
@@ -79,4 +114,6 @@ module.exports = {
     joinAttributes,
     userInGame,
     userNotInGame,
+    userInGameHash,
+    gameFull,
 }

@@ -51,6 +51,7 @@ function startGame(pageManager) {
 
 function cleanupGame(gameHash, evtSource) {
     document.getElementById("game-status").classList.add("hidden");
+    console.log("hello bitch boy ", gameHash);
 
     if (toggleGameStatus.open) {
         toggleGameStatus();

@@ -24,7 +24,7 @@ class UserController  {
         try {
             await this.#model.insert("nick", {
                 nick: user,
-                pass: hashed,
+                password: hashed,
             });   
         } catch (error) {
             console.error(error);
@@ -33,14 +33,14 @@ class UserController  {
     }
 
     async addGame(nick) {
-        const user = await this.#model.find(nick);
+        const [user] = await this.#model.findByKey("nick", nick);
 
         user["games"] = (user["games"] ?? 0) + 1;
         await this.#model.update("nick", user.nick, user);
     }
 
     async addWin(nick) {
-        const user = await this.#model.find(nick);
+        const [user] = await this.#model.findByKey("nick", nick);
 
         user["victories"] = (user["victories"] ?? 0) + 1;
         user["games"] = (user["games"] ?? 0) + 1;

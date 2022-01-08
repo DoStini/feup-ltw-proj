@@ -53,13 +53,14 @@ function isAuthenticated() {
 }
 
 function logout() {
+    startAuth();
+
     setCookie("user", "", -1);
     setCookie("pass", "", -1);
 
     session = {};
 
     launchSuccessSnackbar("Logged out successfully");
-    startAuth();
 }
 
 function replaceButtonsLogout() {

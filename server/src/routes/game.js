@@ -1,11 +1,13 @@
 const Router = require("../../framework/router/router");
 const UserController = require('../services/user');
 const bodyParser = require("../../framework/middleware/bodyParser");
-const { userRequired, passRequired, auth, validCredentials } = require("../middleware/auth");
-const { requestError, checkHash, hash } = require("../utils");
-const { join, leave, notify, update, userInGame, userNotInGame, joinAttributes } = require("../middleware/game");
+const { validCredentials, validNick } = require("../middleware/auth");
+const { requestError, hash } = require("../utils");
+const { join, leave, notify, update, userInGame, userNotInGame, joinAttributes, userInGameHash, gameFull } = require("../middleware/game");
 const queryParser = require("../../framework/middleware/queryParser");
 const GameController = require("../services/gameController");
+const { GAME_TIMEOUT } = require("../env");
+const { WRONG_TURN, INVALID_HOLE, GAME_END } = require("../constants");
 
 /**
  * 
@@ -19,6 +21,7 @@ module.exports = async (router, userController, gameController) => {
         bodyParser,
         join,
         joinAttributes,
+        validNick("body"),
         validCredentials(userController),
         userNotInGame("body", gameController),
         async (req, res) => {
@@ -27,15 +30,17 @@ module.exports = async (router, userController, gameController) => {
 
             if(foundGame === null) {
                 gameHash = hash(req.body.nick + Date.now() + req.body.size + req.body.initial)
-                await gameController.setupMultiplayerGame(req.body.size, req.body.initial, req.body.nick, req.body.nick, gameHash);
+                await gameController.setupMultiplayerGame(req.body.size, req.body.initial, req.body.nick, req.body.nick, null, gameHash);
             } else {
                 gameHash = foundGame.gameHash;
                 await gameController.addPlayer2(foundGame, req.body.nick);
+
+                // send event to player 1
             }
-            
-            // setTimeout(() => {
-            //     gameController.
-            // })
+
+            // setTimeout((gameController, nick, hash) => {
+            //     gameController.leaveGame(nick, hash);
+            // }, GAME_TIMEOUT, gameController, req.body.nick, gameHash);
 
             return res.json({
                 "game" : gameHash,
@@ -46,37 +51,64 @@ module.exports = async (router, userController, gameController) => {
     router.post("/leave",
         bodyParser,
         leave,
+        validNick("body"),
         validCredentials(userController),
-        userInGame("body", gameController),
+        userInGameHash("body", gameController),
         async (req, res) => {
-            return res.json({
-                "message": "Success",
-            });
+            await gameController.leaveGame(req.body.nick, req.body.game);
+
+            return res.json({});
         }
     );
 
     router.post("/notify",
         bodyParser,
         notify,
+        validNick("body"),
         validCredentials(userController),
-        userInGame("body"),
+        userInGameHash("body", gameController),
+        gameFull(gameController),
         async (req, res) => {
-            return res.json({
-                "message": "Succes",
-            });
+
+            const { result, game } = await gameController.clickHole(req.body.nick, req.body.game, req.body.move);
+
+            if (result.status === WRONG_TURN) {
+                return requestError(res, 400, "Not your turn to play");
+            } 
+            
+            if (result.status === INVALID_HOLE) {
+                return requestError(res, 400, "Invalid hole");
+            } 
+            
+            const obj = {
+                board: game.parseBoard(),
+                pit: req.body.move
+            };
+            
+            if (result.status === GAME_END) {
+                obj.winner = result.winner;
+
+                gameController.notifyAll(req.body.game, obj);
+
+                gameController.endGame(req.body.game);
+            } else {
+                gameController.notifyAll(req.body.game, obj);
+            }
+
+
+            return res.json(obj); // This is not obj, jsut leave for debug for now
         }
     );
 
     router.get("/update",
         queryParser,
         update,
-        userInGame("query"),
+        validNick("query"),
+        userInGameHash("query", gameController),
         async (req, res) => {
             res.setupServerSentEvent();
-            const gameHandler = (data) => res.write(data);
-            return res.json({
-                "message": "Succes",
-            });
+            gameController.registerEvent(req.query.nick, res);
+            gameController.startGameNotify(req.query.game);
         }
     );
 }

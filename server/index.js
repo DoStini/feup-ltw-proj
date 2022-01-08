@@ -1,8 +1,8 @@
 const config = require("./src/env");
 const Framework = require("./framework/framework");
 const loaders = require("./src/loaders");
-const GameController = require("./src/services/gameController");
 const fs = require('fs');
+const cors = require("./framework/middleware/cors");
 
 const app = new Framework({notFoundHandler : (req, res) => {
     fs.readFile(`public/${req.url}`, null, function (error, data) {
@@ -22,6 +22,7 @@ const app = new Framework({notFoundHandler : (req, res) => {
         }
     });
 }});
+app.use(cors);
 loaders(app);
 
 app.listen(config.PORT, () => {

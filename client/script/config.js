@@ -1,5 +1,5 @@
 let CONFIG = {
-    API_HOSTNAME: "http://twserver.alunos.dcc.fc.up.pt:8008/",
+    API_HOSTNAME: "http://localhost:8080/",
 }
 
 function getApiHost() {
