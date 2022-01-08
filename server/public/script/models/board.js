@@ -28,6 +28,15 @@ class Board {
         return this.#seeds;
     }
 
+    set seeds(seeds) {
+        this.#seeds = seeds;
+    }
+
+
+    set storage(storage) {
+        this.#storage = storage;
+    }
+
     get storage() {
         return this.#storage;
     }

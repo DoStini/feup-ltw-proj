@@ -33,7 +33,7 @@ class GameState {
      * 
      * @returns {Object.<number, Array.<number>>}
      */
-    sowSeeds(hole) {
+    sowSeeds(hole, playerID) {
         let seeds = this.board.getHoleSeedAmount(hole);
         let lastHole = hole
         let curHole = lastHole;
@@ -42,10 +42,10 @@ class GameState {
         destHoles[hole] = [];
 
         for (let i = 0; i < seeds; i++) {
-            if (lastHole === this.board.getLastHole(this.player.id)) {
-                this.board.moveToStorage(hole, this.player.id);
+            if (lastHole === this.board.getLastHole(playerID)) {
+                this.board.moveToStorage(hole, playerID);
 
-                lastHole = this.board.getStorageID(this.player.id);
+                lastHole = this.board.getStorageID(playerID);
                 destHoles[hole].push(lastHole);
             } else {
                 curHole = this.board.getNextHole(curHole);
@@ -61,21 +61,22 @@ class GameState {
 
     /**
      * @param {number} lastHole
+     * @param {number} playerID
      * 
      * @returns {Object.<number, Array.<number>>}
      */
-    captureSeeds(lastHole) {
+    captureSeeds(lastHole, playerID) {
         let holeToHoles = {};
 
-        if (this.board.holeBelongsToPlayer(lastHole, this.player.id) && this.board.getHoleSeedAmount(lastHole) === 1) {
-            let storage = this.board.getStorageID(this.player.id);
+        if (this.board.holeBelongsToPlayer(lastHole, playerID) && this.board.getHoleSeedAmount(lastHole) === 1) {
+            let storage = this.board.getStorageID(playerID);
             let oppositeHole = this.board.getOppositeHole(lastHole);
             let oppositeSeeds = this.board.getHoleSeedAmount(oppositeHole);
 
             for (let i = 0; i < oppositeSeeds; i++) {
-                this.board.moveToStorage(oppositeHole, this.player.id);
+                this.board.moveToStorage(oppositeHole, playerID);
             }
-            this.board.moveToStorage(lastHole, this.player.id);
+            this.board.moveToStorage(lastHole, playerID);
 
             holeToHoles[lastHole] = [storage];
             holeToHoles[oppositeHole] = Array(oppositeSeeds).fill(storage);
@@ -88,10 +89,12 @@ class GameState {
      * Checks if player can play again.
      * 
      * @param {number} lastHole The hole where the last seed was placed
+     * @param {number} playerID The current player.
+     * 
      * @returns {boolean}
      */
-    checkChain(lastHole) {
-        return lastHole === this.board.getStorageID(this.player.id);
+    checkChain(lastHole, playerID) {
+        return lastHole === this.board.getStorageID(playerID);
     }
 
     /**
@@ -117,17 +120,17 @@ class GameState {
      * @param {number} hole 
      * @returns {{chain: boolean, animation: SeedAnimation}}
      */
-    sowAndCapture(hole) {
+    sowAndCapture(hole, playerID) {
         const seedAnimation = new SeedAnimation();
 
-        const holeToHoles = this.sowSeeds(hole);
+        const holeToHoles = this.sowSeeds(hole, playerID);
         const destHoles = holeToHoles[hole];
         const lastHole = destHoles[destHoles.length - 1];
 
         seedAnimation.addStep(holeToHoles);
-        seedAnimation.addStep(this.captureSeeds(lastHole));
+        seedAnimation.addStep(this.captureSeeds(lastHole, playerID));
 
-        return { chain: this.checkChain(lastHole), animation: seedAnimation };
+        return { chain: this.checkChain(lastHole, playerID), animation: seedAnimation };
     }
 
     /**
@@ -137,7 +140,7 @@ class GameState {
      * @returns {Promise<GameState>} The next game state.
      */
     async play(hole) {
-        const response = this.sowAndCapture(hole);
+        const response = this.sowAndCapture(hole, this.player.id);
 
         await this.animator.executeAnimation(this.board.nHoles, response.animation);
 
@@ -231,7 +234,7 @@ class PlayAIState extends GameState {
         }
 
         setTimeoutClearable(async function () {
-            let hole = this.game.aiStrategy.move(this.game, this.player.id);
+            let hole = this.game.aiStrategy.move(this);
 
             this.game.changePlayerState(await this.play(hole));
         }.bind(this), 2000);
