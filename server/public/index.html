@@ -14,22 +14,30 @@
     <link rel="stylesheet" href="css/styles.css" />
 
     <script src="https://kit.fontawesome.com/4616109396.js" crossorigin="anonymous"></script>
+
+    <script src="constants/mancala.js"></script>
     <script src="script/config.js" defer></script>
+
+    <script src="script/models/player.js" defer></script>
+    <script src="script/models/seed.js" defer></script>
+    <script src="script/models/board.js" defer></script>
+    <script src="script/models/numberBoard.js" defer></script>
+    <script src="script/models/mancala.js" defer></script>
+
+    <script src="script/view/animation.js" defer></script>
+    <script src="script/view/renderer.js" defer></script>
+    
+    <script src="script/controllers/aiStrategy.js" defer></script>
+    <script src="script/controllers/gameStates.js" defer></script>
+
+    <script src="script/network/communication.js" defer></script>
+    <script src="script/network/auth.js" defer></script>
+    <script src="script/network/multiplayer.js" defer></script>
+
     <script src="script/snackbar.js" defer></script>
     <script src="script/status.js" defer></script>
-    <script src="script/animation.js" defer></script>
-    <script src="script/gameStates.js" defer></script>
-    <script src="constants/mancala.js"></script>
     <script src="script/common.js" defer></script>
-    <script src="script/player.js" defer></script>
-    <script src="script/renderer.js" defer></script>
-    <script src="script/seed.js" defer></script>
-    <script src="script/board.js" defer></script>
-    <script src="script/mancala.js" defer></script>
     <script src="script/pages.js" defer></script>
-    <script src="script/communication.js" defer></script>
-    <script src="script/auth.js" defer></script>
-    <script src="script/multiplayer.js" defer></script>
     <script src="script/script.js" defer></script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -386,11 +394,16 @@
 
                 <label for="ai_difficulty">AI Difficulty</label>
                 <select name="ai_difficulty" id="ai_difficulty">
-                    <option value="easy">Lets You Win</option>
-                    <option value="hard">
-                        Loses on Purpose Sometimes (but will kick your ass)
+                    <option value="random" selected>Lets You Win (because it's random)</option>
+                    <option value="nega-1">
+                       Beginner Level (for babies)
                     </option>
-                    <option value="impossible" selected>Impossible</option>
+                    <option value="nega-2">Loses sometimes (but will completely destroy you))</option>
+                    <option value="nega-3">Like someone who started playing mancala a month ago.</option>
+                    <option value="nega-5">Has played this game before you were even born</option>
+                    <option value="nega-6">There is no hope</option>
+                    <option value="nega-9">NEGAMIND</option>
+                    <option value="nega-12">GOD (we are not ready to witness god's beauty using bigger boards)</option>
                 </select>
 
                 <fieldset>

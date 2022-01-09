@@ -36,15 +36,16 @@ PageManager.prototype.setPage = function (elementId) {
 }
 
 function startGame(pageManager) {
-    let holes = document.getElementById("holes").value;
-    let seeds = document.getElementById("seeds").value;
+    let holes = parseInt(document.getElementById("holes").value);
+    let seeds = parseInt(document.getElementById("seeds").value);
+    let aiDifficulty = document.getElementById("ai_difficulty").value;
     let turn = 0;
 
     if (document.getElementById("ai-order-ai").checked) {
         turn = 1;
     }
 
-    setupLocalGame(holes, seeds, turn);
+    setupLocalGame(holes, seeds, turn, aiDifficulty);
     pageManager.setPage("game-section");
     document.getElementById("game-status").classList.remove("hidden");
 }
