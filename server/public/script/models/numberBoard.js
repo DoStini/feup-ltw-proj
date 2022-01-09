@@ -31,4 +31,8 @@ class NumberBoard extends Board {
     getStorageAmount(playerID) {
         return this.storage[playerID];
     }
+
+    toNumberBoard() {
+        return this;
+    }
 }

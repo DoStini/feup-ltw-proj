@@ -42,7 +42,7 @@ class RandomAIStrategy {
      * @returns {number} The hole chosen to play.
      */
     move(gameState) {
-        let avail = gameState.board.getAvailHoles(gameState.player.id);
+        let avail = gameState.game.board.getAvailHoles(gameState.player.id);
 
         let hole = avail[(Math.random() * avail.length) >> 0];
 
@@ -53,6 +53,8 @@ class RandomAIStrategy {
 class NegaMaxAIStrategy {
     /** @type {number} */
     #depth;
+    /** @type {Function} */
+    #evalFunc;
 
     /**
      * 
@@ -60,6 +62,11 @@ class NegaMaxAIStrategy {
      */
     constructor(depth) {
         this.#depth = depth;
+        if(depth > 9) {
+            this.#evalFunc = simpleEval;
+        } else {
+            this.#evalFunc = evaluateBoard;
+        }
     }
 
     /**
@@ -71,23 +78,31 @@ class NegaMaxAIStrategy {
      * @returns {{maxScore: number, maxHole: number}}
      */
     negamax(gameState, depth, curPlayerID, alpha, beta) {
-        if (depth <= 0 || gameState.checkEnd()) {
-            return { maxScore: evaluateBoard(gameState), maxHole: -1 };
+        if(gameState.checkEnd()) {
+            depth = 0;
+
+            gameState.game.collectAllSeeds();
         }
 
-        const origSeeds = [...gameState.board.seeds];
-        const origStorage = [...gameState.board.storage];
+        if (depth <= 0) {
+            return { maxScore: this.#evalFunc(gameState), maxHole: -1 };
+        }
+
+        const origSeeds = [...gameState.game.board.seeds];
+        const origStorage = [...gameState.game.board.storage];
 
         let maxScore = Number.NEGATIVE_INFINITY;
         let maxHole = 0;
-        const availHoles = gameState.board.getAvailHoles(curPlayerID);
+        const availHoles = gameState.game.board.getAvailHoles(curPlayerID);
 
         for (let h = 0; h < availHoles.length; h++) {
             const hole = availHoles[h];
 
-            const result = gameState.sowAndCapture(hole, curPlayerID);
+            const destHoles = gameState.sowSeeds(hole, curPlayerID);
+            const lastHole = destHoles[destHoles.length - 1];
+            gameState.captureSeeds(lastHole, curPlayerID);
             let newGameState;
-            if (result.chain) {
+            if (gameState.checkChain(lastHole, curPlayerID)) {
                 newGameState = gameState;
             } else {
                 newGameState = gameState.getNextState();
@@ -110,8 +125,12 @@ class NegaMaxAIStrategy {
                 return { maxScore, maxHole };
             }
 
-            gameState.board.seeds = [...origSeeds]
-            gameState.board.storage = [...origStorage]
+            for(let i = 0; i < origSeeds.length; i++) {
+                gameState.game.board.seeds[i] = origSeeds[i];
+            } 
+            for(let i = 0; i < origStorage.length; i++) {
+                gameState.game.board.storage[i] = origStorage[i];
+            }
         }
 
         return { maxScore, maxHole };
@@ -125,7 +144,7 @@ class NegaMaxAIStrategy {
      */
     move(gameState) {
 
-        const origBoard = gameState.board;
+        const origBoard = gameState.game.board;
         gameState.game.board = new NumberBoard(origBoard);
 
         let { maxScore, maxHole } = this.negamax(gameState, this.#depth, gameState.player.id, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY);
@@ -135,6 +154,17 @@ class NegaMaxAIStrategy {
         return maxHole;
     }
 }
+
+function simpleEval(gameState) {
+    let score = 0;
+    let otherPlayer = (gameState.player.id + 1) % 2;
+
+    score += (gameState.game.board.getStorageAmount(gameState.player.id) - gameState.game.board.getStorageAmount(otherPlayer));
+    score += gameState.game.board.getSeedsInPlay(gameState.player.id) * (0.55 / (gameState.game.board.nHoles * gameState.game.board.nSeeds));
+
+    return score;
+}
+
 
 /**
  * 
@@ -148,32 +178,31 @@ function evaluateBoard(gameState) {
     let curPlayer;
 
     const origBoard = gameState.game.board;
-    gameState.game.board = new NumberBoard(origBoard);
+    gameState.game.board = gameState.game.board.toNumberBoard();
 
-    score += (gameState.board.getStorageAmount(gameState.player.id) - gameState.board.getStorageAmount(otherPlayer)) * 0.45;
-    score += gameState.board.getSeedsInPlay(gameState.player.id) * (0.55 / (gameState.board.nHoles * gameState.board.nSeeds));
-    
+    score += (gameState.game.board.getStorageAmount(gameState.player.id) - gameState.game.board.getStorageAmount(otherPlayer)) * 0.45;
+    score += gameState.game.board.getSeedsInPlay(gameState.player.id) * (0.55 / (gameState.game.board.nHoles * gameState.game.board.nSeeds));
 
     const origSeeds = [...gameState.game.board.seeds]
     const origStorage = [...gameState.game.board.storage]
 
-    for (let hole = 0; hole < gameState.board.nHoles * 2; hole++) {
-        if (gameState.board.holeBelongsToPlayer(hole, gameState.player.id)) {
+    for (let hole = 0; hole < gameState.game.board.nHoles * 2; hole++) {
+        if (gameState.game.board.holeBelongsToPlayer(hole, gameState.player.id)) {
             curPlayer = gameState.player.id;
         } else {
             curPlayer = otherPlayer;
         }
 
-        const holeToHoles = gameState.sowSeeds(hole, curPlayer);
-        const destHoles = holeToHoles[hole];
+        const destHoles = gameState.sowSeeds(hole, curPlayer);
         const lastHole = destHoles[destHoles.length - 1];
         const captured = gameState.captureSeeds(lastHole, curPlayer);
+        const oppositeHole = gameState.game.board.getOppositeHole(lastHole);
 
-        for (let key in captured) {
+        if(captured[oppositeHole] != null) {
             if (curPlayer === gameState.player.id) {
-                score += captured[key].length * 0.05;
+                score += captured[oppositeHole].length * 0.05;
             } else {
-                score -= captured[key].length * 0.1;
+                score -= captured[oppositeHole].length * 0.1;
             }
         }
 
@@ -181,8 +210,12 @@ function evaluateBoard(gameState) {
             score += 0.1;
         }
 
-        gameState.game.board.seeds = [...origSeeds]
-        gameState.game.board.storage = [...origStorage]
+        for(let i = 0; i < origSeeds.length; i++) {
+            gameState.game.board.seeds[i] = origSeeds[i];
+        } 
+        for(let i = 0; i < origStorage.length; i++) {
+            gameState.game.board.storage[i] = origStorage[i];
+        }
     }
 
     gameState.game.board = origBoard;

@@ -7,6 +7,7 @@ class GameState {
     otherPlayer;
     /** @property {Animator} animator */
     animator;
+
     /**
     * 
     * @param {Game} game
@@ -25,38 +26,28 @@ class GameState {
         }
     }
 
-    get board() {
-        return this.game.board;
-    }
-
-    set board(board) {
-        this.game.board = board;
-    }
-
     /**
      * @param {number} hole
      * 
-     * @returns {Object.<number, Array.<number>>}
+     * @returns {Array.<number>}
      */
     sowSeeds(hole, playerID) {
-        let seeds = this.board.getHoleSeedAmount(hole);
+        let seeds = this.game.board.getHoleSeedAmount(hole);
         let lastHole = hole
         let curHole = lastHole;
-        let destHoles = {};
-
-        destHoles[hole] = [];
+        let destHoles = new Array(seeds);
 
         for (let i = 0; i < seeds; i++) {
-            if (lastHole === this.board.getLastHole(playerID)) {
-                this.board.moveToStorage(hole, playerID);
+            if (lastHole === this.game.board.getLastHole(playerID)) {
+                this.game.board.moveToStorage(hole, playerID);
 
-                lastHole = this.board.getStorageID(playerID);
-                destHoles[hole].push(lastHole);
+                lastHole = this.game.board.getStorageID(playerID);
+                destHoles[i] = lastHole;
             } else {
-                curHole = this.board.getNextHole(curHole);
-                this.board.moveToHole(hole, curHole);
+                curHole = this.game.board.getNextHole(curHole);
+                this.game.board.moveToHole(hole, curHole);
 
-                destHoles[hole].push(curHole);
+                destHoles[i] = curHole;
                 lastHole = curHole;
             }
         }
@@ -73,15 +64,15 @@ class GameState {
     captureSeeds(lastHole, playerID) {
         let holeToHoles = {};
 
-        if (this.board.holeBelongsToPlayer(lastHole, playerID) && this.board.getHoleSeedAmount(lastHole) === 1) {
-            let storage = this.board.getStorageID(playerID);
-            let oppositeHole = this.board.getOppositeHole(lastHole);
-            let oppositeSeeds = this.board.getHoleSeedAmount(oppositeHole);
+        if (this.game.board.holeBelongsToPlayer(lastHole, playerID) && this.game.board.getHoleSeedAmount(lastHole) === 1) {
+            let storage = this.game.board.getStorageID(playerID);
+            let oppositeHole = this.game.board.getOppositeHole(lastHole);
+            let oppositeSeeds = this.game.board.getHoleSeedAmount(oppositeHole);
 
             for (let i = 0; i < oppositeSeeds; i++) {
-                this.board.moveToStorage(oppositeHole, playerID);
+                this.game.board.moveToStorage(oppositeHole, playerID);
             }
-            this.board.moveToStorage(lastHole, playerID);
+            this.game.board.moveToStorage(lastHole, playerID);
 
             holeToHoles[lastHole] = [storage];
             holeToHoles[oppositeHole] = Array(oppositeSeeds).fill(storage);
@@ -99,7 +90,7 @@ class GameState {
      * @returns {boolean}
      */
     checkChain(lastHole, playerID) {
-        return lastHole === this.board.getStorageID(playerID);
+        return lastHole === this.game.board.getStorageID(playerID);
     }
 
     /**
@@ -109,7 +100,7 @@ class GameState {
      */
     checkEnd() {
         for (let playerID = 0; playerID <= 1; playerID++) {
-            const avail = this.board.getAvailHoles(playerID);
+            const avail = this.game.board.getAvailHoles(playerID);
 
             if (avail.length === 0) {
                 return true;
@@ -128,9 +119,10 @@ class GameState {
     sowAndCapture(hole, playerID) {
         const seedAnimation = new SeedAnimation();
 
-        const holeToHoles = this.sowSeeds(hole, playerID);
-        const destHoles = holeToHoles[hole];
+        const destHoles = this.sowSeeds(hole, playerID);
         const lastHole = destHoles[destHoles.length - 1];
+        const holeToHoles = {}
+        holeToHoles[hole] = destHoles;
 
         seedAnimation.addStep(holeToHoles);
         seedAnimation.addStep(this.captureSeeds(lastHole, playerID));
@@ -147,7 +139,7 @@ class GameState {
     async play(hole) {
         const response = this.sowAndCapture(hole, this.player.id);
 
-        await this.animator.executeAnimation(this.board.nHoles, response.animation);
+        await this.animator.executeAnimation(this.game.board.nHoles, response.animation);
 
         if (response.chain) {
             return this.getCurrentState();
@@ -212,8 +204,8 @@ class PlayerState extends GameState {
     }
 
     async clickHole(hole) {
-        if (this.board.getHoleSeedAmount(hole) === 0) return;
-        if (!this.board.holeBelongsToPlayer(hole, this.player.id)) return;
+        if (this.game.board.getHoleSeedAmount(hole) === 0) return;
+        if (!this.game.board.holeBelongsToPlayer(hole, this.player.id)) return;
 
         this.game.changePlayerState(new WaitState(this.game, this.player, this.otherPlayer));
 
@@ -242,7 +234,7 @@ class PlayAIState extends GameState {
             let hole = this.game.aiStrategy.move(this);
 
             this.game.changePlayerState(await this.play(hole));
-        }.bind(this), 1500);
+        }.bind(this), 500);
     }
 }
 
@@ -295,11 +287,11 @@ class MPGameState extends GameState {
         if (data.board) {
             let parsed = parseBoard(data);
 
-            let hole = this.board.getRealHole(data.pit, this.player.id);
+            let hole = this.game.board.getRealHole(data.pit, this.player.id);
             await this.play(hole);
 
-            if (!this.board.compareBoards(parsed.board)) {
-                this.board.regenerateBoard(parsed.board);
+            if (!this.game.board.compareBoards(parsed.board)) {
+                this.game.board.regenerateBoard(parsed.board);
             }
         }
 
@@ -330,8 +322,8 @@ class PlayMPState extends MPGameState {
     }
 
     async clickHole(hole) {
-        if (this.board.getHoleSeedAmount(hole) === 0) return;
-        if (!this.board.holeBelongsToPlayer(hole, this.player.id)) return;
+        if (this.game.board.getHoleSeedAmount(hole) === 0) return;
+        if (!this.game.board.holeBelongsToPlayer(hole, this.player.id)) return;
         this.game.changePlayerState(new WaitState(this.game, this.player, this.otherPlayer));
 
         const data = {
@@ -376,7 +368,7 @@ class WaitState extends GameState {
     }
 
     run() {
-        for (let i = 0; i < this.board.nHoles; i++) {
+        for (let i = 0; i < this.game.board.nHoles; i++) {
             document.getElementById(`hole-${i}`).classList.remove("player-hole");
         }
     }
@@ -399,8 +391,8 @@ class EndState extends GameState {
     }
 
     showWinner() {
-        const score1 = this.board.getStorageAmount(this.player.id);
-        const score2 = this.board.getStorageAmount(this.otherPlayer.id);
+        const score1 = this.game.board.getStorageAmount(this.player.id);
+        const score2 = this.game.board.getStorageAmount(this.otherPlayer.id);
 
         if (this.winner === null) {
             launchTieGame(score1);
@@ -422,7 +414,7 @@ class EndState extends GameState {
     }
 
     async run() {
-        for (let i = 0; i < this.board.nHoles; i++) {
+        for (let i = 0; i < this.game.board.nHoles; i++) {
             document.getElementById(`hole-${i}`).classList.remove("player-hole");
         }
 
@@ -430,7 +422,7 @@ class EndState extends GameState {
 
         let animation = new SeedAnimation();
         animation.addStep(destHoles);
-        await this.animator.executeAnimation(this.board.nHoles, animation);
+        await this.animator.executeAnimation(this.game.board.nHoles, animation);
 
         this.game.renderAll();
         this.showWinner();

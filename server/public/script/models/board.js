@@ -162,4 +162,8 @@ class Board {
             }
         }
     }
+
+    toNumberBoard() {
+        return new NumberBoard(this);
+    }
 }
