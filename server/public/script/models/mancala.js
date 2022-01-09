@@ -13,7 +13,7 @@ class Game {
     /** @property {GameState} state The current game state.*/
     #state;
     /** @property {Board} board The game board */
-    #board;
+    board;
     /** @property {Player} player1 The player with ID 0 */
     #player1;
     /** @property {Player} player2 The player with ID 1 */
@@ -37,7 +37,7 @@ class Game {
      */
     constructor(board, player1, player2, aiDifficulty, boardRenderer, statusRenderer) {
         this.#state;
-        this.#board = board;
+        this.board = board;
         this.#player1 = player1;
         this.#player2 = player2;
         this.#turn = 0;
@@ -63,7 +63,7 @@ class Game {
     }
 
     get board() {
-        return this.#board;
+        return this.board;
     }
 
     get player1() {
@@ -130,7 +130,7 @@ class Game {
      * Renders the HTML elements.
      */
     renderAll() {
-        this.#boardRenderer.render(this.#board);
+        this.#boardRenderer.render(this.board);
         this.setupHoles();
         this.#statusRenderer.render(this);
     }
@@ -144,15 +144,15 @@ class Game {
         let destHoles = {};
 
         for (let playerID = 0; playerID <= 1; playerID++) {
-            let avail = this.#board.getAvailHoles(playerID);
+            let avail = this.board.getAvailHoles(playerID);
 
             avail.forEach((hole) => {
-                let storage = this.#board.nHoles * 2 + playerID
-                let seeds = this.#board.getHoleSeedAmount(hole);
+                let storage = this.board.nHoles * 2 + playerID
+                let seeds = this.board.getHoleSeedAmount(hole);
                 destHoles[hole] = Array(seeds).fill(storage);
 
                 for (let i = 0; i < seeds; i++) {
-                    this.#board.moveToStorage(hole, playerID);
+                    this.board.moveToStorage(hole, playerID);
                 }
             });
         }
@@ -175,7 +175,7 @@ class Game {
             holes.forEach(hole => {
                 let curHole = parseInt(hole.id.split("-")[1]);
 
-                if (this.#board.holeBelongsToPlayer(curHole, this.#state.player.id)) {
+                if (this.board.holeBelongsToPlayer(curHole, this.#state.player.id)) {
                     hole.classList.add("player-hole");
                 }
             })

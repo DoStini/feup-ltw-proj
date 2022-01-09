@@ -1,6 +1,4 @@
 class GameState {
-    /** @type {Board} board */
-    board;
     /** @property {Game} game */
     game;
     /** @property {Player} player */
@@ -17,7 +15,6 @@ class GameState {
     * @param {Animator} animator
     */
     constructor(game, player, otherPlayer, animator) {
-        this.board = game.board;
         this.game = game;
         this.player = player;
         this.otherPlayer = otherPlayer;
@@ -26,6 +23,14 @@ class GameState {
         } else {
             this.animator = animator;
         }
+    }
+
+    get board() {
+        return this.game.board;
+    }
+
+    set board(board) {
+        this.game.board = board;
     }
 
     /**

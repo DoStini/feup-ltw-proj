@@ -75,8 +75,8 @@ class NegaMaxAIStrategy {
             return { maxScore: evaluateBoard(gameState), maxHole: -1 };
         }
 
-        const origSeeds = JSON.parse(JSON.stringify(gameState.board.seeds));
-        const origStorage = JSON.parse(JSON.stringify(gameState.board.storage));
+        const origSeeds = [...gameState.board.seeds];
+        const origStorage = [...gameState.board.storage];
 
         let maxScore = Number.NEGATIVE_INFINITY;
         let maxHole = 0;
@@ -110,8 +110,8 @@ class NegaMaxAIStrategy {
                 return { maxScore, maxHole };
             }
 
-            gameState.board.seeds = JSON.parse(JSON.stringify(origSeeds));
-            gameState.board.storage = JSON.parse(JSON.stringify(origStorage));
+            gameState.board.seeds = [...origSeeds]
+            gameState.board.storage = [...origStorage]
         }
 
         return { maxScore, maxHole };
@@ -125,17 +125,12 @@ class NegaMaxAIStrategy {
      */
     move(gameState) {
 
-        const origSeeds = gameState.board.seeds;
-        const origStorage = gameState.board.storage;
-        gameState.board.seeds = JSON.parse(JSON.stringify(gameState.board.seeds));
-        gameState.board.storage = JSON.parse(JSON.stringify(gameState.board.storage));
+        const origBoard = gameState.board;
+        gameState.game.board = new NumberBoard(origBoard);
 
         let { maxScore, maxHole } = this.negamax(gameState, this.#depth, gameState.player.id, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY);
-        console.log(maxHole);
-        console.log(maxScore);
 
-        gameState.board.seeds = origSeeds;
-        gameState.board.storage = origStorage;
+        gameState.game.board = origBoard
 
         return maxHole;
     }
@@ -152,13 +147,15 @@ function evaluateBoard(gameState) {
     let otherPlayer = (gameState.player.id + 1) % 2;
     let curPlayer;
 
-    score += (gameState.board.getStorageAmount(gameState.player.id) - gameState.board.getStorageAmount(otherPlayer)) * 0.45;
-    const origSeeds = gameState.board.seeds;
-    const origStorage = gameState.board.storage;
+    const origBoard = gameState.game.board;
+    gameState.game.board = new NumberBoard(origBoard);
 
+    score += (gameState.board.getStorageAmount(gameState.player.id) - gameState.board.getStorageAmount(otherPlayer)) * 0.45;
     score += gameState.board.getSeedsInPlay(gameState.player.id) * (0.55 / (gameState.board.nHoles * gameState.board.nSeeds));
-    gameState.board.seeds = JSON.parse(JSON.stringify(gameState.board.seeds));
-    gameState.board.storage = JSON.parse(JSON.stringify(gameState.board.storage));
+    
+
+    const origSeeds = [...gameState.game.board.seeds]
+    const origStorage = [...gameState.game.board.storage]
 
     for (let hole = 0; hole < gameState.board.nHoles * 2; hole++) {
         if (gameState.board.holeBelongsToPlayer(hole, gameState.player.id)) {
@@ -184,14 +181,11 @@ function evaluateBoard(gameState) {
             score += 0.1;
         }
 
-        gameState.board.seeds = JSON.parse(JSON.stringify(origSeeds));
-        gameState.board.storage = JSON.parse(JSON.stringify(origStorage));
-
+        gameState.game.board.seeds = [...origSeeds]
+        gameState.game.board.storage = [...origStorage]
     }
 
-    gameState.board.seeds = origSeeds;
-    gameState.board.storage = origStorage;
-
+    gameState.game.board = origBoard;
 
     return score;
 }

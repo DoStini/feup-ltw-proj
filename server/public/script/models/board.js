@@ -2,18 +2,20 @@
 
 class Board {
     /** @property {Array.<Array.<Seed>>} storage */
-    #storage = [[], []];
+    storage = [[], []];
     /** @property {number} nHoles */
     #nHoles;
     /** @property {number} nSeeds */
     #nSeeds;
     /** @property {Array.<Array.<Seed>>} seeds */
-    #seeds;
+    seeds;
 
-    constructor(nHoles, nSeeds) {
+    constructor(nHoles, nSeeds, skipGen) {
         this.#nHoles = nHoles;
         this.#nSeeds = nSeeds;
-        this.generateSeeds();
+        if(skipGen == null || skipGen !== true) {
+            this.generateSeeds();
+        }
     }
 
     get nHoles() {
@@ -25,36 +27,35 @@ class Board {
     }
 
     get seeds() {
-        return this.#seeds;
+        return this.seeds;
     }
 
     set seeds(seeds) {
-        this.#seeds = seeds;
+        this.seeds = seeds;
     }
 
-
     set storage(storage) {
-        this.#storage = storage;
+        this.storage = storage;
     }
 
     get storage() {
-        return this.#storage;
+        return this.storage;
     }
 
     moveToStorage(hole, playerID) {
-        this.#storage[playerID].push(this.#seeds[hole].pop());
+        this.storage[playerID].push(this.seeds[hole].pop());
     }
 
     moveToHole(fromHole, toHole) {
-        this.#seeds[toHole].push(this.#seeds[fromHole].pop());
+        this.seeds[toHole].push(this.seeds[fromHole].pop());
     }
 
     getHoleSeedAmount(hole) {
-        return this.#seeds[hole].length;
+        return this.seeds[hole].length;
     }
 
     getStorageAmount(playerID) {
-        return this.#storage[playerID].length;
+        return this.storage[playerID].length;
     }
 
     getSeedsInPlay(playerID) {
@@ -78,7 +79,7 @@ class Board {
             }
         }
 
-        this.#seeds = container;
+        this.seeds = container;
     }
 
     holeBelongsToPlayer(hole, playerID) {
@@ -148,14 +149,14 @@ class Board {
             }
         }
 
-        this.#seeds = container;
+        this.seeds = container;
         const storageStart = this.#nHoles * 2;
-        this.#storage = [[],[]];
+        this.storage = [[],[]];
 
         for (let playerID = 0; playerID <= 1; playerID++) {
             let storageID = storageStart + playerID;
             for (let s = 0; s < seeds[storageID]; s++) {
-                this.#storage[playerID].push(new Seed(id));
+                this.storage[playerID].push(new Seed(id));
 
                 id++;
             }
