@@ -98,18 +98,21 @@ class StatusRenderer extends Renderer {
         document.getElementById("status-p1-store-seeds").innerText = game.board.storage[1].length;
         document.getElementById("status-p1").innerText = game.player2.name;
 
-        let seeds0 = 0;
-        let seeds1 = 0;
-        for (let hole = 0; hole < game.board.nHoles; hole++) {
-            seeds0 += game.board.seeds[hole].length;
-        }
-
-        for (let hole = game.board.nHoles; hole < game.board.nHoles * 2; hole++) {
-            seeds1 += game.board.seeds[hole].length;
-        }
+        let seeds0 = game.board.getSeedsInPlay(0);
+        let seeds1 = game.board.getSeedsInPlay(1);
 
         document.getElementById("status-p0-play-seeds").innerText = seeds0;
         document.getElementById("status-p1-play-seeds").innerText = seeds1;
+
+        let score = evaluateBoard(game.state);
+
+        if(game.currentPlayer.id === 0) {
+            document.getElementById("status-p0-play-adv").innerText = score.toFixed(2);
+            document.getElementById("status-p1-play-adv").innerText = (-score).toFixed(2);
+        }  else {
+            document.getElementById("status-p0-play-adv").innerText = (-score).toFixed(2);
+            document.getElementById("status-p1-play-adv").innerText = score.toFixed(2);
+        }
 
         document.getElementById("status-turn-name").innerText = game.currentPlayer ? game.currentPlayer.name : "?";
 
