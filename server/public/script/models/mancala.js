@@ -116,7 +116,7 @@ class Game {
     endMPGame(winner) {
         pageManager.pageCleanup["game-section"] = cleanupGame;
 
-        this.changePlayerState(new EndState(this, this.#player1, this.#player2, winner));
+        this.changePlayerState(new EndState(this, this.#player1, this.#player2, winner, this.#state.animator));
     }
 
     /**

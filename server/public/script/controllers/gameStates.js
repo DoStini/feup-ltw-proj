@@ -187,12 +187,12 @@ class GameState {
 }
 
 class PlayerState extends GameState {
-    constructor(game, player, otherPlayer) {
-        super(game, player, otherPlayer);
+    constructor(game, player, otherPlayer, animator) {
+        super(game, player, otherPlayer, animator);
     }
 
     getNextState() {
-        return new PlayAIState(this.game, this.otherPlayer, this.player);
+        return new PlayAIState(this.game, this.otherPlayer, this.player, this.animator);
     }
 
     run() {
@@ -207,19 +207,19 @@ class PlayerState extends GameState {
         if (this.game.board.getHoleSeedAmount(hole) === 0) return;
         if (!this.game.board.holeBelongsToPlayer(hole, this.player.id)) return;
 
-        this.game.changePlayerState(new WaitState(this.game, this.player, this.otherPlayer));
+        this.game.changePlayerState(new WaitState(this.game, this.player, this.otherPlayer, this.animator));
 
         this.game.changePlayerState(await this.play(hole));
     }
 }
 
 class PlayAIState extends GameState {
-    constructor(game, player, otherPlayer) {
-        super(game, player, otherPlayer);
+    constructor(game, player, otherPlayer, animator) {
+        super(game, player, otherPlayer, animator);
     }
 
     getNextState() {
-        return new PlayerState(this.game, this.otherPlayer, this.player);
+        return new PlayerState(this.game, this.otherPlayer, this.player, this.animator);
     }
 
     async run() {
@@ -241,6 +241,7 @@ class PlayAIState extends GameState {
 class MPGameState extends GameState {
     /** @property {MultiplayerInfo} mInfo */
     mInfo;
+    runningEvent = new Promise((res, rej) => res());
 
     /**
      * 
@@ -249,19 +250,10 @@ class MPGameState extends GameState {
      * @param {Player} otherPlayer 
      * @param {MultiplayerInfo} mInfo 
      */
-    constructor(game, player, otherPlayer, mInfo) {
-        super(game, player, otherPlayer);
+    constructor(game, player, otherPlayer, mInfo, animator) {
+        super(game, player, otherPlayer, animator);
         this.mInfo = mInfo;
     }
-
-    /**
-     * Handles an update response.
-     * 
-     * @param {MessageEvent<any>} e
-     */
-    handleUpdate(e) {
-
-    };
 
     changeStateOrEnd(data) {
         if (data.winner !== undefined) {
@@ -281,7 +273,13 @@ class MPGameState extends GameState {
         }
     }
 
+    /**
+     * Handles an update response.
+     * 
+     * @param {MessageEvent<any>} e
+     */
     async handleUpdate(e) {
+
         let data = JSON.parse(e.data);
 
         if (data.board) {
@@ -299,7 +297,15 @@ class MPGameState extends GameState {
     }
 
     run() {
-        this.mInfo.evtSource.onmessage = this.handleUpdate.bind(this);
+        this.mInfo.evtSource.onmessage = (async (e) => {
+            let run = this.runningEvent; // CURRENTLY RUNNING EVENT
+            let resolve;
+
+            this.runningEvent = new Promise((res, rej) => resolve = res); // SET RUNNING EVENT TO THIS EVENT
+            await run; // WAIT FOR CURRENT EVENT TO FINISH
+            await this.handleUpdate(e);
+            resolve(); // EVENT FINISHED
+        }).bind(this);
 
         this.startTurn();
     }
@@ -313,8 +319,8 @@ class PlayMPState extends MPGameState {
      * @param {Player} otherPlayer 
      * @param {MultiplayerInfo} mInfo 
      */
-    constructor(game, player, otherPlayer, mInfo) {
-        super(game, player, otherPlayer, mInfo);
+    constructor(game, player, otherPlayer, mInfo, animator) {
+        super(game, player, otherPlayer, mInfo, animator);
     }
 
     getNextState() {
@@ -324,7 +330,7 @@ class PlayMPState extends MPGameState {
     async clickHole(hole) {
         if (this.game.board.getHoleSeedAmount(hole) === 0) return;
         if (!this.game.board.holeBelongsToPlayer(hole, this.player.id)) return;
-        this.game.changePlayerState(new WaitState(this.game, this.player, this.otherPlayer));
+        this.game.changePlayerState(new WaitState(this.game, this.player, this.otherPlayer, this.animator));
 
         const data = {
             nick: getUser(),
@@ -344,8 +350,8 @@ class PlayMPState extends MPGameState {
 }
 
 class WaitMPState extends MPGameState {
-    constructor(game, player, otherPlayer, mInfo) {
-        super(game, player, otherPlayer, mInfo);
+    constructor(game, player, otherPlayer, mInfo, animator) {
+        super(game, player, otherPlayer, mInfo, animator);
     }
 
     getNextState() {
@@ -359,8 +365,8 @@ class WaitMPState extends MPGameState {
  * @param {Board} board 
  */
 class WaitState extends GameState {
-    constructor(game, player, otherPlayer) {
-        super(game, player, otherPlayer);
+    constructor(game, player, otherPlayer, animator) {
+        super(game, player, otherPlayer, animator);
     }
 
     clickHole(hole) {
@@ -385,8 +391,8 @@ class EndState extends GameState {
      * @param {Player} otherPlayer 
      * @param {Player} winner 
      */
-    constructor(game, player, otherPlayer, winner) {
-        super(game, player, otherPlayer);
+    constructor(game, player, otherPlayer, winner, animator) {
+        super(game, player, otherPlayer, animator);
         this.winner = winner;
     }
 

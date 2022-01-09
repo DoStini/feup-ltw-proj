@@ -6,6 +6,8 @@ const DatabaseModel = require("../database/DatabaseModel");
 const { GAME_END } = require("../constants");
 const GameResponse = require("../models/gameResponse");
 const UserController = require("./user");
+const { GAME_TIMEOUT } = require("../env");
+const Middleware = require("../../framework/middleware/middleware");
 
 class GameController {
     /** @type {DatabaseModel}  */
@@ -14,6 +16,11 @@ class GameController {
     #userController;
 
     #handlers;
+    #timeouts;
+    timeoutCallback = (gameController, nick, hash) => {
+        gameController.leaveGame(nick, hash);
+        gameController.clearUserTimeout(nick);
+    };
 
     /**
      * @param {DatabaseModel} model
@@ -22,6 +29,7 @@ class GameController {
         this.#model = model;
         this.#userController = userController;
         this.#handlers = {};
+        this.#timeouts = {};
     }
 
     /**
@@ -41,6 +49,19 @@ class GameController {
 
     registerEvent(user, handler) {
         this.#handlers[user] = handler;
+    }
+
+    registerTimeout(user, hash) {
+        this.#timeouts[user] = setTimeout(this.timeoutCallback, GAME_TIMEOUT, this, user, hash)
+    }
+
+    clearUserTimeout(user) {
+        delete this.#timeouts[user];
+    }
+
+    cancelTimeout(user) {
+        clearTimeout(this.#timeouts[user]);
+        this.clearUserTimeout(user);
     }
 
     async startGameNotify(hash) {
@@ -98,9 +119,9 @@ class GameController {
         const [data2] = await this.#model.findByKey("player2", nick);
 
         if(data != null) {
-            return data.hash;
+            return data;
         } else if (data2 != null) {
-            return data2.hash;
+            return data2;
         } else {
             return null;
         }
@@ -222,6 +243,8 @@ class GameController {
 
         delete this.#handlers[game.player1];
         delete this.#handlers[game.player2];
+        this.cancelTimeout(game.player1);
+        this.cancelTimeout(game.player2);
 
         await this.#model.delete("hash", hash);
     }

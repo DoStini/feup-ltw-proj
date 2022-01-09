@@ -28,9 +28,6 @@ async function queryRequest(method, data, path) {
     let options = {
         method: method,
     }
-
-    console.log(encodeForQuery(data))
-
     let request = new Request(getApiHost() + path + "?" + encodeForQuery(data), options);
 
     return fetch(request).then(async (fetched) => {
@@ -61,7 +58,6 @@ function setCookie(name, value, minutes) {
 }
 
 function getCookie(name) {
-    console.log("try my cookie cookie", document.cookie)
     return document.cookie
         .split('; ')
         ?.find(row => row.startsWith(`${name}=`))

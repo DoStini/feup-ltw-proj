@@ -129,9 +129,9 @@ class Board {
                 return false;
             }
         }
-
         if (this.getStorageAmount(0) !== seeds[this.#nHoles * 2]) return false;
         if (this.getStorageAmount(1) !== seeds[this.#nHoles * 2 + 1]) return false;
+
 
         return true;
     }

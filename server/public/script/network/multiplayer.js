@@ -45,7 +45,6 @@ function setupMultiplayer() {
         };
 
         const req = await join(data);
-        console.log("join", formData, req)
     });
 
     document.querySelector("#config-multiplayer-matchmaking > form").addEventListener('submit', async (e) => {
@@ -77,7 +76,6 @@ function setupMultiplayer() {
 }
 
 function parseBoard(data) {
-    console.log(data);
     const user = getUser();
     const enemy = Object.keys(data.board.sides).find(el => el !== user);
     const turn = data.board.turn;
@@ -119,7 +117,6 @@ class MultiplayerInfo {
 
 function startMultiplayerGame(data, evtSource, gameHash) {
     const parsed = parseBoard(data);
-    console.log(parsed)
     setupMultiplayerGame(parsed.holes, parsed.board[0], parsed.turn, parsed.player, parsed.enemy, new MultiplayerInfo(evtSource, gameHash));
     pageManager.pageCleanup["waiting-area"] = null;
     pageManager.setPage("game-section");
@@ -151,7 +148,7 @@ async function leaveGame(gameHash) {
         game: gameHash
     }
 
-    console.log(await leave(request));
+    await leave(request);
 }
 
 setupMultiplayer();

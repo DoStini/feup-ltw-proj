@@ -57,7 +57,6 @@ function cleanupGame(gameHash, evtSource) {
     }
 
     if (gameHash != null) {
-        console.log(gameHash);
         evtSource.onmessage = null;
         leaveGame(gameHash);
     }
