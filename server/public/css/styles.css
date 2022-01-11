@@ -92,8 +92,12 @@ button:hover {
   cursor: pointer;
 }
 
+.no-hover-btn {
+  background-color: rgb(105, 121, 126);
+}
+
 .no-hover-btn:hover {
-  background-color: #3c64b1;
+  background-color: rgb(105, 121, 126);
   font-weight: 400;
   cursor: default;
 }
@@ -606,7 +610,7 @@ i.button {
   display: flex;
   flex-direction: column;
   opacity: 0;
-  visibility: collapse;
+  visibility: hidden;
 }
 
 .end-game-content {
@@ -617,6 +621,7 @@ i.button {
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
+  flex-grow: 2;
   padding: 1.8em;
   padding-right: 3.5em;
   font-size: 16px;
@@ -630,19 +635,16 @@ i.button {
 
 .win-icon {
   font-size: 10em;
-  visibility: collapse;
   color: green;
 }
 
 .lose-icon {
   font-size: 10em;
-  visibility: collapse;
   color: red;
 }
 
 .tie-icon {
   font-size: 10em;
-  visibility: collapse;
   color: yellow;
 }
 
@@ -822,7 +824,18 @@ i.button {
 }
 
 .hidden {
+  display: none !important;
   visibility: hidden;
+  opacity: 0;
+}
+
+.invisible {
+    visibility: hidden;
+}
+
+.visible {
+  visibility: visible;
+  opacity: 1;
 }
 
 @keyframes fade-in {
@@ -834,9 +847,9 @@ i.button {
   }
 }
 
-.auth-btn {
-  visibility: collapse;
-}
+/* .auth-btn {
+  #display: none;
+} */
 
 section#waiting-area {
   display: flex;

@@ -30,26 +30,20 @@ function setupPopupWindows() {
         document.getElementById(`${target}-open-btn`).addEventListener('click', () => {
             let targetElement = document.getElementById(target);
 
-            if (targetElement.style.opacity === "1") {
-                targetElement.style.opacity = "0";
-            } else {
-                targetElement.style.opacity = "1";
+            if(targetElement.classList.toggle("visible")) {
                 if (target === "leaderboard")
                     leaderboardHandler();
             }
-
-            if (targetElement.style.visibility === "visible") {
-                targetElement.style.visibility = null;
-            } else {
-                targetElement.style.visibility = "visible";
-            }
+            targetElement.classList.toggle("hidden");
         });
     });
 
     ["rules", "leaderboard", "end-game"].forEach((target) => {
         document.getElementById(`close-${target}`).addEventListener('click', () => {
-            document.getElementById(target).style.opacity = null;
-            document.getElementById(target).style.visibility = null;
+            let targetElement = document.getElementById(target);
+
+            targetElement.classList.toggle("visible");
+            targetElement.classList.toggle("hidden");
         });
     });
 
@@ -66,18 +60,20 @@ function setupPopupWindows() {
 
 function launchTieGame(points) {
     const target = document.getElementById("end-game");
-    target.style.opacity = "1";
-    target.style.visibility = "visible";
+    target.classList.remove("hidden");
+    target.classList.add("show");
+    target.classList.add("visible");
 
     ["win-icon", "lose-icon"].forEach((id) => {
         const target = document.getElementById(id);
-        target.style.opacity = "";
-        target.style.visibility = "";
+
+        target.classList.add("hidden");
+        target.classList.remove("visible");
     });
 
     const icon = document.getElementById("tie-icon");
-    icon.style.opacity = "1";
-    icon.style.visibility = "visible";
+    icon.classList.add("visible");
+    icon.classList.remove("hidden");
 
     const nameText = document.getElementById("end-player-name");
     nameText.innerText = "It was a Tie!";
@@ -89,19 +85,20 @@ function launchTieGame(points) {
 
 function launchEndGame(isWinner, name, points) {
     const target = document.getElementById("end-game");
-    target.style.opacity = "1";
-    target.style.visibility = "visible";
+    target.classList.remove("hidden");
+    target.classList.add("show");
+    target.classList.add("visible");
 
     const visibleIcon = document.getElementById(`${isWinner ? "win" : "lose"}-icon`);
     const invisibleIcon = document.getElementById(`${isWinner ? "lose" : "win"}-icon`);
     const tieIcon = document.getElementById("tie-icon");
 
-    visibleIcon.style.opacity = "1";
-    visibleIcon.style.visibility = "visible";
+    visibleIcon.classList.add("visible");
+    visibleIcon.classList.remove("hidden");
 
     [tieIcon, invisibleIcon].forEach((target) => {
-        target.style.opacity = "";
-        target.style.visibility = "";
+        target.classList.add("hidden");
+        target.classList.remove("visible");
     })
 
     const nameText = document.getElementById("end-player-name");
