@@ -67,16 +67,16 @@ function replaceButtonsLogout() {
     const login = document.getElementById("log-in-header");
     const logout = document.getElementById("log-out-header");
 
-    login.style.display = "none";
-    logout.style.display = null;
+    login.classList.add("hidden");
+    logout.classList.remove("hidden");
 }
 
 function replaceButtonsLogin() {
     const login = document.getElementById("log-in-header");
     const logout = document.getElementById("log-out-header");
 
-    login.style.display = null
-    logout.style.display = "none";
+    login.classList.remove("hidden");
+    logout.classList.add("hidden");
 }
 
 function updateAuthButtons() {

@@ -42,8 +42,8 @@ function setupPopupWindows() {
         document.getElementById(`close-${target}`).addEventListener('click', () => {
             let targetElement = document.getElementById(target);
 
-            targetElement.classList.toggle("visible");
-            targetElement.classList.toggle("hidden");
+            targetElement.classList.remove("visible");
+            targetElement.classList.add("hidden");
         });
     });
 
@@ -51,8 +51,8 @@ function setupPopupWindows() {
     document.addEventListener('keydown', (e) => {
         if (e.key === "Escape") {
             document.querySelectorAll(".popup-window").forEach((target) => {
-                target.style.opacity = null;
-                target.style.visibility = null;
+                target.classList.add("hidden");
+                target.classList.remove("visible");
             })
         }
     });
