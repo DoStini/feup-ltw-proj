@@ -108,19 +108,6 @@ function setupInitMenu() {
 
     document.getElementById("start-button-ai").addEventListener('click', setPageConfig);
 
-
-    document.getElementById("create-button").addEventListener('click', (e) => {
-        if (isAuthenticated()) {
-            pageManager.setPage("config-multiplayer-create");
-        }
-    });
-
-    document.getElementById("join-button").addEventListener('click', (e) => {
-        if (isAuthenticated()) {
-            pageManager.setPage("config-multiplayer-join");
-        }
-    });
-
     document.getElementById("start-button").addEventListener('click', (e) => {
         if (isAuthenticated()) {
             pageManager.setPage("config-multiplayer-matchmaking");
@@ -128,8 +115,6 @@ function setupInitMenu() {
     });
 
     [
-        "create-button",
-        "join-button",
         "start-button",
     ].forEach(id => {
         const target = document.getElementById(id);

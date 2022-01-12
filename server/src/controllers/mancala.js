@@ -21,6 +21,7 @@ class Game {
      * @type {string}
      */
     #gameHash;
+    #group;
 
     /**
      * @param {Board} board
@@ -28,16 +29,21 @@ class Game {
      * @param {Player} player2
      * @param {gameHash} gameHash
      */
-    constructor(board, player1, player2, gameHash) {
+    constructor(board, player1, player2, gameHash, group) {
         this.#state;
         this.#board = board;
         this.#player1 = player1;
         this.#player2 = player2;
         this.#gameHash = gameHash;
+        this.#group = group;
     }
 
     get gameHash() {
         return this.#gameHash;
+    }
+
+    get group() {
+        return this.#group;
     }
 
     get board() {

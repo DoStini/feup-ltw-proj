@@ -31,13 +31,16 @@ module.exports = async (router, userController, gameController) => {
                     await gameController.endGame(existingGame.hash);
                 }
             }
+            if(req.body.group == null) {
+                req.body.group = "undefined";
+            }
 
-            let foundGame = await gameController.findGame(req.body.size, req.body.initial);
+            let foundGame = await gameController.findGame(req.body.size, req.body.initial, req.body.group);
             let gameHash;
 
             if(foundGame === null) {
                 gameHash = hash(req.body.nick + Date.now() + req.body.size + req.body.initial)
-                await gameController.setupMultiplayerGame(req.body.size, req.body.initial, req.body.nick, req.body.nick, null, gameHash);
+                await gameController.setupMultiplayerGame(req.body.size, req.body.initial, req.body.nick, req.body.nick, null, gameHash, req.body.group);
             } else {
                 gameHash = foundGame.gameHash;
                 await gameController.addPlayer2(foundGame, req.body.nick);
