@@ -16,12 +16,39 @@ async function leaderboardHandler() {
         return elem;
     }
 
-    const tableBody = document.querySelectorAll(".server-leaderboard .leaderboard-table > tbody")[0];
+    const tableBody = document.getElementById("server-leaderboard-body");
     tableBody.innerHTML = "";
 
     for (let i = 0; i < Math.min(10, leaderboard.length); i++) {
         const entry = leaderboard.at(i);
         tableBody.append(htmlEntry(entry, i + 1));
+    }
+
+    const localBody = document.getElementById("local-leaderboard-body");
+    localBody.innerHTML = "";
+
+    if(!localStorage.getItem("ranking")) {
+        localStorage.setItem("ranking", JSON.stringify({}));
+    }
+
+    const ranking = JSON.parse(localStorage.getItem("ranking"));
+    let rankingArr = [];
+
+    for(let key in ranking) {
+        rankingArr.push({
+            nick: key,
+            victories: ranking[key].victories ?? 0,
+            games: ranking[key].games ?? 0
+        })
+    }
+
+    rankingArr.sort((left, right) => {
+        return right.victories - left.victories;
+    }).slice(0, 10);
+
+    for (let i = 0; i < rankingArr.length; i++) {
+        const entry = rankingArr[i];
+        localBody.append(htmlEntry(entry, i + 1));
     }
 }
 
