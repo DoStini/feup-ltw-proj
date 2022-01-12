@@ -417,8 +417,8 @@ class EndState extends GameState {
             }
         }
 
-        ranking[this.player.name].games = (ranking[this.player.name].games ?? 0) + 1;
-        ranking[this.otherPlayer.name].games = (ranking[this.otherPlayer.name].games ?? 0) + 1;
+        ranking[this.player.name].games = ranking[this.player.name].games + 1;
+        ranking[this.otherPlayer.name].games = ranking[this.otherPlayer.name].games + 1;
 
         localStorage.setItem('ranking', JSON.stringify(ranking));
     }
@@ -437,7 +437,7 @@ class EndState extends GameState {
             }
         }
 
-        ranking[winnerName] = (ranking[winnerName] ?? 0) + 1;
+        ranking[winnerName].victories = ranking[winnerName].victories + 1;
 
         localStorage.setItem('ranking', JSON.stringify(ranking));
     }
