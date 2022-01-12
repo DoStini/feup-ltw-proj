@@ -41,13 +41,14 @@ function startGame(pageManager) {
     let holes = parseInt(document.getElementById("holes").value);
     let seeds = parseInt(document.getElementById("seeds").value);
     let aiDifficulty = document.getElementById("ai_difficulty").value;
+    let name = document.getElementById("name").value;
     let turn = 0;
 
     if (document.getElementById("ai-order-ai").checked) {
         turn = 1;
     }
 
-    setupLocalGame(holes, seeds, turn, aiDifficulty);
+    setupLocalGame(holes, seeds, turn, aiDifficulty, name);
     pageManager.setPage("game-section");
     document.getElementById("game-status").classList.remove("invisible");
 }

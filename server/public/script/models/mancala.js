@@ -192,10 +192,10 @@ class Game {
     }
 }
 
-function setupLocalGame(nHoles, seedsPerHole, turn, aiDifficulty) {
+function setupLocalGame(nHoles, seedsPerHole, turn, aiDifficulty, name) {
     const board = new Board(parseInt(nHoles), seedsPerHole);
 
-    const player1 = new Player(0, "Player 1");
+    const player1 = new Player(0, name || "Player 1");
     const player2 = new Player(1, "AI");
 
     const game = new Game(board, player1, player2,aiDifficulty);
