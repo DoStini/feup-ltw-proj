@@ -15,6 +15,7 @@ class Clicker {
         this.ctx = this.canvas.getContext("2d");
         this.center = new Position(this.canvas.width/2, this.canvas.height/2);
         this.cookie = new Cookie(this.center, 50, "#84563c", "#bd8c61", 5);
+        this.cookie.genChips(10, "#270d0b", "#5A2C22", 10, 5);
         this.run();
     }
 
@@ -38,7 +39,7 @@ class Clicker {
     }
 
     run() {
-        this.ctx.beginPath();
+        // this.ctx.beginPath();
 
         this.cookie.draw(this.ctx);
 

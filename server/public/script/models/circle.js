@@ -29,6 +29,8 @@ class Circle {
         ctx.strokeStyle = this.strokeColor;
         ctx.lineWidth = this.strokeWidth;
 
+        ctx.beginPath();
+
         ctx.arc(this.center.x + 0.5, this.center.y + 0.5, this.radius, 0, 2 * Math.PI);
 
         ctx.stroke();
