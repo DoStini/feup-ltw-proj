@@ -30,7 +30,9 @@ class Clicker {
 
         this.cookies = 0;
 
-        this.animation = new NoAnimation(this);
+        this.animation = new RotationCombinedAnimation(0.01, this);
+        this.animation.animation = new NoAnimation(this);
+        this.animation.animation.start();
         this.animation.start();
         this.run();
     }
@@ -45,8 +47,8 @@ class Clicker {
         let position = this.mouseToCoords(e);
 
         if(this.cookie.inside(position)) {
-            this.animation = new ClickAnimation(13, 1.15, 0.75, this);
-            this.animation.start();
+            this.animation.animation = new ClickAnimation(13, 1.15, 0.75, this);
+            this.animation.animation.start();
             this.cookies++;
         }
     }
@@ -55,15 +57,15 @@ class Clicker {
         let position = this.mouseToCoords(e);
 
         if(this.cookie.inside(position)) {
-            if(!(this.animation instanceof HoverAnimation)) {
-                this.animation = new HoverAnimation(10, 1.15, this);
-                this.animation.start();
+            if(!(this.animation.animation instanceof HoverAnimation)) {
+                this.animation.animation = new HoverAnimation(10, 1.15, this);
+                this.animation.animation.start();
             }
 
             document.body.style.cursor = "pointer";
         } else {
-            this.animation = new NoAnimation(this);
-            this.animation.start();
+            this.animation.animation = new NoAnimation(this);
+            this.animation.animation.start();
             document.body.style.cursor = "default";
         }
 

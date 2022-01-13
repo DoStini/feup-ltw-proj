@@ -59,6 +59,27 @@ class CookieAnimation {
     }
 }
 
+class RotationCombinedAnimation extends CookieAnimation {
+    /** @type {CookieAnimation} */
+    animation;
+
+    constructor(rotationSpeed, clicker) {
+        super(1, false);
+
+        this.addKeyFrame(new KeyFrame((ctx, frame) => {
+            ctx.save();
+
+            ctx.translate(clicker.center.x, clicker.center.y);
+            ctx.rotate(frame*rotationSpeed);
+            ctx.translate(-clicker.center.x, -clicker.center.y);
+
+            this.animation.next(ctx);
+
+            ctx.restore();
+        }), 0);
+    }
+}
+
 class NoAnimation extends CookieAnimation {
     constructor(clicker) {
         super(1, false);
