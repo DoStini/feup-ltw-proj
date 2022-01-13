@@ -118,7 +118,7 @@ class MultiplayerInfo {
 function startMultiplayerGame(data, evtSource, gameHash) {
     const parsed = parseBoard(data);
     setupMultiplayerGame(parsed.holes, parsed.board[0], parsed.turn, parsed.player, parsed.enemy, new MultiplayerInfo(evtSource, gameHash));
-    pageManager.pageCleanup["waiting-area"] = null;
+    pageManager.pageCleanup["waiting-area"] = cleanupWait;
     pageManager.setPage("game-section");
     document.getElementById("game-status").classList.remove("hidden");
 }
@@ -132,11 +132,7 @@ function handleGameStart(gameHash) {
     const evtSource = new EventSource(`${getApiHost()}update?${query}`);
     evtSource.onmessage = ((e) => startMultiplayerGame(JSON.parse(e.data), evtSource, gameHash)).bind(evtSource);
 
-    pageManager.pageCleanup["waiting-area"] = (function (gameHash, evtSource) {
-        evtSource.close();
-        evtSource.onmessage = null;
-        leaveGame(gameHash);
-    }).bind(this, gameHash, evtSource);
+    pageManager.pageCleanup["waiting-area"] = cleanupWait.bind(this, gameHash, evtSource);
     pageManager.pageCleanup["game-section"] = cleanupGame.bind(this, gameHash, evtSource);
 
     setWaitingPage();
