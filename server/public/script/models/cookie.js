@@ -16,7 +16,6 @@ class Cookie extends Circle {
             const xAcc2 = Math.sqrt(this.radius ** 2 - xAcc);
             const minY = this.center.y - xAcc2 + radius;
             const maxY = this.center.y + xAcc2 - radius;
-            console.log("x ", x, " xAcc ", xAcc, " xAcc2 ", xAcc2, " min ", minY , " max ", maxY);
             const y = Math.random() * (maxY - minY) + minY >> 0;
             
             const chip = new Circle(new Position(x, y), radius, chipStroke, chipFill, 2);
