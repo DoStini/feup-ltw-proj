@@ -259,6 +259,10 @@ class MPGameState extends GameState {
         if (data.winner !== undefined) {
             this.mInfo.evtSource.close();
 
+            if(data.board == null) {
+                addMessage((data.winner === this.player.name ? this.otherPlayer.name : this.player.name) + " has quit the game.");
+            }
+
             if (data.winner === null) {
                 this.game.endMPGame(null);
             } else if (data.winner === this.player.name) {
