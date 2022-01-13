@@ -58,6 +58,7 @@ function cleanupGame(gameHash, evtSource) {
     }
 
     if (gameHash != null) {
+        evtSource.close();
         evtSource.onmessage = null;
         leaveGame(gameHash);
     }

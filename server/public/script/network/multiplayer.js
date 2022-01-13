@@ -133,6 +133,7 @@ function handleGameStart(gameHash) {
     evtSource.onmessage = ((e) => startMultiplayerGame(JSON.parse(e.data), evtSource, gameHash)).bind(evtSource);
 
     pageManager.pageCleanup["waiting-area"] = (function (gameHash, evtSource) {
+        evtSource.close();
         evtSource.onmessage = null;
         leaveGame(gameHash);
     }).bind(this, gameHash, evtSource);

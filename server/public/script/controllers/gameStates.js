@@ -257,6 +257,8 @@ class MPGameState extends GameState {
 
     changeStateOrEnd(data) {
         if (data.winner !== undefined) {
+            this.mInfo.evtSource.close();
+
             if (data.winner === null) {
                 this.game.endMPGame(null);
             } else if (data.winner === this.player.name) {
