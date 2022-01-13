@@ -141,6 +141,8 @@ function setupLocalGameConfig() {
 
     pageManager.pageCleanup["game-section"] = cleanupGame;
     startGameButton.addEventListener('click', () => startGame(pageManager));
+
+    document.getElementById("exit-btn").addEventListener('click', pageManager.setPage.bind(pageManager, "init-menu"))
 }
 
 function setupPages() {
