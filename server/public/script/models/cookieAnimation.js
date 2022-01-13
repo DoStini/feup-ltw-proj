@@ -72,21 +72,19 @@ class NoAnimation extends CookieAnimation {
 class HoverAnimation extends CookieAnimation {
     constructor(duration, endRadius, clicker) {
         super(duration, false);
-        endRadius = endRadius - 1;
-        let middleRadius = endRadius / 1.25;
-        let increment = endRadius / (duration * 0.5);
-        let midIncrement = (endRadius - middleRadius) / (duration * 0.5);
-        this.overlay = new Circle(clicker.center, clicker.cookie.radius, "rgba(0,0,0,0)", "rgba(0,0,0,0.2)", 0);
+        let middleRadius = endRadius * 1.1;
+        let midIncrement = (middleRadius - 1) / (duration * 0.5);
+        let increment = (endRadius - middleRadius) / (duration * 0.5);
 
         this.addKeyFrame(new KeyFrame((ctx, frame) => {
             ctx.save();
 
             ctx.translate(clicker.center.x, clicker.center.y);
-            ctx.scale(1 + increment * frame, 1 + increment * frame);
+            ctx.scale(1 + midIncrement * frame, 1 + midIncrement * frame);
             ctx.translate(-clicker.center.x, -clicker.center.y);
 
             clicker.cookie.draw(ctx);
-            this.overlay.draw(ctx);
+            clicker.overlay.draw(ctx);
 
             ctx.restore();
         },0))
@@ -95,28 +93,89 @@ class HoverAnimation extends CookieAnimation {
             ctx.save();
 
             ctx.translate(clicker.center.x, clicker.center.y);
-            ctx.scale(1+ endRadius - midIncrement * frame, 1 + endRadius - midIncrement * frame);
+            ctx.scale(middleRadius + increment * frame, middleRadius + increment * frame);
             ctx.translate(-clicker.center.x, -clicker.center.y);
 
             clicker.cookie.draw(ctx);
-            this.overlay.draw(ctx);
+            clicker.overlay.draw(ctx);
 
             ctx.restore();
         },0.5))
 
         this.addKeyFrame(new KeyFrame((ctx, frame) => {
             ctx.save();
-            console.log("hey");
 
             ctx.translate(clicker.center.x, clicker.center.y);
-            ctx.scale(1+ middleRadius, 1 + middleRadius);
+            ctx.scale(endRadius, endRadius);
             ctx.translate(-clicker.center.x, -clicker.center.y);
 
             clicker.cookie.draw(ctx);
-            this.overlay.draw(ctx);
+            clicker.overlay.draw(ctx);
 
             ctx.restore();
         },1))
+    }
+}
+
+class ClickAnimation extends CookieAnimation {
+    constructor(duration, fromRad, toRad, clicker) {
+        super(duration, false);
+        const toIncrement = (toRad - fromRad) / (duration * 0.5);
+        const maxRad = fromRad * 1.1;
+        const maxIncrement = (maxRad - toRad) / (duration * 0.25);
+        const fromIncrement = (fromRad - maxRad) / (duration * 0.25);
+
+        this.addKeyFrame(new KeyFrame((ctx, frame) => {
+            ctx.save();
+
+            ctx.translate(clicker.center.x, clicker.center.y);
+            ctx.scale(fromRad + toIncrement * frame, fromRad + toIncrement * frame);
+            ctx.translate(-clicker.center.x, -clicker.center.y);
+
+            clicker.cookie.draw(ctx);
+            clicker.overlay.draw(ctx);
+
+            ctx.restore();
+        }, 0))
+
+        this.addKeyFrame(new KeyFrame((ctx, frame) => {
+            ctx.save();
+
+            ctx.translate(clicker.center.x, clicker.center.y);
+            ctx.scale(toRad + maxIncrement * frame, (toRad * 1.5) + maxIncrement * frame);
+            ctx.translate(-clicker.center.x, -clicker.center.y);
+
+            clicker.cookie.draw(ctx);
+            clicker.overlay.draw(ctx);
+
+            ctx.restore();
+        }, 0.5))
+
+        this.addKeyFrame(new KeyFrame((ctx, frame) => {
+            ctx.save();
+
+            ctx.translate(clicker.center.x, clicker.center.y);
+            ctx.scale(maxRad + fromIncrement * frame, maxRad + fromIncrement * frame);
+            ctx.translate(-clicker.center.x, -clicker.center.y);
+
+            clicker.cookie.draw(ctx);
+            clicker.overlay.draw(ctx);
+
+            ctx.restore();
+        }, 0.75))
+
+        this.addKeyFrame(new KeyFrame((ctx, frame) => {
+            ctx.save();
+
+            ctx.translate(clicker.center.x, clicker.center.y);
+            ctx.scale(fromRad, fromRad);
+            ctx.translate(-clicker.center.x, -clicker.center.y);
+
+            clicker.cookie.draw(ctx);
+            clicker.overlay.draw(ctx);
+
+            ctx.restore();
+        }, 1))
     }
 }
 
