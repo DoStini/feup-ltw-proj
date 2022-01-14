@@ -22,7 +22,7 @@ div.game-area {
   grid-template-rows: minmax(0, 4.5em) minmax(0, 20em) minmax(0, 4.5em) minmax(
       0,
       auto
-    ) 4em;
+    ) 4.3em;
   grid-template-areas:
     "name1 seeds1 ."
     "storage1 board storage0"
@@ -40,7 +40,7 @@ div.game-area {
 
 button.exit-btn {
     grid-area: exit;
-    width: 5em;
+    width: 6em;
     margin-top: 1em;
     background-color:orangered;
     justify-self: right;
@@ -236,7 +236,7 @@ div.game .message::before {
     grid-template-columns: minmax(0, 1.3fr) minmax(0, 6fr) minmax(0, 1.3fr);
     grid-template-rows:
       minmax(0, 3.5em) minmax(0, 4.5em) minmax(0, 15em) minmax(0, 4.5em)
-      minmax(0, 3.5em) minmax(0, auto) 2em;
+      minmax(0, 3.5em) minmax(0, auto) 4em;
     grid-template-areas:
       ". name1 ."
       ". seeds1 ."
