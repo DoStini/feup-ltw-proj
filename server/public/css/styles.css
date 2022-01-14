@@ -845,6 +845,10 @@ section#waiting-area {
   align-items: center;
 }
 
+section#waiting-area {
+    text-align: center;
+}
+
 .snackbar {
   transition: all 1s;
   position: fixed;

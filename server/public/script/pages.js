@@ -1,6 +1,7 @@
 'use strict';
 
 const pageManager = new PageManager();
+let clicker;
 
 /**
  * 
@@ -58,6 +59,7 @@ function cleanupGame(gameHash, evtSource) {
     }
 
     if (gameHash != null) {
+        evtSource.close();
         evtSource.onmessage = null;
         leaveGame(gameHash);
     }
@@ -80,6 +82,7 @@ function setConfig() {
 }
 
 function setWaitingPage() {
+    clicker = new Clicker();
     pageManager.setPage("waiting-area");
 }
 
@@ -100,6 +103,16 @@ function cleanupAuth() {
 
     document.getElementById("log-in-header").style.visibility = null;
     document.getElementById("log-in-header").style.display = null;
+}
+
+function cleanupWait(gameHash, evtSource) {
+    if (gameHash != null) {
+        evtSource.close();
+        evtSource.onmessage = null;
+        leaveGame(gameHash);
+    }
+
+    clicker.close();
 }
 
 function setupInitMenu() {
