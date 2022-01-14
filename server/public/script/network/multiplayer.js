@@ -120,6 +120,7 @@ function startMultiplayerGame(data, evtSource, gameHash) {
     setupMultiplayerGame(parsed.holes, parsed.board[0], parsed.turn, parsed.player, parsed.enemy, new MultiplayerInfo(evtSource, gameHash));
     pageManager.pageCleanup["waiting-area"] = cleanupWait;
     pageManager.setPage("game-section");
+    toggleGameStatus();
     document.getElementById("game-status").classList.remove("hidden");
 }
 

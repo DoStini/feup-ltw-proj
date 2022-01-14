@@ -402,9 +402,57 @@ class EndState extends GameState {
         this.winner = winner;
     }
 
+    addGames() {
+        if(!localStorage.getItem('ranking')) {
+            localStorage.setItem('ranking', JSON.stringify({}));
+        }
+
+        let ranking = JSON.parse(localStorage.getItem('ranking'));
+
+        if(!ranking.hasOwnProperty(this.player.name)) {
+            ranking[this.player.name] = {
+                games: 0,
+                victories: 0,
+            }
+        }
+
+        if(!ranking.hasOwnProperty(this.otherPlayer.name)) {
+            ranking[this.otherPlayer.name] = {
+                games: 0,
+                victories: 0,
+            }
+        }
+
+        ranking[this.player.name].games = ranking[this.player.name].games + 1;
+        ranking[this.otherPlayer.name].games = ranking[this.otherPlayer.name].games + 1;
+
+        localStorage.setItem('ranking', JSON.stringify(ranking));
+    }
+
+    addWin(winnerName) {
+        if(!localStorage.getItem('ranking')) {
+            localStorage.setItem('ranking', JSON.stringify({}));
+        }
+
+        let ranking = JSON.parse(localStorage.getItem('ranking'));
+
+        if(!ranking.hasOwnProperty(winnerName)) {
+            ranking[winnerName] = {
+                games: 0,
+                victories: 0,
+            }
+        }
+
+        ranking[winnerName].victories = ranking[winnerName].victories + 1;
+
+        localStorage.setItem('ranking', JSON.stringify(ranking));
+    }
+
     showWinner() {
         const score1 = this.game.board.getStorageAmount(this.player.id);
         const score2 = this.game.board.getStorageAmount(this.otherPlayer.id);
+
+        this.addGames();
 
         if (this.winner === null) {
             launchTieGame(score1);
@@ -412,6 +460,7 @@ class EndState extends GameState {
         }
 
         if (this.winner != null) {
+            this.addWin(this.winner.name);
             launchEndGame(this.winner.id === 0, this.winner.name, this.winner.id === 0 ? score1 : score2);
             return;
         }
@@ -421,6 +470,7 @@ class EndState extends GameState {
         if (score1 === score2) {
             launchTieGame(score1);
         } else {
+            this.addWin(this.winner.name);
             launchEndGame(this.winner.id === 0, this.winner.name, this.winner.id === 0 ? score1 : score2);
         }
     }

@@ -67,16 +67,16 @@ function replaceButtonsLogout() {
     const login = document.getElementById("log-in-header");
     const logout = document.getElementById("log-out-header");
 
-    login.style.visibility = "collapse";
-    logout.style.visibility = "visible";
+    login.classList.add("hidden");
+    logout.classList.remove("hidden");
 }
 
 function replaceButtonsLogin() {
     const login = document.getElementById("log-in-header");
     const logout = document.getElementById("log-out-header");
 
-    login.style.visibility = "visible";
-    logout.style.visibility = "collapse";
+    login.classList.remove("hidden");
+    logout.classList.add("hidden");
 }
 
 function updateAuthButtons() {
@@ -85,6 +85,20 @@ function updateAuthButtons() {
     } else {
         replaceButtonsLogin();
     }
+
+    [
+        "create-button",
+        "join-button",
+        "start-button",
+    ].forEach(id => {
+        const target = document.getElementById(id);
+
+        if(isAuthenticated()) {
+            target.classList.remove("no-hover-btn");
+        } else {
+            target.classList.add("no-hover-btn");
+        }
+    })
 }
 
 // Cookies nit working after broswer restart
