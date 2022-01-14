@@ -28,7 +28,11 @@ class Clicker {
         
         this.cookie.genChips(10, "#270d0b", "#5A2C22", 8, 3);
 
-        this.cookies = 0;
+        if(!localStorage.getItem("cookies")) {
+            localStorage.setItem("cookies", "0");
+        }
+
+        this.cookies = parseInt(localStorage.getItem("cookies"));
 
         this.animation = new RotationCombinedAnimation(0.01, this);
         this.animation.animation = new NoAnimation(this);
@@ -116,6 +120,6 @@ class Clicker {
     close() {
         cancelAnimationFrame(this.frameHandle);
 
-        // save
+        localStorage.setItem("cookies", this.cookies);
     }
 }
