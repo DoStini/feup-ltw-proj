@@ -861,10 +861,6 @@ i.button {
   }
 }
 
-/* .auth-btn {
-  #display: none;
-} */
-
 section#waiting-area {
   display: flex;
   flex-direction: column;

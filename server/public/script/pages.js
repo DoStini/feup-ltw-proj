@@ -146,10 +146,6 @@ function setupLocalGameConfig() {
 }
 
 function setupPages() {
-    // document.querySelectorAll(".in-body").forEach(bodyElement => {
-    //     bodyElement.classList.add("hidden");
-    // });
-
     setupInitMenu(pageManager);
     setupLocalGameConfig(pageManager);
 
