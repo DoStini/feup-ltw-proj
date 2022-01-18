@@ -391,6 +391,10 @@ section#config-multiplayer-join input {
   grid-area: input1;
 }
 
+section#config-multiplayer-create #code-create {
+  grid-area: input3;
+}
+
 section.config div.config-layout > fieldset {
   grid-area: fields;
 }
@@ -869,7 +873,7 @@ section#waiting-area {
 }
 
 section#waiting-area {
-    text-align: center;
+  text-align: center;
 }
 
 .snackbar {
