@@ -99,10 +99,7 @@ function startAuth() {
 
 function cleanupAuth() {
     document.getElementById("username-login").value = null;
-    document.getElementById("username-register").value = null;
     document.getElementById("password-login").value = null;
-    document.getElementById("password-register").value = null;
-    document.getElementById("confirm-password").value = null;
 
     document.getElementById("log-in-header").classList.remove("hidden");
     document.getElementById("log-in-header").classList.add("visible");

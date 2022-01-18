@@ -143,6 +143,11 @@ footer {
 section#auth {
   display: flex;
   flex-direction: column;
+  align-items: center;
+}
+
+section#auth > header {
+    margin-top: 2em;
 }
 
 section#auth input {
@@ -158,23 +163,23 @@ section#auth > #auth-form {
   padding: 3em 0;
 }
 
-section#auth > #auth-form > section {
+section#auth > #auth-form > #login {
   padding: 0 7em;
   flex: 1;
 }
 
-section#auth > #auth-form > section > * {
+section#auth > #auth-form > #login > * {
   max-width: 30em;
   margin: 0 auto;
 }
 
-section#auth > #auth-form > section#login {
+section#auth > #auth-form > div#login {
   border-right: 1px solid black;
 }
 
 /* Login Grid Section */
 
-section#auth > #auth-form > section > #login-form {
+section#auth > #auth-form > #login > #login-form {
   display: grid;
   grid-template-rows: 0.5fr 1fr 0.1fr 0.5fr 1fr 0.1fr 1fr;
   grid-template-columns: minmax(0, 1fr);
@@ -197,7 +202,7 @@ form#login-form > input#username-login {
   grid-area: input1;
 }
 
-section#login > #login-form > label[for="password-login"] {
+div#login > #login-form > label[for="password-login"] {
   grid-area: label2;
 }
 
@@ -211,7 +216,7 @@ form#login-form > button {
 }
 
 @media (max-width: 950px) {
-  section#auth > #auth-form > section {
+  section#auth > #auth-form > #login {
     margin: 0 auto;
     padding: 0;
   }
@@ -223,11 +228,11 @@ form#login-form > button {
     justify-content: start;
     flex: 1;
   }
-  section#auth > #auth-form > section#login {
+  section#auth > #auth-form > div#login {
     border-right: none;
   }
 
-  section#auth > #auth-form > section {
+  section#auth > #auth-form > #login {
     min-width: 20em;
   }
 }
@@ -250,35 +255,6 @@ section#auth > #auth-form > section > #register-form {
     "."
     "submit";
   row-gap: 0.4em;
-}
-
-form#register-form > label[for="username-register"] {
-  grid-area: label1;
-}
-
-form#register-form > input#username-register {
-  grid-area: input1;
-}
-
-section#register > #register-form > label[for="password-register"] {
-  grid-area: label2;
-}
-
-form#register-form > input#password-register {
-  grid-area: input2;
-}
-
-section#register > #register-form > label[for="confirm-password"] {
-  grid-area: label3;
-}
-
-form#register-form > input#confirm-password {
-  grid-area: input3;
-}
-
-form#register-form > button {
-  grid-area: submit;
-  justify-self: right;
 }
 
 section.config {
