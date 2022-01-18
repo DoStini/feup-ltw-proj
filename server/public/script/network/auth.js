@@ -87,8 +87,6 @@ function updateAuthButtons() {
     }
 
     [
-        "create-button",
-        "join-button",
         "start-button",
     ].forEach(id => {
         const target = document.getElementById(id);

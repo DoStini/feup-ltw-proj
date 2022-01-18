@@ -89,7 +89,7 @@
                     <div class="player-back">You</div>
                 </div>
 
-                <section id="message-board"></section>
+                <div id="message-board"></div>
                 <button id="exit-btn" class="exit-btn">Quit</button>
             </div>
         </div>
@@ -111,11 +111,11 @@
     </section>
 
     <section id="auth" class="auth in-body hidden">
+        <header>
+            <h2>Login</h2>
+        </header>
         <div id="auth-form">
-            <section id="login">
-                <header>
-                    <h2>Login</h2>
-                </header>
+            <div id="login">
                 <form id="login-form">
                     <label for="username-login">User Name</label>
                     <input id="username-login" name="nick" type="text" onkeypress="return event.charCode != 32">
@@ -124,25 +124,6 @@
                     <input id="password-login" name="password" type="password" />
 
                     <button type="submit" id="login-btn">Login</button>
-                </form>
-            </section>
-
-            <section id="register">
-                <header>
-                    <h2>Register</h2>
-                </header>
-                <form id="register-form">
-                    <label for="username-register">User Name</label>
-                    <input id="username-register" name="username" type="text"
-                        onkeypress="return event.charCode != 32" />
-
-                    <label for="password-register">Password</label>
-                    <input id="password-register" name="password" type="password" />
-
-                    <label for="confirm-password">Confirm Password</label>
-                    <input id="confirm-password" name="confirm-password" type="password" />
-
-                    <button value="register">Register</button>
                 </form>
             </section>
         </div>
@@ -383,8 +364,6 @@
     <section id="init-menu" class="in-body">
         <h2>Mancalada<br>Sow With Your Friends.</h2>
         <button id="start-button-ai" value="play-alone">Play Against the All Knowing AI</button>
-        <button id="create-button" class="no-hover-btn" value="start-server">Create a game room</button>
-        <button id="join-button" class="no-hover-btn" value="start-server">Join a game room</button>
         <button id="start-button" class="no-hover-btn" value="start-server">Matchmaking</button>
     </section>
 
@@ -433,42 +412,6 @@
     </section>
 
     <!--Config Area-->
-    <section id="config-multiplayer-create" class="in-body config hidden">
-        <form>
-            <fieldset class="config-layout">
-                <h2>Choose Your Game Settings</h2>
-                <div class="config-layout">
-                    <label for="holes-create">Number of holes in each side</label>
-                    <input type="number" id="holes-create" name="holes" value="6" min="1" max="10" step="1">
-
-                    <label for="seeds-create">Number of seeds in each hole</label>
-                    <input type="number" id="seeds-create" name="seeds" value="4" min="1" max="12" step="1">
-
-                    <label for="code-create">Code of the game</label>
-                    <input id="code-create" name="code">
-
-                    <button id="create-multi-game-button" value="submit">Start Game</button>
-                </div>
-            </fieldset>
-        </form>
-    </section>
-
-    <!--Config Area-->
-    <section id="config-multiplayer-join" class="in-body config hidden">
-        <form>
-            <fieldset class="config-layout">
-                <h2>Choose Your Game Settings</h2>
-                <div class="config-layout">
-                    <label for="code-join">Code of the game</label>
-                    <input id= "code-join" name="code">
-
-                    <button id="join-multi-game-button" value="submit">Start Game</button>
-                </div>
-            </fieldset>
-        </form>
-    </section>
-
-    <!--Config Area-->
     <section id="config-multiplayer-matchmaking" class="in-body config hidden">
         <form>
             <fieldset class="config-layout">
@@ -479,6 +422,9 @@
 
                     <label for="seeds-match">Number of seeds in each hole</label>
                     <input type="number" id="seeds-match" name="seeds" value="4" min="1" max="12" step="1">
+
+                    <label for="group">Code of the game (optional)</label>
+                    <input id="group" name="group">
 
                     <button id="start-multi-game-button" value="submit">Start Game</button>
                 </div>

@@ -21,6 +21,7 @@ module.exports = async () => {
         {name: "player2", type: "TEXT", constraint: ""},
         {name: "board", type: "TEXT", constraint: ""},
         {name: "turn", type: "TEXT", constraint: ""},
+        {name: "group", type: "TEXT", constraint: ""},
     ], database, true);
     database.addModel(game);
 

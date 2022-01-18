@@ -17,6 +17,7 @@ async function bodyRequest(method, body, path) {
 
     return fetch(request).then(async (fetched) => {
         const data = await fetched.json();
+        console.log(data);
         return {
             status: fetched.status,
             data,

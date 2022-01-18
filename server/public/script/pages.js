@@ -99,10 +99,7 @@ function startAuth() {
 
 function cleanupAuth() {
     document.getElementById("username-login").value = null;
-    document.getElementById("username-register").value = null;
     document.getElementById("password-login").value = null;
-    document.getElementById("password-register").value = null;
-    document.getElementById("confirm-password").value = null;
 
     document.getElementById("log-in-header").classList.remove("hidden");
     document.getElementById("log-in-header").classList.add("visible");
@@ -123,19 +120,6 @@ function setupInitMenu() {
     let setInitMenu = pageManager.setPage.bind(pageManager, "init-menu");
 
     document.getElementById("start-button-ai").addEventListener('click', setPageConfig);
-
-
-    document.getElementById("create-button").addEventListener('click', (e) => {
-        if (isAuthenticated()) {
-            pageManager.setPage("config-multiplayer-create");
-        }
-    });
-
-    document.getElementById("join-button").addEventListener('click', (e) => {
-        if (isAuthenticated()) {
-            pageManager.setPage("config-multiplayer-join");
-        }
-    });
 
     document.getElementById("start-button").addEventListener('click', (e) => {
         if (isAuthenticated()) {

@@ -43,7 +43,8 @@ class GameController {
             player1: game.player1.name,
             player2: game.player2.name,
             turn: game.currentPlayer.name,
-            board: game.board.toJSON()
+            board: game.board.toJSON(),
+            group: game.group,
         }
     }
 
@@ -86,13 +87,13 @@ class GameController {
         this.#handlers[user].write(`data: ${JSON.stringify(data)}\n\n`);
     }
 
-    createGame(nHoles, nSeeds, turn, player1Name, player2Name, hash, boardJSON) {
+    createGame(nHoles, nSeeds, turn, player1Name, player2Name, hash, boardJSON, group) {
         const board = new Board(nHoles, nSeeds, boardJSON);
 
         const player1 = new Player(0, player1Name);
         const player2 = new Player(1, player2Name);
 
-        const game = new Game(board, player1, player2, hash);
+        const game = new Game(board, player1, player2, hash, group);
 
         if(turn === player1.name) {
             game.changePlayerState(new PlayerState(game, player1, player2));
@@ -111,7 +112,7 @@ class GameController {
     objectToGame(json) {
         const boardObj = JSON.parse(json.board);
         
-        return this.createGame(parseInt(boardObj.nHoles), parseInt(boardObj.nSeeds), json.turn, json.player1, json.player2, json.hash, json.board);
+        return this.createGame(parseInt(boardObj.nHoles), parseInt(boardObj.nSeeds), json.turn, json.player1, json.player2, json.hash, json.board, json.group);
     }
 
     async playerInGame(nick) {
@@ -145,10 +146,11 @@ class GameController {
      * @param {string} player1Name 
      * @param {string} player2Name 
      * @param {string} hash 
+     * @param {string} group 
      * @returns {Game}
      */
-    async setupMultiplayerGame(nHoles, seedsPerHole, turn, player1Name, player2Name, hash) {
-        let game = this.createGame(nHoles, seedsPerHole, turn, player1Name, player2Name, hash);
+    async setupMultiplayerGame(nHoles, seedsPerHole, turn, player1Name, player2Name, hash, group) {
+        let game = this.createGame(nHoles, seedsPerHole, turn, player1Name, player2Name, hash, null, group);
 
         let obj = this.#gameToObject(game);
         await this.#model.insert(hash, obj);
@@ -160,17 +162,17 @@ class GameController {
      * 
      * @param {number} nHoles 
      * @param {number} nSeeds 
+     * @param {string} group 
      * @returns {Game}
      */
-    async findGame(nHoles, nSeeds) {
+    async findGame(nHoles, nSeeds, group) {
         let games = await this.#model.findByKey("player2", "null");
         
         for(let game of games) {
             let board = JSON.parse(game.board);
             let initial = board.nSeeds;
             let size = board.nHoles;
-
-            if(nHoles === size && nSeeds === initial) {
+            if(nHoles === size && nSeeds === initial && game.group === group) {
                 return this.objectToGame(game);
             }
         }

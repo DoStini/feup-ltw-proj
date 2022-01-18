@@ -197,7 +197,7 @@ div.player-turn > div.player-back {
 }
 
 /* MESSAGE BOARD */
-div.game-area > section#message-board {
+div.game-area > div#message-board {
   grid-area: message;
   height: 12em;
   background-color: white;
