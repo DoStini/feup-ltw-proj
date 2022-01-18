@@ -367,7 +367,7 @@ section#config-multiplayer-join input {
   grid-area: input1;
 }
 
-section#config-multiplayer-create #code-create {
+section#config-multiplayer-matchmaking #code-create {
   grid-area: input3;
 }
 
