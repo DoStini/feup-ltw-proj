@@ -40,6 +40,12 @@
     <script src="script/pages.js" defer></script>
     <script src="script/script.js" defer></script>
 
+    <script src="script/models/position.js" defer></script>
+    <script src="script/models/circle.js" defer></script>
+    <script src="script/models/cookie.js" defer></script>
+    <script src="script/controllers/clicker.js" defer></script>
+    <script src="script/models/cookieAnimation.js" defer></script>
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -56,12 +62,12 @@
             <a id="leaderboard-open-btn">Leaderboards</a>
         </nav>
         <div>
-            <button id="log-in-header" class="auth-btn">Log In</button>
-            <button id="log-out-header" class="auth-btn">Log out</button>
+            <button id="log-in-header" class="auth-btn hidden">Log In</button>
+            <button id="log-out-header" class="auth-btn hidden">Log out</button>
         </div>
     </header>
 
-    <section id="game-section" class="in-body">
+    <section id="game-section" class="in-body hidden">
         <header>
             <h3><span id="status-turn-name"></span>'s Turn</h3>
         </header>
@@ -83,32 +89,33 @@
                     <div class="player-back">You</div>
                 </div>
 
-                <section id="message-board"></section>
+                <div id="message-board"></div>
+                <button id="exit-btn" class="exit-btn">Quit</button>
             </div>
         </div>
     </section>
 
    <!--End of game Page-->
-   <section id="end-game" class="popup-window end-game">
+   <section id="end-game" class="popup-window end-game hidden show">
         <header>
             <h2>End Game</h2>
             <i id="close-end-game" class="popup-window-close far fa-times-circle"></i>
         </header>
         <div class="end-game-content">
             <h1 id="end-player-name">[target] won the game!</h1>
-            <i id="win-icon"  class="fas fa-check-circle     win-icon"></i>
-            <i id="lose-icon" class="fas far fa-times-circle lose-icon"></i>
-            <i id="tie-icon"  class="fas fa-pause-circle     tie-icon"></i>
+            <i id="win-icon"  class="fas fa-check-circle     win-icon hidden"></i>
+            <i id="lose-icon" class="fas far fa-times-circle lose-icon hidden"></i>
+            <i id="tie-icon"  class="fas fa-pause-circle     tie-icon hidden"></i>
             <h2 id="end-player-points">The winner conquered [target] points</h2>
         </div>
     </section>
 
-    <section id="auth" class="auth in-body">
+    <section id="auth" class="auth in-body hidden">
+        <header>
+            <h2>Login</h2>
+        </header>
         <div id="auth-form">
-            <section id="login">
-                <header>
-                    <h2>Login</h2>
-                </header>
+            <div id="login">
                 <form id="login-form">
                     <label for="username-login">User Name</label>
                     <input id="username-login" name="nick" type="text" onkeypress="return event.charCode != 32">
@@ -119,30 +126,11 @@
                     <button type="submit" id="login-btn">Login</button>
                 </form>
             </section>
-
-            <section id="register">
-                <header>
-                    <h2>Register</h2>
-                </header>
-                <form id="register-form">
-                    <label for="username-register">User Name</label>
-                    <input id="username-register" name="username" type="text"
-                        onkeypress="return event.charCode != 32" />
-
-                    <label for="password-register">Password</label>
-                    <input id="password-register" name="password" type="password" />
-
-                    <label for="confirm-password">Confirm Password</label>
-                    <input id="confirm-password" name="confirm-password" type="password" />
-
-                    <button value="register">Register</button>
-                </form>
-            </section>
         </div>
     </section>
 
     <!--Game status sidebar-->
-    <section id="game-status" class="hidden">
+    <section id="game-status" class="invisible">
         <header>
             <svg id="game-status-button" width="40" height="40" viewBox="0 0 43 42" fill="none"
                 xmlns="http://www.w3.org/2000/svg">
@@ -197,7 +185,7 @@
     </section>
 
     <!--Rules Page-->
-    <section id="rules" class="popup-window rules">
+    <section id="rules" class="popup-window rules hidden show">
         <header>
             <h2>Rules</h2>
             <i id="close-rules" class="popup-window-close far fa-times-circle"></i>
@@ -269,7 +257,7 @@
     </section>
 
     <!--Leaderboard Page-->
-    <section id="leaderboard" class="popup-window leaderboard">
+    <section id="leaderboard" class="popup-window leaderboard hidden show">
         <header>
             <h2>Leaderboard</h2>
             <i id="close-leaderboard" class="popup-window-close far fa-times-circle"></i>
@@ -288,7 +276,7 @@
                             <th>Wins</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="local-leaderboard-body">
                         <tr>
                             <td>1</td>
                             <td class="name-row">John Cena</td>
@@ -335,7 +323,7 @@
                             <th>Wins</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="server-leaderboard-body">
                         <tr>
                             <td>1</td>
                             <td class="name-row">John Cena</td>
@@ -380,7 +368,7 @@
     </section>
 
     <!--Config Area-->
-    <section id="config-local" class="in-body config">
+    <section id="config-local" class="in-body config hidden">
         <fieldset class="config-layout">
             <h2>Choose Your Game Settings</h2>
             <div class="config-layout">
@@ -415,13 +403,16 @@
                     </div>
                 </fieldset>
 
+                <label for="name">Player Name</label>
+                <input type="text" id="name" name="name" value="Player 1" />
+
                 <button id="start-game-button" value="start">Start Game</button>
             </div>
         </fieldset>
     </section>
 
     <!--Config Area-->
-    <section id="config-multiplayer-matchmaking" class="in-body config">
+    <section id="config-multiplayer-matchmaking" class="in-body config hidden">
         <form>
             <fieldset class="config-layout">
                 <h2>Choose Your Game Settings</h2>
@@ -430,7 +421,7 @@
                     <input type="number" id="holes-match" name="holes" value="6" min="1" max="10" step="1">
 
                     <label for="seeds-match">Number of seeds in each hole</label>
-                    <input id="seeds-match" name="seeds" value="4" min="1" max="12" step="1">
+                    <input type="number" id="seeds-match" name="seeds" value="4" min="1" max="12" step="1">
 
                     <label for="group">Code of the game (optional)</label>
                     <input id="group" name="group">
@@ -442,11 +433,14 @@
     </section>
 
     <!--Waiting Area-->
-    <section id="waiting-area" class="in-body">
+    <section id="waiting-area" class="in-body hidden">
         <h1>Finding opponent</h1>
-        <h4>Trying to find an opponent, please wait</h4>
-        <img src="https://i.pinimg.com/originals/50/3c/28/503c28b8ef38166cebb176bb5772034d.gif">
-        <img src="https://i.makeagif.com/media/2-23-2017/V4qrdr.gif">
+        <h4>Trying to find an opponent, please wait.<br>
+            Meanwhile, try to get as many cookies as you can!
+        </h4>
+        <!-- <img src="https://i.pinimg.com/originals/50/3c/28/503c28b8ef38166cebb176bb5772034d.gif">
+        <img src="https://i.makeagif.com/media/2-23-2017/V4qrdr.gif"> -->
+        <canvas id="waiting-clicker" width="200" height="300"></canvas>
     </section>
 
     <footer>

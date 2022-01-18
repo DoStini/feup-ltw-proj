@@ -1,6 +1,7 @@
 'use strict';
 
 const pageManager = new PageManager();
+let clicker;
 
 /**
  * 
@@ -20,15 +21,17 @@ PageManager.prototype.setPage = function (elementId) {
     if (typeof this.curPage !== 'undefined') {
         let bodyElement = document.getElementById(this.curPage);
 
-        bodyElement.style.display = "none";
-        bodyElement.classList.toggle("show");
+        bodyElement.classList.remove("visible");
+        bodyElement.classList.add("hidden");
+        bodyElement.classList.remove("show");
 
         let curPageCleanup = this.pageCleanup[this.curPage];
         if (typeof curPageCleanup === 'function') curPageCleanup();
     }
 
-    element.style.display = null;
-    element.classList.toggle("show");
+    element.classList.add("visible");
+    element.classList.remove("hidden");
+    element.classList.add("show");
 
     this.curPage = elementId;
 
@@ -39,25 +42,27 @@ function startGame(pageManager) {
     let holes = parseInt(document.getElementById("holes").value);
     let seeds = parseInt(document.getElementById("seeds").value);
     let aiDifficulty = document.getElementById("ai_difficulty").value;
+    let name = document.getElementById("name").value;
     let turn = 0;
 
     if (document.getElementById("ai-order-ai").checked) {
         turn = 1;
     }
 
-    setupLocalGame(holes, seeds, turn, aiDifficulty);
+    setupLocalGame(holes, seeds, turn, aiDifficulty, name);
     pageManager.setPage("game-section");
-    document.getElementById("game-status").classList.remove("hidden");
+    document.getElementById("game-status").classList.remove("invisible");
 }
 
 function cleanupGame(gameHash, evtSource) {
-    document.getElementById("game-status").classList.add("hidden");
+    document.getElementById("game-status").classList.add("invisible");
 
     if (toggleGameStatus.open) {
         toggleGameStatus();
     }
 
     if (gameHash != null) {
+        evtSource.close();
         evtSource.onmessage = null;
         leaveGame(gameHash);
     }
@@ -80,6 +85,7 @@ function setConfig() {
 }
 
 function setWaitingPage() {
+    clicker = new Clicker();
     pageManager.setPage("waiting-area");
 }
 
@@ -87,19 +93,26 @@ function startAuth() {
     if (isAuthenticated()) return;
     pageManager.setPage("auth");
 
-    document.getElementById("log-in-header").style.visibility = "hidden";
-    document.getElementById("log-in-header").style.display = "none";
+    document.getElementById("log-in-header").classList.add("hidden");
+    document.getElementById("log-in-header").classList.remove("visible");
 }
 
 function cleanupAuth() {
     document.getElementById("username-login").value = null;
-    document.getElementById("username-register").value = null;
     document.getElementById("password-login").value = null;
-    document.getElementById("password-register").value = null;
-    document.getElementById("confirm-password").value = null;
 
-    document.getElementById("log-in-header").style.visibility = null;
-    document.getElementById("log-in-header").style.display = null;
+    document.getElementById("log-in-header").classList.remove("hidden");
+    document.getElementById("log-in-header").classList.add("visible");
+}
+
+function cleanupWait(gameHash, evtSource) {
+    if (gameHash != null) {
+        evtSource.close();
+        evtSource.onmessage = null;
+        leaveGame(gameHash);
+    }
+
+    clicker.close();
 }
 
 function setupInitMenu() {
@@ -114,31 +127,6 @@ function setupInitMenu() {
         }
     });
 
-    [
-        "start-button",
-    ].forEach(id => {
-        const target = document.getElementById(id);
-
-        target.addEventListener('mouseover', (e) => {
-            const elem = e.target;
-            if (isAuthenticated()) {
-                elem.style.backgroundColor = "#373f41";
-                elem.style.fontWeight = "600";
-                elem.style.cursor = "pointer";
-            } else {
-                elem.style.backgroundColor = "";
-                elem.style.fontWeight = "";
-            }
-        });
-
-        target.addEventListener('mouseleave', (e) => {
-            const elem = e.target;
-            elem.style.cursor = "";
-            elem.style.backgroundColor = "";
-            elem.style.fontWeight = "";
-        });
-    })
-
     document.getElementById("header-logo").addEventListener('click', setInitMenu);
     document.getElementById("log-in-header").addEventListener('click', () => startAuth(pageManager));
 
@@ -150,13 +138,11 @@ function setupLocalGameConfig() {
 
     pageManager.pageCleanup["game-section"] = cleanupGame;
     startGameButton.addEventListener('click', () => startGame(pageManager));
+
+    document.getElementById("exit-btn").addEventListener('click', pageManager.setPage.bind(pageManager, "init-menu"))
 }
 
 function setupPages() {
-    document.querySelectorAll(".in-body").forEach(bodyElement => {
-        bodyElement.style.display = "none";
-    });
-
     setupInitMenu(pageManager);
     setupLocalGameConfig(pageManager);
 

@@ -104,13 +104,21 @@ class StatusRenderer extends Renderer {
         document.getElementById("status-p0-play-seeds").innerText = seeds0;
         document.getElementById("status-p1-play-seeds").innerText = seeds1;
 
+        let original = game.state.player;
         let score = evaluateBoard(game.state);
+        game.state.player = game.state.otherPlayer;
+        game.state.otherPlayer = original;
+
+        let score1 = evaluateBoard(game.state);
+
+        game.state.otherPlayer = game.state.player;
+        game.state.player = original;
 
         if(game.currentPlayer.id === 0) {
             document.getElementById("status-p0-play-adv").innerText = score.toFixed(2);
-            document.getElementById("status-p1-play-adv").innerText = (-score).toFixed(2);
+            document.getElementById("status-p1-play-adv").innerText = score1.toFixed(2);
         }  else {
-            document.getElementById("status-p0-play-adv").innerText = (-score).toFixed(2);
+            document.getElementById("status-p0-play-adv").innerText = score1.toFixed(2);
             document.getElementById("status-p1-play-adv").innerText = score.toFixed(2);
         }
 
