@@ -71,8 +71,11 @@ class GameController {
             return;
         }
 
+        let mancala = this.objectToGame(game);
+
         await this.notifyAll(hash, {
-            board: this.objectToGame(game).parseBoard()
+            board: mancala.parseBoard(),
+            stores: mancala.getStores(),
         });
     }
 

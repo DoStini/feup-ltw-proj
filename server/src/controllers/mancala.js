@@ -88,6 +88,16 @@ class Game {
         return obj;
     }
 
+    getStores() {
+        const obj = {
+
+        }
+
+        obj[this.#player1.name] = this.#board.getStorageAmount(0);
+        obj[this.#player2.name] = this.#board.getStorageAmount(1);
+
+        return obj;
+    }
 
     /**
      * Changes the current game state and starts the state.
