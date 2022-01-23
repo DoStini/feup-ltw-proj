@@ -1,5 +1,3 @@
-console.log(getApiHost())
-
 function encodeForQuery(data) {
     if (data == null) return null;
     return Object.keys(data).map(function (k) {
@@ -17,7 +15,6 @@ async function bodyRequest(method, body, path) {
 
     return fetch(request).then(async (fetched) => {
         const data = await fetched.json();
-        console.log(data);
         return {
             status: fetched.status,
             data,

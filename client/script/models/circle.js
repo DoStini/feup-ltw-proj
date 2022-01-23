@@ -25,7 +25,6 @@ class Circle {
         const origWidth = ctx.lineWidth;
 
         ctx.fillStyle = this.fillColor;
-        // console.log(ctx.fillStyle);
         ctx.strokeStyle = this.strokeColor;
         ctx.lineWidth = this.strokeWidth;
 

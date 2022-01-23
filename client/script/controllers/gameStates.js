@@ -287,7 +287,6 @@ class MPGameState extends GameState {
     async handleUpdate(e) {
 
         let data = JSON.parse(e.data);
-        console.log(data);
 
         if (data.board) {
             let parsed = parseBoard(data);
@@ -349,8 +348,6 @@ class PlayMPState extends MPGameState {
         let a = await postRequest(data, 'notify');
 
         if (a.status !== 200) {
-            console.log("lol fail: ", a);
-
             return;
         }
     }

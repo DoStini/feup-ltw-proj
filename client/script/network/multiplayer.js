@@ -17,7 +17,6 @@ function setupMultiplayer() {
 
         if (req.status === STATUS_CODES.OK) {
             launchSuccessSnackbar("Finding a game");
-            console.log("req", req.data.game);
             handleGameStart(req.data.game);
         } else {
             launchErrorSnackbar(req.data?.error);
@@ -83,7 +82,7 @@ function handleGameStart(gameHash) {
     });
 
     const evtSource = new EventSource(`${getApiHost()}update?${query}`);
-    evtSource.onmessage = ((e) => { console.log(e); startMultiplayerGame(JSON.parse(e.data), evtSource, gameHash)}).bind(evtSource);
+    evtSource.onmessage = ((e) => { startMultiplayerGame(JSON.parse(e.data), evtSource, gameHash)}).bind(evtSource);
 
     pageManager.pageCleanup["waiting-area"] = cleanupWait.bind(this, gameHash, evtSource);
     pageManager.pageCleanup["game-section"] = cleanupGame.bind(this, gameHash, evtSource);
