@@ -16,12 +16,39 @@ async function leaderboardHandler() {
         return elem;
     }
 
-    const tableBody = document.querySelectorAll(".server-leaderboard .leaderboard-table > tbody")[0];
+    const tableBody = document.getElementById("server-leaderboard-body");
     tableBody.innerHTML = "";
 
-    for (let i = 0; i < Math.min(5, leaderboard.length - 1); i++) {
+    for (let i = 0; i < Math.min(10, leaderboard.length); i++) {
         const entry = leaderboard.at(i);
         tableBody.append(htmlEntry(entry, i + 1));
+    }
+
+    const localBody = document.getElementById("local-leaderboard-body");
+    localBody.innerHTML = "";
+
+    if(!localStorage.getItem("ranking")) {
+        localStorage.setItem("ranking", JSON.stringify({}));
+    }
+
+    const ranking = JSON.parse(localStorage.getItem("ranking"));
+    let rankingArr = [];
+
+    for(let key in ranking) {
+        rankingArr.push({
+            nick: key,
+            victories: ranking[key].victories ?? 0,
+            games: ranking[key].games ?? 0
+        })
+    }
+
+    rankingArr.sort((left, right) => {
+        return right.victories - left.victories;
+    }).slice(0, 10);
+
+    for (let i = 0; i < rankingArr.length; i++) {
+        const entry = rankingArr[i];
+        localBody.append(htmlEntry(entry, i + 1));
     }
 }
 
@@ -30,26 +57,20 @@ function setupPopupWindows() {
         document.getElementById(`${target}-open-btn`).addEventListener('click', () => {
             let targetElement = document.getElementById(target);
 
-            if (targetElement.style.opacity === "1") {
-                targetElement.style.opacity = "0";
-            } else {
-                targetElement.style.opacity = "1";
+            if(targetElement.classList.toggle("visible")) {
                 if (target === "leaderboard")
                     leaderboardHandler();
             }
-
-            if (targetElement.style.visibility === "visible") {
-                targetElement.style.visibility = null;
-            } else {
-                targetElement.style.visibility = "visible";
-            }
+            targetElement.classList.toggle("hidden");
         });
     });
 
     ["rules", "leaderboard", "end-game"].forEach((target) => {
         document.getElementById(`close-${target}`).addEventListener('click', () => {
-            document.getElementById(target).style.opacity = null;
-            document.getElementById(target).style.visibility = null;
+            let targetElement = document.getElementById(target);
+
+            targetElement.classList.remove("visible");
+            targetElement.classList.add("hidden");
         });
     });
 
@@ -57,8 +78,8 @@ function setupPopupWindows() {
     document.addEventListener('keydown', (e) => {
         if (e.key === "Escape") {
             document.querySelectorAll(".popup-window").forEach((target) => {
-                target.style.opacity = null;
-                target.style.visibility = null;
+                target.classList.add("hidden");
+                target.classList.remove("visible");
             })
         }
     });
@@ -66,18 +87,20 @@ function setupPopupWindows() {
 
 function launchTieGame(points) {
     const target = document.getElementById("end-game");
-    target.style.opacity = "1";
-    target.style.visibility = "visible";
+    target.classList.remove("hidden");
+    target.classList.add("show");
+    target.classList.add("visible");
 
     ["win-icon", "lose-icon"].forEach((id) => {
         const target = document.getElementById(id);
-        target.style.opacity = "";
-        target.style.visibility = "";
+
+        target.classList.add("hidden");
+        target.classList.remove("visible");
     });
 
     const icon = document.getElementById("tie-icon");
-    icon.style.opacity = "1";
-    icon.style.visibility = "visible";
+    icon.classList.add("visible");
+    icon.classList.remove("hidden");
 
     const nameText = document.getElementById("end-player-name");
     nameText.innerText = "It was a Tie!";
@@ -89,19 +112,20 @@ function launchTieGame(points) {
 
 function launchEndGame(isWinner, name, points) {
     const target = document.getElementById("end-game");
-    target.style.opacity = "1";
-    target.style.visibility = "visible";
+    target.classList.remove("hidden");
+    target.classList.add("show");
+    target.classList.add("visible");
 
     const visibleIcon = document.getElementById(`${isWinner ? "win" : "lose"}-icon`);
     const invisibleIcon = document.getElementById(`${isWinner ? "lose" : "win"}-icon`);
     const tieIcon = document.getElementById("tie-icon");
 
-    visibleIcon.style.opacity = "1";
-    visibleIcon.style.visibility = "visible";
+    visibleIcon.classList.add("visible");
+    visibleIcon.classList.remove("hidden");
 
     [tieIcon, invisibleIcon].forEach((target) => {
-        target.style.opacity = "";
-        target.style.visibility = "";
+        target.classList.add("hidden");
+        target.classList.remove("visible");
     })
 
     const nameText = document.getElementById("end-player-name");

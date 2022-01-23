@@ -17,6 +17,7 @@ async function bodyRequest(method, body, path) {
 
     return fetch(request).then(async (fetched) => {
         const data = await fetched.json();
+        console.log(data);
         return {
             status: fetched.status,
             data,
@@ -28,6 +29,7 @@ async function queryRequest(method, data, path) {
     let options = {
         method: method,
     }
+
     let request = new Request(getApiHost() + path + "?" + encodeForQuery(data), options);
 
     return fetch(request).then(async (fetched) => {

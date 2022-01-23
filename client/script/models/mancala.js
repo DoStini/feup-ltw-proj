@@ -13,7 +13,7 @@ class Game {
     /** @property {GameState} state The current game state.*/
     #state;
     /** @property {Board} board The game board */
-    #board;
+    board;
     /** @property {Player} player1 The player with ID 0 */
     #player1;
     /** @property {Player} player2 The player with ID 1 */
@@ -24,6 +24,8 @@ class Game {
     #boardRenderer;
     /** @property {Renderer} statusRenderer */
     #statusRenderer
+    /** @type {AIStrategy} */
+    #aiStrategy;
 
     /**
      * @param {Board} board
@@ -31,13 +33,17 @@ class Game {
      * @param {Player} player2
      * @param {Renderer} board
      * @param {Renderer} statusRenderer
+     * @param {string} aiDifficulty
      */
-    constructor(board, player1, player2, boardRenderer, statusRenderer) {
+    constructor(board, player1, player2, aiDifficulty, boardRenderer, statusRenderer) {
         this.#state;
-        this.#board = board;
+        this.board = board;
         this.#player1 = player1;
         this.#player2 = player2;
         this.#turn = 0;
+        if(aiDifficulty != null) {
+            this.#aiStrategy = new AIStrategyFactory().createStrategy(aiDifficulty);
+        }
 
         if (boardRenderer == null) {
             this.#boardRenderer = new BoardRenderer();
@@ -57,7 +63,7 @@ class Game {
     }
 
     get board() {
-        return this.#board;
+        return this.board;
     }
 
     get player1() {
@@ -68,11 +74,19 @@ class Game {
         return this.#player2;
     }
 
+    get aiStrategy() {
+        return this.#aiStrategy;
+    }
+
     /**
      * @returns {Player}
      */
     get currentPlayer() {
         return this.#state.player;
+    }
+
+    get state() {
+        return this.#state;
     }
 
     /**
@@ -91,7 +105,7 @@ class Game {
      * @param {number} playerId The player without seeds.
      */
     endGame() {
-        this.changePlayerState(new EndState(this, this.#player1, this.#player2));
+        this.changePlayerState(new EndState(this, false, this.#player1, this.#player2));
     }
 
     /**
@@ -102,7 +116,7 @@ class Game {
     endMPGame(winner) {
         pageManager.pageCleanup["game-section"] = cleanupGame;
 
-        this.changePlayerState(new EndState(this, this.#player1, this.#player2, winner));
+        this.changePlayerState(new EndState(this, true, this.#player1, this.#player2, winner, this.#state.animator));
     }
 
     /**
@@ -116,7 +130,7 @@ class Game {
      * Renders the HTML elements.
      */
     renderAll() {
-        this.#boardRenderer.render(this.#board);
+        this.#boardRenderer.render(this.board);
         this.setupHoles();
         this.#statusRenderer.render(this);
     }
@@ -130,15 +144,15 @@ class Game {
         let destHoles = {};
 
         for (let playerID = 0; playerID <= 1; playerID++) {
-            let avail = this.#board.getAvailHoles(playerID);
+            let avail = this.board.getAvailHoles(playerID);
 
             avail.forEach((hole) => {
-                let storage = this.#board.nHoles * 2 + playerID
-                let seeds = this.#board.getHoleSeedAmount(hole);
+                let storage = this.board.nHoles * 2 + playerID
+                let seeds = this.board.getHoleSeedAmount(hole);
                 destHoles[hole] = Array(seeds).fill(storage);
 
                 for (let i = 0; i < seeds; i++) {
-                    this.#board.moveToStorage(hole, playerID);
+                    this.board.moveToStorage(hole, playerID);
                 }
             });
         }
@@ -161,7 +175,7 @@ class Game {
             holes.forEach(hole => {
                 let curHole = parseInt(hole.id.split("-")[1]);
 
-                if (this.#board.holeBelongsToPlayer(curHole, this.#state.player.id)) {
+                if (this.board.holeBelongsToPlayer(curHole, this.#state.player.id)) {
                     hole.classList.add("player-hole");
                 }
             })
@@ -178,13 +192,13 @@ class Game {
     }
 }
 
-function setupLocalGame(nHoles, seedsPerHole, turn) {
+function setupLocalGame(nHoles, seedsPerHole, turn, aiDifficulty, name) {
     const board = new Board(parseInt(nHoles), seedsPerHole);
 
-    const player1 = new Player(0, "Player 1");
+    const player1 = new Player(0, name || "Player 1");
     const player2 = new Player(1, "AI");
 
-    const game = new Game(board, player1, player2);
+    const game = new Game(board, player1, player2,aiDifficulty);
 
     if (turn === 0) {
         game.changePlayerState(new PlayerState(game, player1, player2));

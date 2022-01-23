@@ -1,52 +1,4 @@
 function setupMultiplayer() {
-    document.querySelector("#config-multiplayer-create > form").addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const form = e.target;
-
-        const formData = serializeFormData(new FormData(form));
-
-        if (!formData.code) {
-            launchErrorSnackbar("Group id not given");
-        }
-
-        const data = {
-            group: parseInt(formData.code),
-            size: formData.holes,
-            initial: formData.seeds,
-            nick: getUser(),
-            password: getPass(),
-        };
-
-        const req = await join(data);
-
-        if (req.status === STATUS_CODES.OK) {
-            launchClipboardSnackbar("Room created! Click to copy code to clipboard", req.data.game, 4000);
-        } else {
-            launchErrorSnackbar(req.data?.error);
-        }
-
-    });
-
-    document.querySelector("#config-multiplayer-join > form").addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const form = e.target;
-
-        const formData = serializeFormData(new FormData(form));
-
-
-        if (!formData.code) {
-            launchErrorSnackbar("Group id not given");
-        }
-
-        const data = {
-            group: parseInt(formData.code),
-            nick: getUser(),
-            password: getPass(),
-        };
-
-        const req = await join(data);
-    });
-
     document.querySelector("#config-multiplayer-matchmaking > form").addEventListener('submit', async (e) => {
         e.preventDefault();
         const form = e.target;
@@ -56,12 +8,12 @@ function setupMultiplayer() {
         const data = {
             size: formData.holes,
             initial: formData.seeds,
+            group: formData.group,
             nick: getUser(),
             password: getPass(),
         };
 
         const req = await join(data);
-
 
         if (req.status === STATUS_CODES.OK) {
             launchSuccessSnackbar("Finding a game");
@@ -117,10 +69,10 @@ class MultiplayerInfo {
 
 function startMultiplayerGame(data, evtSource, gameHash) {
     const parsed = parseBoard(data);
-    console.log(parsed)
     setupMultiplayerGame(parsed.holes, parsed.board[0], parsed.turn, parsed.player, parsed.enemy, new MultiplayerInfo(evtSource, gameHash));
-    pageManager.pageCleanup["waiting-area"] = null;
+    pageManager.pageCleanup["waiting-area"] = cleanupWait;
     pageManager.setPage("game-section");
+    toggleGameStatus();
     document.getElementById("game-status").classList.remove("hidden");
 }
 
@@ -131,12 +83,9 @@ function handleGameStart(gameHash) {
     });
 
     const evtSource = new EventSource(`${getApiHost()}update?${query}`);
-    evtSource.onmessage = ((e) => startMultiplayerGame(JSON.parse(e.data), evtSource, gameHash)).bind(evtSource);
+    evtSource.onmessage = ((e) => { console.log(e); startMultiplayerGame(JSON.parse(e.data), evtSource, gameHash)}).bind(evtSource);
 
-    pageManager.pageCleanup["waiting-area"] = (function (gameHash, evtSource) {
-        evtSource.onmessage = null;
-        leaveGame(gameHash);
-    }).bind(this, gameHash, evtSource);
+    pageManager.pageCleanup["waiting-area"] = cleanupWait.bind(this, gameHash, evtSource);
     pageManager.pageCleanup["game-section"] = cleanupGame.bind(this, gameHash, evtSource);
 
     setWaitingPage();
@@ -149,7 +98,7 @@ async function leaveGame(gameHash) {
         game: gameHash
     }
 
-    console.log(await leave(request));
+    await leave(request);
 }
 
 setupMultiplayer();

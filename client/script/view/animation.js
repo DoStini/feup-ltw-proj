@@ -16,6 +16,10 @@ class SeedAnimation {
 
 class Animator {
     /**
+     * @type {Array.<Promise>}
+     */
+    runningAnims = [];
+    /**
      * 
      * @param {number} nHoles 
      * @param {SeedAnimation} steps 
@@ -71,7 +75,10 @@ class HTMLAnimator extends Animator {
                 animations.push(this.animateSeeds(hole, nHoles, holeToHoles[hole]));
             }
 
+            await Promise.all(this.runningAnims);
+            this.runningAnims.push(...animations);
             await Promise.all(animations);
+            this.runningAnims = this.runningAnims.slice(0, -animations.length);
         }
     }
 
