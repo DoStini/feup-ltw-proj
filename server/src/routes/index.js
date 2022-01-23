@@ -25,7 +25,7 @@ module.exports = (app, db) => {
     ranking(router, userController);
     game(router, userController, gameController);
     router.get("/", (req, res) => {
-        fs.readFile('public/index.html', null, function (error, data) {
+        fs.readFile('index.html', null, function (error, data) {
             if (error) {
                 res.status(404).text("404");
             } else {
