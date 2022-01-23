@@ -83,7 +83,7 @@ function handleGameStart(gameHash) {
     });
 
     const evtSource = new EventSource(`${getApiHost()}update?${query}`);
-    evtSource.onmessage = ((e) => startMultiplayerGame(JSON.parse(e.data), evtSource, gameHash)).bind(evtSource);
+    evtSource.onmessage = ((e) => { console.log(e); startMultiplayerGame(JSON.parse(e.data), evtSource, gameHash)}).bind(evtSource);
 
     pageManager.pageCleanup["waiting-area"] = cleanupWait.bind(this, gameHash, evtSource);
     pageManager.pageCleanup["game-section"] = cleanupGame.bind(this, gameHash, evtSource);

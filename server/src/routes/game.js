@@ -91,7 +91,8 @@ module.exports = async (router, userController, gameController) => {
             
             const obj = {
                 board: game.parseBoard(),
-                pit: req.body.move
+                pit: req.body.move,
+                stores: game.getStores(),
             };
             
             if (result.status === GAME_END) {
