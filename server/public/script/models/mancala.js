@@ -105,7 +105,7 @@ class Game {
      * @param {number} playerId The player without seeds.
      */
     endGame() {
-        this.changePlayerState(new EndState(this, this.#player1, this.#player2));
+        this.changePlayerState(new EndState(this, false, this.#player1, this.#player2));
     }
 
     /**
@@ -116,7 +116,7 @@ class Game {
     endMPGame(winner) {
         pageManager.pageCleanup["game-section"] = cleanupGame;
 
-        this.changePlayerState(new EndState(this, this.#player1, this.#player2, winner, this.#state.animator));
+        this.changePlayerState(new EndState(this, true, this.#player1, this.#player2, winner, this.#state.animator));
     }
 
     /**

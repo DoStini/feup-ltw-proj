@@ -390,6 +390,7 @@ class WaitState extends GameState {
 class EndState extends GameState {
     /** @property {Player} winner */
     winner;
+    multiplayer;
 
     /**
      * 
@@ -398,12 +399,16 @@ class EndState extends GameState {
      * @param {Player} otherPlayer 
      * @param {Player} winner 
      */
-    constructor(game, player, otherPlayer, winner, animator) {
+    constructor(game, multiplayer, player, otherPlayer, winner, animator) {
         super(game, player, otherPlayer, animator);
+        this.multiplayer = multiplayer;
         this.winner = winner;
     }
 
     addGames() {
+        if(this.multiplayer) {
+            return;
+        }
         if(!localStorage.getItem('ranking')) {
             localStorage.setItem('ranking', JSON.stringify({}));
         }
@@ -431,6 +436,9 @@ class EndState extends GameState {
     }
 
     addWin(winnerName) {
+        if(this.multiplayer) {
+            return;
+        }
         if(!localStorage.getItem('ranking')) {
             localStorage.setItem('ranking', JSON.stringify({}));
         }
