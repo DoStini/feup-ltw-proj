@@ -2,4 +2,4 @@
 
 ## Project Preview
 
-A project preview is available [here](https://mancalada-ltw.netlify.app/client)
+A project deployed [here](http://twserver.alunos.dcc.fc.up.pt:9010/)
